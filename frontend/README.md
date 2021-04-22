@@ -403,3 +403,42 @@ daca nu merge cautarea, schimba search:null si verifica daca search===null!!!
         :options="options"
         @click="openPage(model)"
       /> -->
+
+
+          v-on:childToParent="getProducts"
+  watch: {
+    val(newVal, oldVal) {
+      console.log(newVal)
+      this.products = newVal;
+      console.log(this.products)
+    },
+  },
+  getProducts(value) {
+      this.val = value;
+    },
+
+    
+      /* display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  margin-left:50px; */
+
+divul mare: position relative
+div ul pt buton:
+  margin: 0;
+            position: absolute;
+            top: 50%;
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+
+            //centreaza -9+ cu : justify-content: center; align-items: center
+                    display:flex; justify-content: center; align-items: center
+   <!-- <q-input
+          input-class="text-center"
+          class="zip-input"
+          
+          type="number"
+          v-model="number"
+          :min="quantityProd"
+          :max="quantityProduct"
+        /> -->

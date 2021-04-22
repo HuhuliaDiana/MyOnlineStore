@@ -208,7 +208,12 @@ const controllers = {
   },
 
   getLastViewedProducts: async (req, res) => {
-    const lastViewedProducts = await ViewedProductDB.findAll();
+    const lastViewedProducts = await ViewedProductDB.findAll({
+      include: {
+        model: ProductDB,
+        as: "Product",
+      },
+    });
     res.status(200).send(lastViewedProducts);
   },
 

@@ -5,38 +5,30 @@ const OrderDB = require("../models").Order;
 const controller = require("./Cart");
 
 const controllers = {
-  //incearca sa faci aceasta functie din frontend, verifica daca persista datele
+  modifyQuantity: async (req, res) => {
+    const new_quantity = req.body.quantity;
 
-  /*decreaseQuantity: async (req, res) => {
     //primesc id-ul cartProduct-ului si trebuie sa gasesc product-ul corespunzator
-    const cartProduct = await CartProductDB.findByPk(req.params.id);
-    if (cartProduct.quantity > 1) {
-      const decreaseQuantity = cartProduct.quantity - 1;
-      cartProduct
-        .update({
-          quantity: decreaseQuantity,
-        })
-        .then(() => {
-          res.status(200).send(cartProduct);
-        });
-    } else {
-      //sterge produsul din bd
-      CartProductDB.destroy({
-        where: {
-          id: req.params.id,
-        },
-      }).then(() => {
-        res.status(200).send({ message: "CartProduct deleted!" });
-      });
-    }
-
-    //creste cantitatea produsului din ProductDB
-    const product = await ProductDB.findOne({
+    const cartProduct = await CartProductDB.findOne({
       where: {
-        id: cartProduct.ProductId,
+        ProductId: req.params.id,
       },
     });
-    const newQuantity = product.quantity + 1;
+
+    const quantity = cartProduct.quantity;
+    const diff = quantity - new_quantity;
+
+    cartProduct
+      .update({
+        quantity: new_quantity,
+      })
+      .then(() => {
+        res.status(200).send(cartProduct);
+      });
+
+    //modifica cantitatea produsului din ProductDB
+    const product = await ProductDB.findByPk(req.params.id);
+    const newQuantity = product.quantity + diff;
     product
       .update({
         quantity: newQuantity,
@@ -45,17 +37,17 @@ const controllers = {
         res.status(200).send(result);
       });
 
-      //scade valoarea cosului de cumparaturi
-      const cart = await controller.getCart(req, res);
-      const newPrice=cart.totalPrice-product.price
-      cart.update({
-        totalPrice: newPrice
-        
-      }).then((result) => {
+    //modifica valoarea cosului de cumparaturi
+    const cart = await controller.getCart(req, res);
+    const newPrice = cart.totalPrice + product.price * diff;
+    cart
+      .update({
+        totalPrice: newPrice,
+      })
+      .then((result) => {
         res.status(200).send(result);
       });
-      
-  },*/
+  },
 
   getCartProducts: async (req, res) => {
     //get cart products from user's cart
@@ -64,14 +56,55 @@ const controllers = {
       where: {
         CartId: cart.id,
       },
-      include:{
+      include: {
         model: ProductDB,
-        as: 'Product'
-
-      }
+        as: "Product",
+      },
     });
 
     res.status(200).send(cartProducts);
+  },
+
+  deleteCartProduct: async (req, res) => {
+    //preia produsul
+    const cart = await controller.getCart(req, res);
+    const cartProduct = await CartProductDB.findOne({
+      where: {
+        CartId: cart.id,
+        id: req.params.id,
+      },
+    });
+
+    //adauga cantitatea inapoi la produsul initial
+    const quantity = cartProduct.quantity;
+    const product = await ProductDB.findByPk(cartProduct.ProductId);
+    const newQuantityProduct = quantity + product.quantity;
+    product.update({
+      quantity: newQuantityProduct,
+    });
+
+    //sterge
+    const cartProductDeleted = CartProductDB.destroy({
+      where: {
+        CartId: cart.id,
+        id: req.params.id,
+      },
+    });
+    CartProductDB.findAll({
+      where: {
+        CartId: cart.id,
+      },
+      include: {
+        model: ProductDB,
+        as: "Product",
+      },
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
   },
 };
 module.exports = controllers;

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div :style="myStyle" class="product" v-on:click.self="seeProduct()">
+    <!-- div intreg -->
+    <div :style="myStyle" style="font-family:'Montserrat', sans-serif" class="product" v-on:click.self="seeProduct()">
+      <!-- div heart rating -->
       <div style="display: flex; justify-content: flex-end">
         <q-rating
           style="margin-top: 10px; margin-right: 10px"
@@ -15,12 +17,16 @@
           @click="onFav"
         />
       </div>
+
+      <!-- div photo -->
       <div>
         <img
           class="photos"
           v-bind:src="`../photos/${photosProd.split(', ')[0]}`"
         />
       </div>
+
+      <!-- div info -->
       <div style="margin-left: 20px">
         <div style="font-size: 17px; margin-top: 20px; font-weight: bold">
           {{ product.brand }}
@@ -30,6 +36,8 @@
           {{ product.memRAM }}
         </div>
       </div>
+
+      <!-- div pret -->
 
       <div
         style="margin-top: 30px; margin-left: 20px; display: flex"
@@ -60,6 +68,7 @@
         <div>{{ priceProd }} lei</div>
       </div>
 
+      <!-- div buton + status stock -->
       <div style="display: flex; margin-top: 30px">
         <div style="flex: 1; margin-left: 20px">
           <q-btn
@@ -75,14 +84,16 @@
             flex: 1;
             margin-top: 10px;
             margin-left: 60px;
-            font-family: 'Montserrat', sans-serif;
           "
           :style="{ color: color }"
         >
           {{ getStockStatus() }}
         </div>
       </div>
+
+      <!-- div final btn stock -->
     </div>
+    <!-- div intreg final -->
   </div>
 </template>
 
@@ -98,6 +109,7 @@ export default {
       quantity: null,
       username: null,
       reducedPrice: null,
+      out:null,
       color: null,
       myStyle: {
         backgroundColor: "white",
@@ -153,7 +165,7 @@ export default {
             withCredentials: true,
           })
           .then((response) => {
-            console.log(response.data.message);
+            this.$emit('childToParent', response.data)
           })
           .catch((err) => {
             console.log(err);
@@ -205,12 +217,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .product {
   width: 280px;
   height: 560px;
   justify-content: center;
-  margin-right: 10px;
+  margin-right: 5px;
+  margin-left: 5px;
   margin-bottom: 20px;
   border-radius: 10px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,

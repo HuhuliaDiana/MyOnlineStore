@@ -29,7 +29,12 @@
         </div>
       </div>
 
-      <q-tabs v-model="model" size="15px" style="margin-right: 5%" @click="openPage(model)">
+      <q-tabs
+        v-model="model"
+        size="15px"
+        style="margin-right: 5%"
+        @click="openPage(model)"
+      >
         <q-tab name="home" label="Shop" />
         <q-tab name="discounts" label="Discounts" />
         <q-tab name="new" label="New" />
@@ -195,13 +200,15 @@
         </div>
       </div>
       <div class="flex-child products">
-        <Product
-          v-for="item in products"
-          :key="item.id"
-          :idProd="item.id"
-          :priceProd="item.price"
-          :photosProd="item.photos"
-        />
+        <div class="products">
+          <Product
+            v-for="item in products"
+            :key="item.id"
+            :idProd="item.id"
+            :priceProd="item.price"
+            :photosProd="item.photos"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -218,7 +225,6 @@ export default {
 
   data() {
     return {
-     
       ss: null,
       price: null,
       brand: null,
@@ -587,11 +593,15 @@ export default {
   display: block;
 }
 .flex-child:nth-child(2) {
-  width: 55%;
+  width: 50%;
+  margin-top: 20px;
+  margin-left: 5%;
+}
+.products {
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
-  margin-left: 30px;
+  margin: auto;
+  width: fit-content;
 }
 .lbFilter {
   margin-left: 20px;

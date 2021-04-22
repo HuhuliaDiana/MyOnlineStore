@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div :style="myStyle" class="product" v-on:click.self="seeProduct()">
+    <div
+      :style="myStyle"
+      style="font-family: 'Montserrat', sans-serif"
+      class="product"
+      v-on:click.self="seeProduct()"
+    >
       <div style="display: flex; justify-content: flex-end">
         <q-rating
           style="margin-top: 10px; margin-right: 10px"
@@ -71,15 +76,10 @@
           />
         </div>
         <div
-          style="
-            flex: 1;
-            margin-top: 10px;
-            margin-left: 60px;
-            font-family: 'Montserrat', sans-serif;
-          "
+          style="flex: 1; margin-top: 10px; margin-left: 60px"
           :style="{ color: color }"
         >
-          {{ getStockStatus() }}
+          {{ stockStatus }}
         </div>
       </div>
     </div>
@@ -98,11 +98,15 @@ export default {
       quantity: null,
       username: null,
       reducedPrice: null,
+      stockStatus: null,
       color: null,
-      myStyle: {
-        backgroundColor: "white",
-      },
     };
+  },
+  watch: {
+    stockStatus(newVal, oldVal) {
+      console.log(newVal);
+      console.log(oldVal);
+    },
   },
 
   mounted() {
@@ -125,6 +129,7 @@ export default {
       .then((response) => {
         this.product = response.data;
         this.quantity = this.product.quantity;
+        this.getStockStatus();
       })
       .catch((err) => {
         console.log(err);
@@ -161,15 +166,15 @@ export default {
       }
     },
     getStockStatus() {
-      if (this.product.quantity > 0 && this.product.quantity <= 15) {
+      if (this.quantity > 0 && this.quantity <= 15) {
         this.color = "orange";
-        return "Stoc limitat";
-      } else if (this.product.quantity > 15) {
+        this.stockStatus = "Stoc limitat";
+      } else if (this.quantity > 15) {
         this.color = "green";
-        return "In stoc";
-      } else if (this.product.quantity == 0) {
+        this.stockStatus = "In stoc";
+      } else if (this.quantity == 0) {
         this.color = "red";
-        return "Stoc epuizat";
+        this.stockStatus = "Stoc epuizat";
       }
     },
     addProductInCart() {
@@ -180,6 +185,7 @@ export default {
         .then((response) => {
           this.quantity = response.data.quantity;
           console.log(this.quantity);
+          this.getStockStatus();
         })
         .catch((err) => {
           console.log(err);
@@ -205,12 +211,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .product {
   width: 280px;
   height: 560px;
   justify-content: center;
-  margin-right: 10px;
+  margin-right: 5px;
+  margin-left: 5px;
   margin-bottom: 20px;
   border-radius: 10px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,

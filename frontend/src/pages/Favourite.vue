@@ -1,46 +1,77 @@
 <template>
-  <div>
+  <div class="myDiv">
     <div>
-      <Toolbar></Toolbar>
+      <Toolbar />
     </div>
-    <div>
-      <CardProduct
-        v-for="item in products"
-        :key="item.Product.id"
-        :idProd="item.Product.id"
-        :priceProd="item.Product.price"
-        :photosProd="item.Product.photos"
-      />
+    <div class="divProducts">
+      <div class="products">
+        <FavProduct
+          v-on:childToParent="getProducts"
+          v-for="item in products"
+          :key="item.id"
+          :idProd="item.Product.id"
+          :priceProd="item.Product.price"
+          :photosProd="item.Product.photos"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "../boot/axios";
-import CardProduct from "../components/CardProduct";
+import FavProduct from "../components/FavProduct";
 import Toolbar from "../components/Toolbar";
 
 export default {
   name: "Favourite",
   components: {
-    CardProduct,
+    FavProduct,
     Toolbar,
+  },
+
+  watch: {
+    val(newVal, oldVal) {
+      this.getTheProducts();
+    },
   },
   data() {
     return {
       products: [],
+      val: [],
     };
   },
+  methods: {
+    getProducts(value) {
+      this.val = value;
+    },
+    getTheProducts() {
+      axios
+        .get("http://localhost:8082/getUserFavProducts", {
+          withCredentials: true,
+        })
+        .then((response) => {
+          this.products = response.data;
+          console.log(this.products);
+        });
+    },
+  },
   mounted() {
-    axios
-      .get("http://localhost:8082/getUserFavProducts", { withCredentials: true })
-      .then((response) => {
-        this.products = response.data;
-        console.log(this.products)
-      });
+    this.getTheProducts();
   },
 };
 </script>
 
-<style>
+<style scoped>
+.products {
+  display: flex;
+  flex-flow: row wrap;
+  margin: auto;
+  margin-top: 80px;
+  width: fit-content;
+}
+.divProducts {
+  width: 77%;
+  margin: auto;
+}
 </style>

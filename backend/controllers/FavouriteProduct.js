@@ -47,16 +47,21 @@ const controllers = {
     const currentUser = await req.user;
     const id = req.params.id;
 
-    FavouriteProductDB.destroy({
+    const product = await FavouriteProductDB.destroy({
       where: {
         UserId: currentUser.id,
         ProductId: id,
       },
+    });
+
+    FavouriteProductDB.findAll({
+      where: {
+        UserId: currentUser.id,
+     
+      },
     })
       .then((result) => {
-        res
-          .status(200)
-          .send({ message: "Ati eliminat produsul din lista de favorite!" });
+        res.status(200).send(result);
       })
       .catch((err) => {
         res.status(500).send(err);

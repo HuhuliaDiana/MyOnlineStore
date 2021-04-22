@@ -90,51 +90,7 @@
 
 <script>
 export default {
-  props: ["products"],
-  methods: {
-    searchProduct(newVal) {
-      if (this.search !== "") {
-        this.products = this.products.filter((product) => {
-          if (
-            Object.keys(product).find(
-              (key) =>
-                //id si quantity nu vor fi afisate userului
-                key !== "id" &&
-                key !== "quantity" &&
-                product[key] &&
-                product[key]
-                  .toString()
-                  .toUpperCase()
-                  .trim()
-                  .includes(newVal.toUpperCase().trim()) //case insensitive
-            )
-          ) {
-            return product;
-          }
-        });
-      }
-    },
-  },
-  mounted() {
-    this.getCurrentRoute();
-  },
 
-  watch: {
-    search(newVal, oldVal) {
-      axios
-        .get(this.url, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          this.products = response.data;
-          console.log(this.products);
-          this.searchProduct(newVal);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-  },
   data() {
     return {
       search: "",
@@ -144,27 +100,10 @@ export default {
       fmemInt: "",
       fstock: "",
       fnet: "",
-      url: null,
     };
   },
   methods: {
-    getCurrentRoute() {
-      const currUrl = this.$router.currentRoute.path;
-      if (currUrl.includes("home")) {
-        this.path = "home";
-        this.url = "http://localhost:8082/getAllProducts";
-      } else if (currUrl.includes("discounts")) {
-        this.path = "discounts";
-        this.url = "http://localhost:8082/getReducedProducts";
-      } else if (currUrl.includes("new")) {
-        this.path = "new";
-        this.url = "http://localhost:8082/getNewProducts";
-      } else if (currUrl.includes("favourite")) {
-        this.url = "http://localhost:8082/getUserFavProducts";
-      } else if (currUrl.includes("cart")) {
-        this.url = "http://localhost:8082/getUserCartProducts";
-      }
-    },
+   
     openPage(key) {
       this.$router
         .push(

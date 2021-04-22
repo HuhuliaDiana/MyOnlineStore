@@ -3,7 +3,8 @@ const router = express.Router()
 const controllers=require('../controllers').cartProduct
 const other=require('../controllers').other
 
-/*router.delete('/decreaseQuantity/:id',other.checkNotAuth, controllers.decreaseQuantity)*/
+router.patch('/modifyQuantity/:id',other.checkNotAuth, controllers.modifyQuantity)
 router.get('/getCartProducts',other.checkNotAuth, controllers.getCartProducts)
+router.delete('/deleteCartProduct/:id',other.checkNotAuth,controllers.deleteCartProduct)
 
 module.exports=router

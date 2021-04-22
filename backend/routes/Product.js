@@ -11,7 +11,7 @@ router.post('/addProductInCart',other.checkNotAuth,controllers.addProductInCart)
 // router.get('/getNetSpeed',other.checkNotAuth,controllers.getNetSpeed)
 // router.get('/getStock',other.checkNotAuth,controllers.getStock)
 // router.get('/getMemInternal',other.checkNotAuth,controllers.getMemInternal);
-router.post('/addToViewedProducts/:id',other.checkNotAuth,controllers.addToViewedProducts)
+router.post('/addToViewedProducts',other.checkNotAuth,controllers.addToViewedProducts)
 router.get('/getLastViewedProducts',other.checkNotAuth,controllers.getLastViewedProducts)
 router.get('/getNewProducts',other.checkNotAuth,controllers.getNewProducts)
 router.get('/getReducedProducts',other.checkNotAuth,controllers.getReducedProducts)
