@@ -64,7 +64,10 @@ export default {
       .then((result) => {
         this.products = result.data;
         this.products.forEach((prod) => {
-          this.cost += prod.Product.price * prod.quantity;
+          this.cost +=
+            (prod.Product.price -
+              (prod.Product.price * prod.Product.discount) / 100) *
+            prod.quantity;
         });
         if (this.cost > 0) {
           this.costLivrare = 17.5;
