@@ -20,4 +20,5 @@ router.patch('/updateRating/:id',other.checkNotAuth,controllers.updateRating)
 router.get('/getRatingProduct/:id',other.checkNotAuth,controllers.getRatingProduct)
 router.get('/getUserRatingProduct/:id',other.checkNotAuth,controllers.getUserRatingProduct)
 router.post('/sendProductSugestion',other.checkNotAuth,controllers.sendProductSugestion)
+router.get('/getNumberRatings/:id',other.checkNotAuth,controllers.getNumberRatings)
 module.exports=router

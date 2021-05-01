@@ -48,7 +48,7 @@ const controllers = {
   },
 
   addProductInCart: async (req, res) => {
-    const id=req.body.id
+    const id = req.body.id;
     const product = await ProductDB.findByPk(id);
 
     const userCart = await controller.getCart(req, res);
@@ -162,7 +162,7 @@ const controllers = {
   addToViewedProducts: async (req, res) => {
     //se adauga produsul daca el nu se afla deja in ViewedProduct
 
-    const id=req.body.id
+    const id = req.body.id;
     const currentUser = await req.user;
 
     const foundProduct = await ViewedProductDB.findOne({
@@ -316,6 +316,20 @@ const controllers = {
     })
       .then((result) => {
         res.status(200).send({ rating: result.rating });
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  },
+  getNumberRatings: async (req, res) => {
+    const id = req.params.id;
+    RatingProductDB.findAll({
+      where: {
+        ProductId: id,
+      },
+    })
+      .then((result) => {
+        res.status(200).send({ nrRatings: result.length });
       })
       .catch((err) => {
         res.status(500).send(err);

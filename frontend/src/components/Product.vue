@@ -47,7 +47,7 @@
             {{ priceProd }} lei
           </div>
           <div style="font-size: 20px">
-            {{ product.price - product.discount / 100 }} lei
+            {{ product.price -product.price* product.discount / 100 }} lei
           </div>
         </div>
 

@@ -442,3 +442,34 @@ div ul pt buton:
           :min="quantityProd"
           :max="quantityProduct"
         /> -->
+
+        sa trimita cart la cartproduct pretul unde se va modifica ulterior iar pretul sa fie trimis de la cartproduct la cartprice
+
+
+          <div class="q-pa-md" :key="product">
+      <q-carousel
+        style="width: 20%"
+        animated
+        v-model="slide"
+        navigation
+        padding
+        control-color="primary"
+      >
+        <q-carousel-slide
+          style="width: 100%; margin: auto"
+          v-for="photo in photos"
+          :key="photo"
+          :name="photos.indexOf(photo)"
+          
+          v-bind:img-src="`../photos/${photo}`"
+        />
+      </q-carousel>
+    </div>
+    adauga arrows pt sageti!!
+
+    width:150%;height:140%
+
+
+    //pagini de facut: vezi comenzi, vezi sugestii primite
+    //pagina profil personal: editare date personale + vezi comenzi +anuleaza comanda x daca comanda s-a realizat in ultimele 12 ore
+    //ofera rating (si review) produselor cumparate de pe pagina cu comenzile mele

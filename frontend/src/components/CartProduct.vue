@@ -32,8 +32,9 @@
             <span :style="{ color: color }">
               {{ getStockStatus() }}
             </span>
+            
           </div>
-          <div style="color: grey">Garantie inclusa: 24 luni</div>
+          <!-- <div style="color: grey">Garantie inclusa: 24 luni</div> -->
         </div>
       </div>
 
@@ -89,7 +90,7 @@
                 {{ priceProd }} lei
               </div>
               <div style="font-size: 20px">
-                {{ product.price - product.discount / 100 }} lei
+                {{ product.price - product.price*product.discount / 100 }} lei
               </div>
             </div>
 
@@ -228,9 +229,11 @@ export default {
   methods: {
     minus_1() {
       this.number--;
+      this.$emit("productListModified", true);
     },
     plus_1() {
       this.number++;
+      this.$emit("productListModified", true);
     },
     deleteProduct() {
       axios
@@ -239,6 +242,7 @@ export default {
         })
         .then((response) => {
           this.$emit("childToParent", response.data);
+           this.$emit("productListModified", true);
         })
         .catch((err) => {
           console.log(err);

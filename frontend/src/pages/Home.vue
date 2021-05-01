@@ -48,6 +48,7 @@
         icon="favorite"
         @click="getFavouriteProducts"
       />
+
       <q-btn
         size="15px"
         style="margin-right: 10px"
