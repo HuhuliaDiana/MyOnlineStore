@@ -25,10 +25,10 @@
     </div>
    -->
       <div class="body" style="font-family: 'Montserrat', sans-serif">
-        <div style="height: 500px; width: 400px">
+        <div style="height: 560px; width: 450px">
           <div :key="product">
             <q-carousel
-              style="height: 500px"
+              style="height: 560px"
               animated
               v-model="slide"
               padding
@@ -53,7 +53,7 @@
             </q-carousel>
           </div>
         </div>
-        <div class="infoProduct">
+        <div class="infoProduct" style="width: 20%">
           <div style="font-weight: bold; font-size: 200%">
             {{ product.brand }} {{ product.model }}
           </div>
@@ -124,11 +124,31 @@
             </div>
           </div>
           <div class="fav" style="display: flex; margin-top: 10%">
-            <div class="material-icons" style="font-size: 200%; color: orange">
+            <!-- <div class="material-icons" style="font-size: 200%; color: orange">
               favorite
+            </div> -->
+            <div style="margin-right: 3%">
+              <q-rating
+                v-model="fav"
+                max="1"
+                size="2.5em"
+                color="orange"
+                color-selected="orange"
+                icon="favorite_border"
+                icon-selected="favorite"
+                no-dimming
+                @click="onFav"
+              />
             </div>
-            <div style="margin: auto; font-size: 120%; color: #ff8c00">
-              Ai apreciat acest produs!
+            <div
+              style="
+                margin: auto;
+                font-size: 120%;
+                color: #ff8c00;
+                margin-left: 1%;
+              "
+            >
+              {{ message }}
             </div>
           </div>
           <div style="display: flex; margin-top: 10%; font-size: 110%">
@@ -177,18 +197,23 @@
             <q-btn
               style="
                 padding: 3px;
-                width:70%;
+                width: 70%;
                 box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
                 margin-top: 25px;
               "
               color="secondary"
               icon="shopping_cart"
               label="Adauga in cos"
+              @click="addProductInCart"
             />
           </div>
           <div class="q-pa-md q-gutter-sm">
             <q-btn
-              style="padding: 3px; box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;width:70%;"
+              style="
+                padding: 3px;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                width: 70%;
+              "
               color="red"
               icon-right="send"
               label="Trimite sugestie"
@@ -224,10 +249,12 @@
                   hint="Email"
                 />
                 <q-input
+                  v-model="textareaModel"
+                  clearable
                   outlined
-                  v-model="text"
-                  style="margin-top: 30px"
+                  autogrow
                   label="Nota:"
+                  style="margin-top: 30px"
                   color="secondary"
                 />
                 <div style="display: flex; justify-content: flex-end">
@@ -304,6 +331,7 @@ export default {
     return {
       setRating: null,
       getRating: 0,
+      message: null,
       product: null,
       color: null,
       idProduct: null,
@@ -313,6 +341,7 @@ export default {
       email: null,
       fav: null,
       options: [],
+      textareaModel: "",
       qinput: document.getElementById("qinput_email"),
     };
   },
@@ -323,11 +352,32 @@ export default {
         this.email = newVal;
       }
     },
+    fav(n, o) {
+      if (n === 1) {
+        this.message = "Ati apreciat acest produs!";
+      } else {
+        this.message = "Adaugati produsul in lista de preferate!";
+      }
+    },
   },
 
   mounted() {
     this.getProduct();
     this.getNrReviews();
+    axios
+      .get(`http://localhost:8082/checkFavProduct/${this.idProduct}`, {
+        withCredentials: true,
+      })
+      .then((result) => {
+        if (result.data !== "") {
+          this.fav = 1;
+        } else {
+          this.fav = 0;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     axios
       .get(`http://localhost:8082/getUserRatingProduct/${this.idProduct}`, {
         withCredentials: true,
@@ -347,6 +397,49 @@ export default {
       });
   },
   methods: {
+    addProductInCart() {
+      axios
+        .post(`http://localhost:8082/addProductInCart`, this.product, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          this.quantity = response.data.quantity;
+          console.log(this.quantity);
+          this.getStockStatus();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    onFav() {
+      if (this.fav === 1) {
+        //add to favorites
+
+        axios
+          .post("http://localhost:8082/addFavProduct", this.product, {
+            withCredentials: true,
+          })
+          .then((response) => {
+            console.log(response.data.message);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        //delete from favorites
+
+        axios
+          .delete(`http://localhost:8082/deleteFavProduct/${this.idProduct}`, {
+            withCredentials: true,
+          })
+          .then((response) => {
+            this.$emit("childToParent", response.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
     getFormSuggestion() {
       const div = document.getElementById("formSuggestion");
       div.style.visibility = "visible";
@@ -455,9 +548,12 @@ export default {
           console.log(err);
         });
     },
-    chooseToSendSugestion() {},
     sendSugestion() {
-      const body = { to: this.email, productId: this.idProduct };
+      const body = {
+        to: this.email,
+        productId: this.idProduct,
+        note: this.textareaModel,
+      };
       console.log(body);
       axios
         .post("http://localhost:8082/sendProductSugestion", body, {

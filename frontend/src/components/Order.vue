@@ -89,6 +89,7 @@
                   margin-right: 10px;
                 "
                 label="Update"
+                color="secondary"
                 @click="updateUserContact"
               />
             </div>

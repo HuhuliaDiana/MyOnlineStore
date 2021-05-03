@@ -1,27 +1,24 @@
 <template>
   <div>
-    <q-input
-      v-model="cartName"
-      label="Cart name"
-      hint="Choose a name for your cart"
-    />
-    <q-btn label="Create cart" @click="createCart" color="primary" />
+    <div>
+      <Toolbar />
+    </div>
+    <div>
+      <PersonalData/>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from "../boot/axios";
+import Toolbar from "../components/Toolbar";
+import PersonalData from "../components/PersonalData";
+
 export default {
   name: "Profile",
-  data() {
-    return {
-      cartName: null,
-    };
-  },
-  methods: {
-      createCart(){
-          
-
-      }
+  components: {
+    Toolbar,
+    PersonalData
   },
 };
 </script>

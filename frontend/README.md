@@ -473,3 +473,39 @@ div ul pt buton:
     //pagini de facut: vezi comenzi, vezi sugestii primite
     //pagina profil personal: editare date personale + vezi comenzi +anuleaza comanda x daca comanda s-a realizat in ultimele 12 ore
     //ofera rating (si review) produselor cumparate de pe pagina cu comenzile mele
+
+    !!!!!!!!!!!!adauga in cos-repara butonul de pe pagina product
+    !!!!!!!!!!!!get cart la momentul logarii
+
+
+    profile:
+    <template>
+  <div>
+    <q-input
+      v-model="cartName"
+      label="Cart name"
+      hint="Choose a name for your cart"
+    />
+    <q-btn label="Create cart" @click="createCart" color="primary" />
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Profile",
+  data() {
+    return {
+      cartName: null,
+    };
+  },
+  methods: {
+      createCart(){
+          
+
+      }
+  },
+};
+</script>
+
+<style>
+</style>

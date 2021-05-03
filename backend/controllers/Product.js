@@ -339,6 +339,7 @@ const controllers = {
     const email = req.body.to;
     const productId = req.body.productId;
     const currentUser = await req.user;
+    const note=req.body.note
 
     const user = await UserDB.findOne({
       where: {
@@ -350,6 +351,7 @@ const controllers = {
         UserId: currentUser.id,
         to: email,
         ProductId: productId,
+        note:note
       };
       ProductSugestionDB.create(productSugestion)
         .then(() => {

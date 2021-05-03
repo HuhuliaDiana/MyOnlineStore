@@ -4,7 +4,7 @@
       <Toolbar />
     </div>
     <div class="divProducts">
-      <div class="products">
+      <div v-if="products.length > 0" class="products">
         <FavProduct
           v-on:childToParent="getProducts"
           v-for="item in products"
@@ -13,6 +13,17 @@
           :priceProd="item.Product.price"
           :photosProd="item.Product.photos"
         />
+      </div>
+      <div v-else style="margin-top: 5%; text-align: center">
+        <div
+          style="
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            font-size: 150%;
+          "
+        >
+          Nu aveti produse favorite!
+        </div>
       </div>
     </div>
   </div>
@@ -67,7 +78,7 @@ export default {
   display: flex;
   flex-flow: row wrap;
   margin: auto;
-  margin-top: 80px;
+  margin-top: 5%;
   width: fit-content;
 }
 .divProducts {

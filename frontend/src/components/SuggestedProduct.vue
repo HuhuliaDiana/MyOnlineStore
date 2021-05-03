@@ -1,15 +1,6 @@
 <template>
-  <div>
-    <!-- div intreg -->
-    <div
-      :style="myDiv"
-      style="font-family: 'Montserrat', sans-serif"
-      class="product"
-      v-on:click.self="seeProduct()"
-    >
-      <!-- div heart rating -->
-
-      <!-- div photo -->
+  <div style="font-family: 'Montserrat', sans-serif">
+    <div :style="myDiv" class="product" v-on:click.self="seeProduct()">
       <div class="divPhoto">
         <img
           class="photos"
@@ -17,9 +8,7 @@
         />
       </div>
 
-      <!-- div info -->
-
-      <div class="infoProduct" style="width: 25%">
+      <div class="infoProduct" style="width: 26%">
         <div style="font-weight: bold; font-size: 115%">
           {{ product.brand }} {{ product.model }}
         </div>
@@ -33,46 +22,12 @@
               {{ getStockStatus() }}
             </span>
           </div>
-          <!-- <div style="color: grey">Garantie inclusa: 24 luni</div> -->
         </div>
       </div>
 
-      <!-- div principal -->
       <div
-        style="width: 25%; margin-left: 12%; display: block; margin-right: 11%"
+        style="width: 25%; margin-left: 13%; display: block; margin-right: 11%"
       >
-        <!-- div cantitate -->
-        <div style="display: flex; flex-flow: row wrap; margin-top: 10px">
-          <div style="margin-top: 3px">
-            <q-btn
-              size="7px"
-              flat
-              round
-              :disabled="number === 1"
-              style="background-color: #f0f0f0"
-              color="grey"
-              icon="remove"
-              @click="minus_1()"
-            />
-          </div>
-          <div style="margin-right: 8px; margin-left: 8px; margin-top: 3px">
-            <span style="font-size: 15px">{{ number }}</span>
-          </div>
-          <div style="margin-top: 3px">
-            <q-btn
-              size="7px"
-              flat
-              :disabled="quantityProduct === 0"
-              style="background-color: #f0f0f0"
-              color="grey"
-              round
-              icon="add"
-              @click="plus_1()"
-            />
-          </div>
-        </div>
-
-        <!-- div pret -->
         <div>
           <div
             style="margin-top: 15%; display: flex"
@@ -89,9 +44,7 @@
                 {{ priceProd }} lei
               </div>
               <div style="font-size: 20px">
-                {{
-                  product.price - (product.price * product.discount) / 100
-                }}
+                {{ product.price - (product.price * product.discount) / 100 }}
                 lei
               </div>
             </div>
@@ -114,9 +67,8 @@
 
       <div
         style="
-          margin-top: 10px;
-          margin-bottom: 10px;
           display: flex;
+          padding: 5px;
           flex-direction: column;
           justify-content: space-between;
         "
@@ -125,7 +77,6 @@
           <q-rating
             v-model="fav"
             max="1"
-            style="margin-left: 17%"
             size="2em"
             color="orange"
             color-selected="orange"
@@ -136,15 +87,17 @@
           />
         </div>
         <div>
-          <q-btn
-            size="12px"
-            round
-            icon="delete"
-            color="secondary"
+          <q-icon
+            name="clear"
+            style="margin-left: 17%"
+            class="cursor-pointer"
             @click="deleteProduct"
           />
         </div>
       </div>
+    </div>
+    <div style="border: 1px solid">
+      <div>{{ note }}</div>
     </div>
   </div>
 </template>
@@ -152,14 +105,7 @@
 <script>
 import axios from "../boot/axios";
 export default {
-  props: [
-    "idProd",
-    "priceProd",
-    "photosProd",
-    "quantityProd",
-    "quantityProduct",
-    "idCartProd",
-  ],
+  props: ["idProd", "priceProd", "photosProd", "idCartProd", "userId", "note"],
 
   data() {
     return {
@@ -167,43 +113,13 @@ export default {
       product: null,
       username: null,
       reducedPrice: null,
-      quantity: null,
       color: null,
 
       number: null,
     };
   },
 
-  watch: {
-    number(newVal, oldVal) {
-      if (newVal !== oldVal) {
-        axios
-          .patch(
-            `http://localhost:8082/modifyQuantity/${this.idProd}`,
-            { quantity: newVal },
-            { withCredentials: true }
-          )
-          .then(() => {
-            axios
-              .get(`http://localhost:8082/getProduct/${this.idProd}`, {
-                withCredentials: true,
-              })
-              .then((result) => {
-                console.log(result.data);
-                this.quantityProduct = result.data.quantity;
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    },
-  },
   mounted() {
-    this.number = this.quantityProd;
     axios
       .get(`http://localhost:8082/checkFavProduct/${this.idProd}`, {
         withCredentials: true,
@@ -228,23 +144,26 @@ export default {
         console.log(err);
       });
   },
+  watch: {
+    val(newVal, oldVal) {
+      this.getTheProducts();
+    },
+  },
   methods: {
-    minus_1() {
-      this.number--;
-      this.$emit("productListModified", true);
+    getProducts(value) {
+      this.val = value;
     },
-    plus_1() {
-      this.number++;
-      this.$emit("productListModified", true);
-    },
+
     deleteProduct() {
       axios
-        .delete(`http://localhost:8082/deleteCartProduct/${this.idCartProd}`, {
-          withCredentials: true,
-        })
+        .delete(
+          `http://localhost:8082/removeSuggestion/${this.idProd}/${this.userId}`,
+          {
+            withCredentials: true,
+          }
+        )
         .then((response) => {
           this.$emit("childToParent", response.data);
-          this.$emit("productListModified", true);
         })
         .catch((err) => {
           console.log(err);

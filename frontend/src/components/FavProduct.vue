@@ -1,7 +1,12 @@
 <template>
   <div>
     <!-- div intreg -->
-    <div :style="myStyle" style="font-family:'Montserrat', sans-serif" class="product" v-on:click.self="seeProduct()">
+    <div
+      :style="myStyle"
+      style="font-family: 'Montserrat', sans-serif"
+      class="product"
+      v-on:click.self="seeProduct()"
+    >
       <!-- div heart rating -->
       <div style="display: flex; justify-content: flex-end">
         <q-rating
@@ -50,7 +55,7 @@
             {{ priceProd }} lei
           </div>
           <div style="font-size: 20px">
-            {{ product.price - product.price* product.discount / 100 }} lei
+            {{ product.price - (product.price * product.discount) / 100 }} lei
           </div>
         </div>
 
@@ -69,8 +74,10 @@
       </div>
 
       <!-- div buton + status stock -->
-      <div style="display: flex; margin-top: 30px">
-        <div style="flex: 1; margin-left: 20px">
+      <div
+        style="display: flex; justify-content: space-between; margin-top: 30px"
+      >
+        <div style="margin-left: 20px">
           <q-btn
             :disabled="quantity === 0"
             round
@@ -80,11 +87,7 @@
           />
         </div>
         <div
-          style="
-            flex: 1;
-            margin-top: 10px;
-            margin-left: 60px;
-          "
+          style="margin-top: 4%; margin-right: 10%"
           :style="{ color: color }"
         >
           {{ getStockStatus() }}
@@ -109,7 +112,7 @@ export default {
       quantity: null,
       username: null,
       reducedPrice: null,
-      out:null,
+      out: null,
       color: null,
       myStyle: {
         backgroundColor: "white",
@@ -165,7 +168,7 @@ export default {
             withCredentials: true,
           })
           .then((response) => {
-            this.$emit('childToParent', response.data)
+            this.$emit("childToParent", response.data);
           })
           .catch((err) => {
             console.log(err);

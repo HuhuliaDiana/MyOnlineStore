@@ -4,7 +4,7 @@
       <Toolbar />
     </div>
     <div class="divProducts">
-      <div class="products">
+      <div v-if="products.length > 0" class="products">
         <FavProduct
           v-for="item in products"
           :key="item.id"
@@ -12,6 +12,17 @@
           :priceProd="item.Product.price"
           :photosProd="item.Product.photos"
         />
+      </div>
+      <div v-else>
+        <div
+          style="
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            font-size: 150%;
+          "
+        >
+          Nu ati vizualizat inca niciun produs!
+        </div>
       </div>
     </div>
   </div>

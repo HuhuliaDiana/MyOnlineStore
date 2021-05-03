@@ -21,6 +21,10 @@ const routes = [
     component: () => import('pages/Home.vue')
   },
   {
+    path: '/suggestionsfrom',
+    component: () => import('pages/SuggestionsFrom.vue')
+  },
+  {
     path: '/new',
     component: () => import('pages/Home.vue')
   },

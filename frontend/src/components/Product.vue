@@ -47,7 +47,7 @@
             {{ priceProd }} lei
           </div>
           <div style="font-size: 20px">
-            {{ product.price -product.price* product.discount / 100 }} lei
+            {{ product.price - (product.price * product.discount) / 100 }} lei
           </div>
         </div>
 
@@ -65,8 +65,10 @@
         <div>{{ priceProd }} lei</div>
       </div>
 
-      <div style="display: flex; margin-top: 30px">
-        <div style="flex: 1; margin-left: 20px">
+      <div
+        style="display: flex; margin-top: 30px; justify-content: space-between"
+      >
+        <div style="margin-left: 20px">
           <q-btn
             :disabled="quantity === 0"
             round
@@ -76,7 +78,7 @@
           />
         </div>
         <div
-          style="flex: 1; margin-top: 10px; margin-left: 60px"
+          style="margin-right: 10%; margin-top: 4%"
           :style="{ color: color }"
         >
           {{ stockStatus }}

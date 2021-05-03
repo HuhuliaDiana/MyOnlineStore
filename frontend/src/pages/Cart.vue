@@ -5,18 +5,25 @@
     </div>
     <div class="body">
       <div class="flex-child products">
-        <CartProduct
-          v-on:childToParent="getProducts"
-          v-on:productListModified="listModified"
-          v-for="item in products"
-          :key="item.Product.id"
-          :idCartProd="item.id"
-          :idProd="item.Product.id"
-          :priceProd="item.Product.price"
-          :photosProd="item.Product.photos"
-          :quantityProd="item.quantity"
-          :quantityProduct="item.Product.quantity"
-        />
+        <div v-if="cost !== 0">
+          <CartProduct
+            v-on:childToParent="getProducts"
+            v-on:productListModified="listModified"
+            v-for="item in products"
+            :key="item.Product.id"
+            :idCartProd="item.id"
+            :idProd="item.Product.id"
+            :priceProd="item.Product.price"
+            :photosProd="item.Product.photos"
+            :quantityProd="item.quantity"
+            :quantityProduct="item.Product.quantity"
+          />
+        </div>
+        <div v-else>
+          <div style="font-family: 'Montserrat', sans-serif; font-weight:bold;font-size:150%">
+            Cosul de cumparaturi este gol!
+          </div>
+        </div>
         <div>
           <div
             class="div_lb"
@@ -84,7 +91,7 @@
           </div>
         </div>
       </div>
-      <div class="flex-child orderSummary">
+      <div class="flex-child orderSummary" style="margin-left: 3%">
         <CartPrice :key="shouldRender" style="width: 60%" />
       </div>
     </div>
@@ -140,6 +147,9 @@ export default {
     val(newVal, oldVal) {
       this.getTheProducts();
     },
+    cost(n,o){
+      this.cost=n
+    }
   },
   methods: {
     listModified(value) {
