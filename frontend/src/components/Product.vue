@@ -1,14 +1,27 @@
 <template>
   <div>
     <div
-      :style="myStyle"
       style="font-family: 'Montserrat', sans-serif"
       class="product"
       v-on:click.self="seeProduct()"
     >
-      <div style="display: flex; justify-content: flex-end">
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <q-badge
+          font-size="15px"
+          text-color="white"
+          style="background-color: #ff4d4d; margin-left: 10px; margin-top: 10px"
+          :label="isNew"
+        />
+
         <q-rating
-          style="margin-top: 10px; margin-right: 10px"
+          style="margin-right: 10px; height: 100%; margin-top: 10px"
           v-model="fav"
           max="1"
           size="2.5em"
@@ -98,6 +111,7 @@ export default {
       fav: null,
       product: null,
       quantity: null,
+      isNew: "",
       username: null,
       reducedPrice: null,
       stockStatus: null,
@@ -105,13 +119,12 @@ export default {
     };
   },
   watch: {
-    stockStatus(newVal, oldVal) {
-      console.log(newVal);
-      console.log(oldVal);
-    },
+    stockStatus(newVal, oldVal) {},
   },
 
   mounted() {
+    this.checkProductNew();
+
     axios
       .get(`http://localhost:8082/checkFavProduct/${this.idProd}`, {
         withCredentials: true,
@@ -138,6 +151,21 @@ export default {
       });
   },
   methods: {
+    checkProductNew() {
+      axios
+        .get(`http://localhost:8082/checkIfProductIsNew/${this.idProd}`, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          if (response.data !== null) {
+            this.isNew = "New!";
+            console.log(this.isNew);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     onFav() {
       if (this.fav === 1) {
         //add to favorites

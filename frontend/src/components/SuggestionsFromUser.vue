@@ -1,9 +1,41 @@
 <template>
   <div class="body">
     <div v-if="products.length > 0">
-      <div style="font-family:'Montserrat',sans-serif;font-size:130%">De la {{ username }}</div>
+      <div
+        style="
+          color: #c0c0c0;
+          margin-top: 5%;
+          text-align: center;
+          font-weight: bold;
+        "
+      >
+        RECOMANDARI
+      </div>
+      <div
+        style="
+          font-size: 200%;
+          font-weight: bold;
+          text-align: center;
+          font-family: 'Arial Narrow', Arial, sans-serif;
+        "
+      >
+        {{ username }}
+      </div>
+      <div
+        style="
+          font-size: 250%;
+          font-weight: bold;
+          text-align: center;
+          color: #c0c0c0;
+        "
+      >
+        <img
+          style="width: 30px"
+          src="photos/outline_account_circle_black_24dp.png"
+        />
+      </div>
       <div class="products">
-        <div style="margin: 0 auto; width:65%">
+        <div style="margin: 0 auto; width: 100%; margin-top: 5%">
           <SuggestedProduct
             v-on:childToParent="getProducts"
             :userId="id"
@@ -71,5 +103,6 @@ export default {
 .body {
   display: flex;
   flex-direction: column;
+  margin-bottom: 50px;
 }
 </style>

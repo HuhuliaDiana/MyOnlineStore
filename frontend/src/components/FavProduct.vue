@@ -8,9 +8,26 @@
       v-on:click.self="seeProduct()"
     >
       <!-- div heart rating -->
-      <div style="display: flex; justify-content: flex-end">
+      <div
+        style="
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
+        <span
+          style="
+            margin-top: 10px;
+            margin-left: 10px;
+            font-size: 130%;
+            color: red;
+            font-weight: bold;
+          "
+          >{{ isNew }}</span
+        >
         <q-rating
-          style="margin-top: 10px; margin-right: 10px"
+          style="margin-right: 10px; margin-top: 10px"
           v-model="fav"
           max="1"
           size="2.5em"
@@ -110,6 +127,7 @@ export default {
       fav: null,
       product: null,
       quantity: null,
+      isNew:'',
       username: null,
       reducedPrice: null,
       out: null,
@@ -121,6 +139,7 @@ export default {
   },
 
   mounted() {
+      this.checkProductNew();
     axios
       .get(`http://localhost:8082/checkFavProduct/${this.idProd}`, {
         withCredentials: true,
@@ -146,6 +165,21 @@ export default {
       });
   },
   methods: {
+     checkProductNew() {
+      axios
+        .get(`http://localhost:8082/checkIfProductIsNew/${this.idProd}`, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          if (response.data !== null) {
+            this.isNew = "New!";
+            console.log(this.isNew);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     onFav() {
       if (this.fav === 1) {
         //add to favorites

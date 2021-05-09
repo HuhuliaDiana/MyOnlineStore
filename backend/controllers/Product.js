@@ -335,11 +335,30 @@ const controllers = {
         res.status(500).send(err);
       });
   },
+  checkIfProductIsNew: async (req, res) => {
+    var d = new Date();
+    d.setMonth(d.getMonth() - 1);
+
+    ProductDB.findOne({
+      where: {
+        createdAt: {
+          [Op.gte]: d,
+        },
+        id: req.params.id,
+      },
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  },
   sendProductSugestion: async (req, res) => {
     const email = req.body.to;
     const productId = req.body.productId;
     const currentUser = await req.user;
-    const note=req.body.note
+    const note = req.body.note;
 
     const user = await UserDB.findOne({
       where: {
@@ -351,7 +370,7 @@ const controllers = {
         UserId: currentUser.id,
         to: email,
         ProductId: productId,
-        note:note
+        note: note,
       };
       ProductSugestionDB.create(productSugestion)
         .then(() => {

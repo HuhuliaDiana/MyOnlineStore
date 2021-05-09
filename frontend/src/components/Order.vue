@@ -1,6 +1,5 @@
 <template>
   <div>
-   
     <div
       style="
         margin-top: 5%;
@@ -55,10 +54,8 @@
         >
           <div>
             <q-btn-dropdown
-            color="secondary"
-              style="
-                font-family: 'Montserrat', sans-serif;
-              "
+              color="secondary"
+              style="font-family: 'Montserrat', sans-serif"
               label="Selecteaza date"
             >
               <q-list v-for="contact in userContacts" :key="contact">
@@ -85,7 +82,7 @@
                 style="
                   background-color: #f5f5f5;
                   font-family: 'Montserrat', sans-serif;
-                  display:none ;
+                  display: none;
                   margin-right: 10px;
                 "
                 label="Update"
@@ -95,11 +92,9 @@
             </div>
             <div>
               <q-btn
-              color="secondary"
+                color="secondary"
                 label="Save"
-                style="
-                  font-family: 'Montserrat', sans-serif;
-                "
+                style="font-family: 'Montserrat', sans-serif"
                 @click="saveUserContact"
               />
             </div>

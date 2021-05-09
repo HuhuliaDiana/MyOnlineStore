@@ -1,5 +1,12 @@
 <template>
-  <div style="font-family: 'Montserrat', sans-serif">
+  <div
+    style="
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      flex-direction: row;
+      margin-top: 5%;
+    "
+  >
     <div :style="myDiv" class="product" v-on:click.self="seeProduct()">
       <div class="divPhoto">
         <img
@@ -96,8 +103,27 @@
         </div>
       </div>
     </div>
-    <div style="border: 1px solid">
-      <div>{{ note }}</div>
+    <div
+      class="quote"
+      v-if="note !== ''"
+      style="width: 25%; margin-left: 5%; text-align: center"
+    >
+      <div style="display: flex; justify-content: flex-end">
+        <div class="material-icons" style="color: #26a69b; font-size: 35px">
+          format_quote
+        </div>
+      </div>
+
+      <div
+        style="
+          padding: 10px;
+          font-style: italic;
+          color: #404040;
+          margin-top: 5%;
+        "
+      >
+        {{ note }}
+      </div>
     </div>
   </div>
 </template>
@@ -245,8 +271,7 @@ export default {
 
 <style scoped>
 .product {
-  width: 95%;
-  margin-bottom: 20px;
+  width: 65%;
   display: flex;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
@@ -263,5 +288,17 @@ export default {
 .infoProduct {
   margin-bottom: 10px;
   margin-top: 10px;
+}
+.quote {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+
+  background: -webkit-linear-gradient(
+    bottom,
+    #26a69b,
+    #26a69b 10%,
+    #ffffff 1%,
+    #ffffff
+  );
 }
 </style>

@@ -93,8 +93,8 @@
               </div>
             </div>
 
-            <div style="margin-top: 25%; font-size: 20px" v-else>
-              <div>{{ priceProd }} lei</div>
+            <div v-else style="margin-top: 25%; font-size: 35px">
+              <div>{{ product.price }} lei</div>
             </div>
           </div>
 
@@ -352,6 +352,9 @@ export default {
         this.email = newVal;
       }
     },
+    isNew(n, o) {
+      this.isNew = n;
+    },
     fav(n, o) {
       if (n === 1) {
         this.message = "Ati apreciat acest produs!";
@@ -404,7 +407,6 @@ export default {
         })
         .then((response) => {
           this.quantity = response.data.quantity;
-          console.log(this.quantity);
           this.getStockStatus();
         })
         .catch((err) => {
@@ -419,9 +421,7 @@ export default {
           .post("http://localhost:8082/addFavProduct", this.product, {
             withCredentials: true,
           })
-          .then((response) => {
-            console.log(response.data.message);
-          })
+          .then((response) => {})
           .catch((err) => {
             console.log(err);
           });
@@ -450,7 +450,6 @@ export default {
           withCredentials: true,
         })
         .then((result) => {
-          console.log(result.data);
           this.nrReviews = result.data.nrRatings;
         })
         .catch((err) => {
@@ -541,7 +540,6 @@ export default {
           { withCredentials: true }
         )
         .then((result) => {
-          console.log(result.data);
           this.getRating = this.setRating;
         })
         .catch((err) => {

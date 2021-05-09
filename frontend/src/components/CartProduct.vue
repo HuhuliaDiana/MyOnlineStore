@@ -33,7 +33,6 @@
               {{ getStockStatus() }}
             </span>
           </div>
-          <!-- <div style="color: grey">Garantie inclusa: 24 luni</div> -->
         </div>
       </div>
 
@@ -89,9 +88,7 @@
                 {{ priceProd }} lei
               </div>
               <div style="font-size: 20px">
-                {{
-                  product.price - (product.price * product.discount) / 100
-                }}
+                {{ product.price - (product.price * product.discount) / 100 }}
                 lei
               </div>
             </div>

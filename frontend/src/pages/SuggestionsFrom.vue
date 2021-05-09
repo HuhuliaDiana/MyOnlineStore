@@ -9,7 +9,7 @@
           v-for="user in users"
           :key="user.id"
           :id="user.id"
-          :username="user.username"
+          :username="user.username.toUpperCase()"
         />
       </div>
       <div style="margin-top: 5%; text-align: center" v-else>
@@ -65,8 +65,7 @@ export default {
 
 <style scoped>
 .suggestions {
-  border: 1px solid;
-  width: 60%;
+  width: 55%;
   margin: 0 auto;
 }
 </style>
