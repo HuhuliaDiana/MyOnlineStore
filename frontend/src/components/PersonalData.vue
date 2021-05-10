@@ -1,19 +1,11 @@
 <template>
-  <div
-    style="
-      display: flex;
-      flex-direction: column;
-      width: 14%;
-      text-align: center;
-    "
-  >
+  <div style="display: flex; flex-direction: column; text-align: center;font-size:90%">
     <div
       style="
         display: flex;
         flex-direction: column;
         height: 200px;
         justify-content: space-between;
-        font-family: 'Montserrat', sans-serif;
       "
     >
       <div

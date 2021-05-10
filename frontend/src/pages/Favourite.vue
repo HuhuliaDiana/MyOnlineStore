@@ -1,5 +1,5 @@
 <template>
-  <div class="myDiv">
+  <div>
     <div>
       <Toolbar />
     </div>

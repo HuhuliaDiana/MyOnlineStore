@@ -72,7 +72,7 @@
         flat
         round
         dense
-        icon="manage_accounts"
+        icon="person"
         @click="getProfile"
       />
       <q-btn

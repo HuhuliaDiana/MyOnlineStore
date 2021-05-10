@@ -509,3 +509,58 @@ export default {
 
 <style>
 </style>
+
+
+ <div style="display: flex; justify-content: center;">
+      <div class="q-pa-md" style="width: 40%; font-size: 200%">
+        <q-list bordered class="rounded-borders">
+          <q-expansion-item
+            expand-icon-toggle
+            expand-separator
+            icon="person"
+            label="Date personale"
+           
+          >
+            <q-card>
+              <q-card-section style="justify-content: center; display: flex">
+                <div style="width: 80%; margin-top: 5%">
+                  <PersonalData />
+                </div>
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+
+          <q-expansion-item
+            expand-icon-toggle
+            expand-separator
+            icon="shopping_bag"
+            label="Comenzile tale"
+          >
+            <q-card>
+              <q-card-section>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Quidem, eius reprehenderit eos corrupti commodi magni quaerat ex
+                numquam, dolorum officiis modi facere maiores architecto
+                suscipit iste eveniet doloribus ullam aliquid.
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+
+          <q-expansion-item
+            expand-icon-toggle
+            expand-separator
+            icon="groups"
+            label="Sugestii primite"
+            header-class="text-secondary"
+          >
+            <q-card>
+              <q-card-section>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Quidem, eius reprehenderit eos corrupti commodi magni quaerat ex
+                numquam, dolorum officiis modi facere maiores architecto
+                suscipit iste eveniet doloribus ullam aliquid.
+              </q-card-section>
+            </q-card>
+          </q-expansion-item>
+        </q-list>
+      </div>
