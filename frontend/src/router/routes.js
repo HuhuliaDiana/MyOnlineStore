@@ -17,6 +17,10 @@ const routes = [
     component: () => import('pages/Submit.vue')
   },
   {
+    path: '/orders',
+    component: () => import('pages/Orders.vue')
+  },
+  {
     path: '/discounts',
     component: () => import('pages/Home.vue')
   },

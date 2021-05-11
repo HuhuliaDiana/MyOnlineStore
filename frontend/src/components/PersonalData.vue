@@ -1,10 +1,19 @@
 <template>
-  <div style="display: flex; flex-direction: column; text-align: center;font-size:90%">
+  <div
+    style="
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      font-size: 140%;
+      height: 430px;
+      padding: 6%;
+    "
+  >
     <div
       style="
         display: flex;
         flex-direction: column;
-        height: 200px;
+        height: 100%;
         justify-content: space-between;
       "
     >
@@ -16,7 +25,12 @@
         "
       >
         <span>Lastname:</span>
-        <input outlined v-model="lastname" />
+        <!-- <input v-model="lastname" /> -->
+        <q-input color="teal" filled v-model="lastname" style="font-size: 80%;">
+          <template v-slot:prepend>
+            <q-icon name="badge" />
+          </template>
+        </q-input>
       </div>
 
       <div
@@ -27,7 +41,12 @@
         "
       >
         <span>Firstname:</span>
-        <input outlined v-model="firstname" />
+        <!-- <input outlined v-model="firstname" /> -->
+        <q-input color="teal" filled v-model="firstname" style="font-size: 80%">
+          <template v-slot:prepend>
+            <q-icon name="badge" />
+          </template>
+        </q-input>
       </div>
       <div
         style="
@@ -37,7 +56,12 @@
         "
       >
         <span>Username:</span>
-        <input outlined v-model="username" />
+        <!-- <input outlined v-model="username" /> -->
+        <q-input color="teal" filled v-model="username" style="font-size: 80%">
+          <template v-slot:prepend>
+            <q-icon name="person" />
+          </template>
+        </q-input>
       </div>
       <div
         style="
@@ -47,16 +71,16 @@
         "
       >
         <span>Email:</span>
-        <input outlined v-model="email" />
+        <!-- <input outlined v-model="email" /> -->
+        <q-input color="teal" filled v-model="email" style="font-size: 80%">
+          <template v-slot:prepend>
+            <q-icon name="email" />
+          </template>
+        </q-input>
       </div>
     </div>
     <div style="margin-top: 10%">
-      <q-btn
-        color="secondary"
-        glossy
-        label="Save"
-        @click="updatePersonalData"
-      />
+      <q-btn color="secondary" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;" label="Save" @click="updatePersonalData" />
     </div>
   </div>
 </template>
