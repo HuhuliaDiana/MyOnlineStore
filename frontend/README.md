@@ -564,3 +564,23 @@ export default {
           </q-expansion-item>
         </q-list>
       </div>
+
+      <q-list bordered class="rounded-borders">
+                <q-expansion-item
+                  expand-icon-toggle
+                  expand-separator
+                  icon="send"
+                  label="TRIMITE SUGESTIE"
+                  style="
+                    background-color: red;
+                    color: white;
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                  "
+                >
+                  <q-card>
+                    <q-card-section>
+                     
+                    </q-card-section>
+                  </q-card>
+                </q-expansion-item>
+              </q-list>

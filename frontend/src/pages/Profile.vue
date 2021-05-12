@@ -51,10 +51,10 @@
               shopping_bag
             </span>
             <div style="margin-top: 4%; font-weight: bold">
-              <a href="/#/suggestionsFrom" style="">Comenzile tale</a>
+              <a href="/#/orders" style="">Comenzile tale</a>
             </div>
           </div>
-          <div style="text-align: center;">
+          <div style="text-align: center">
             <span
               class="material-icons"
               style="color: #26a69b; font-size: 500%"
@@ -62,7 +62,7 @@
               groups
             </span>
             <div style="margin-top: 4%; font-weight: bold">
-              <a href="/#/orders">Sugestiile tale</a>
+              <a href="/#/suggestionsFrom">Sugestii primite</a>
             </div>
           </div>
         </div>

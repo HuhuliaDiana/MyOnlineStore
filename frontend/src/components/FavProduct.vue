@@ -16,16 +16,13 @@
           align-items: center;
         "
       >
-        <span
-          style="
-            margin-top: 10px;
-            margin-left: 10px;
-            font-size: 130%;
-            color: red;
-            font-weight: bold;
-          "
-          >{{ isNew }}</span
-        >
+        <q-badge
+          font-size="15px"
+          text-color="white"
+          style="background-color: #ff4d4d; margin-left: 10px; margin-top: 10px"
+          :label="isNew"
+        />
+
         <q-rating
           style="margin-right: 10px; margin-top: 10px"
           v-model="fav"
@@ -127,7 +124,7 @@ export default {
       fav: null,
       product: null,
       quantity: null,
-      isNew:'',
+      isNew: "",
       username: null,
       reducedPrice: null,
       out: null,
@@ -139,7 +136,7 @@ export default {
   },
 
   mounted() {
-      this.checkProductNew();
+    this.checkProductNew();
     axios
       .get(`http://localhost:8082/checkFavProduct/${this.idProd}`, {
         withCredentials: true,
@@ -165,7 +162,7 @@ export default {
       });
   },
   methods: {
-     checkProductNew() {
+    checkProductNew() {
       axios
         .get(`http://localhost:8082/checkIfProductIsNew/${this.idProd}`, {
           withCredentials: true,
