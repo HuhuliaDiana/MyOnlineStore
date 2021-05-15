@@ -12,16 +12,18 @@
           :username="user.username.toUpperCase()"
         />
       </div>
-      <div style="margin-top: 5%; text-align: center" v-else>
+      <div v-else style="margin-top: 8%; text-align: center">
         <div
           style="
             font-family: 'Montserrat', sans-serif;
             font-weight: bold;
             font-size: 150%;
+            color: #383838;
           "
         >
           Nu aveti sugestii de produse!
         </div>
+        <img style="width: 30%; margin-top: 5%" src="photos/empty_cart.png" />
       </div>
     </div>
   </div>

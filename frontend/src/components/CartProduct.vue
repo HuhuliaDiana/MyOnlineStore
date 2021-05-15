@@ -173,6 +173,7 @@ export default {
 
   watch: {
     number(newVal, oldVal) {
+      console.log(this.idProd);
       if (newVal !== oldVal) {
         axios
           .patch(
@@ -186,7 +187,6 @@ export default {
                 withCredentials: true,
               })
               .then((result) => {
-                console.log(result.data);
                 this.quantityProduct = result.data.quantity;
               })
               .catch((err) => {

@@ -7,46 +7,39 @@ const controller = require("./Cart");
 const controllers = {
   modifyQuantity: async (req, res) => {
     const new_quantity = req.body.quantity;
+    const cart = await controller.getCart(req, res);
+    const product = await ProductDB.findByPk(req.params.id);
 
     //primesc id-ul cartProduct-ului si trebuie sa gasesc product-ul corespunzator
     const cartProduct = await CartProductDB.findOne({
       where: {
         ProductId: req.params.id,
+        CartId: cart.id,
       },
     });
 
     const quantity = cartProduct.quantity;
+    // const quantity = product.quantity;
+
     const diff = quantity - new_quantity;
 
-    cartProduct
-      .update({
-        quantity: new_quantity,
-      })
-      .then(() => {
-        res.status(200).send(cartProduct);
-      });
+    const cartProductUpdated = await cartProduct.update({
+      quantity: new_quantity,
+    });
 
-    //modifica cantitatea produsului din ProductDB
-    const product = await ProductDB.findByPk(req.params.id);
     const newQuantity = product.quantity + diff;
-    product
-      .update({
-        quantity: newQuantity,
-      })
-      .then((result) => {
-        res.status(200).send(result);
-      });
+
+    const productUpdated = await product.update({
+      quantity: newQuantity,
+    });
 
     //modifica valoarea cosului de cumparaturi
-    const cart = await controller.getCart(req, res);
-    const newPrice = cart.totalPrice + product.price * diff;
-    cart
-      .update({
-        totalPrice: newPrice,
-      })
-      .then((result) => {
-        res.status(200).send(result);
-      });
+    const newPrice =
+      cart.totalPrice -
+      (product.price - (product.price * product.discount) / 100) * diff;
+    const cartUpdated = await cart.update({
+      totalPrice: newPrice,
+    });
   },
 
   getCartProducts: async (req, res) => {
@@ -78,6 +71,18 @@ const controllers = {
     //adauga cantitatea inapoi la produsul initial
     const quantity = cartProduct.quantity;
     const product = await ProductDB.findByPk(cartProduct.ProductId);
+
+    //modific pret cart
+    const newPrice =
+      cart.totalPrice -
+      (product.price - (product.price * product.discount) / 100) * quantity;
+
+    const cartUpdated = await cart.update({
+      totalPrice: newPrice,
+    });
+
+    //
+
     const newQuantityProduct = quantity + product.quantity;
     product.update({
       quantity: newQuantityProduct,

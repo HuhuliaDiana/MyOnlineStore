@@ -91,6 +91,16 @@
               />
             </div>
             <div>
+              <q-tooltip
+                anchor="top middle"
+                self="bottom middle"
+                :offset="[10, 10]"
+                content-style="font-size: 12px;text-align:center;background-color:#ffe5b4;color:black;
+            font-family: 'Montserrat', sans-serif"
+              >
+                Salveaza datele de livrare pentru a le putea reutiliza la
+                urmatoarea comanda!
+              </q-tooltip>
               <q-btn
                 color="secondary"
                 label="Save"
@@ -166,6 +176,7 @@ export default {
   },
   watch: {
     town(newValue, oldValue) {
+      this.$emit("sendTown", newValue);
       if (this.chosenContact && newValue !== this.chosenContact.town) {
         btnUpdateContact.style.display = "inherit";
       } else {
@@ -173,6 +184,8 @@ export default {
       }
     },
     county(newValue, oldValue) {
+      this.$emit("sendCounty", newValue);
+
       if (this.chosenContact && newValue !== this.chosenContact.county) {
         btnUpdateContact.style.display = "inherit";
       } else {
@@ -180,6 +193,8 @@ export default {
       }
     },
     address(newValue, oldValue) {
+      this.$emit("sendAddress", newValue);
+
       if (this.chosenContact && newValue !== this.chosenContact.address) {
         btnUpdateContact.style.display = "inherit";
       } else {
@@ -187,6 +202,8 @@ export default {
       }
     },
     phone(newValue, oldValue) {
+      this.$emit("sendPhone", newValue);
+
       if (this.chosenContact && newValue !== this.chosenContact.phone) {
         btnUpdateContact.style.display = "inherit";
       } else {
@@ -200,6 +217,7 @@ export default {
         withCredentials: true,
       })
       .then((result) => {
+        //ia userContacts din orders current user
         this.userContacts = result.data;
       })
       .catch((err) => {

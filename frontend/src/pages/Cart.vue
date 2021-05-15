@@ -20,15 +20,20 @@
           />
         </div>
         <div v-else>
-          <div style="font-family: 'Montserrat', sans-serif; font-weight:bold;font-size:150%">
+          <div
+            style="
+              font-family: 'Montserrat', sans-serif;
+              font-weight: bold;
+              font-size: 150%;
+            "
+          >
             Cosul de cumparaturi este gol!
           </div>
         </div>
-        <div>
+        <div style="font-family: 'Montserrat', sans-serif">
           <div
             class="div_lb"
             style="
-              font-family: 'Montserrat', sans-serif;
               font-size: 150%;
               margin-top: 7%;
               background-color: #f0f0f0;
@@ -40,13 +45,17 @@
             Detalii livrare
           </div>
           <div>
-            <Order />
+            <Order
+              v-on:sendTown="getTown"
+              v-on:sendAddress="getAddress"
+              v-on:sendPhone="getPhone"
+              v-on:sendCounty="getCounty"
+            />
           </div>
 
           <div
             class="div_lb"
             style="
-              font-family: 'Montserrat', sans-serif;
               font-size: 150%;
               margin-top: 7%;
               background-color: #f0f0f0;
@@ -60,7 +69,7 @@
           <div class="q-pa-lg">
             <q-option-group
               v-model="livrare"
-              style="font-family: 'Montserrat', sans-serif; font-size: 120%"
+              style="font-size: 120%"
               :options="optionsLivrare"
               color="secondary"
               disable
@@ -70,7 +79,6 @@
           <div
             class="div_lb"
             style="
-              font-family: 'Montserrat', sans-serif;
               font-size: 150%;
               background-color: #f0f0f0;
               padding-top: 10px;
@@ -83,16 +91,24 @@
           <div class="q-pa-lg">
             <q-option-group
               v-model="plata"
-              style="font-family: 'Montserrat', sans-serif; font-size: 120%"
+              style="font-size: 120%"
               :options="optionsPlata"
               color="secondary"
               inline
             />
           </div>
+          <div style="margin-top: 3%; text-align: center; margin-bottom: 8%">
+            <q-btn
+              color="secondary"
+              :disable="cost === 0"
+              label="Trimite comanda"
+              @click="sendOrder"
+            />
+          </div>
         </div>
       </div>
       <div class="flex-child orderSummary" style="margin-left: 3%">
-        <CartPrice :key="shouldRender" style="width: 60%" />
+        <CartPrice style="width: 60%" />
       </div>
     </div>
   </div>
@@ -137,6 +153,10 @@ export default {
       ],
       val: [],
       cost: 0,
+      town: null,
+      county: null,
+      address: null,
+      phone: null,
     };
   },
 
@@ -147,13 +167,47 @@ export default {
     val(newVal, oldVal) {
       this.getTheProducts();
     },
-    cost(n,o){
-      this.cost=n
-    }
+    cost(n, o) {
+      this.cost = n;
+    },
   },
   methods: {
+    getTown(value) {
+      this.town = value;
+      console.log(this.town);
+    },
+    getAddress(value) {
+      this.address = value;
+      console.log(this.address);
+    },
+    getCounty(value) {
+      this.county = value;
+      console.log(this.county);
+    },
+    getPhone(value) {
+      this.phone = value;
+      console.log(this.phone);
+    },
     listModified(value) {
       this.shouldRender = !this.shouldRender;
+      this.$router.go();
+    },
+    sendOrder() {
+      console.log(this.town);
+      axios
+        .post(
+          "http://localhost:8082/orderCart",
+          {
+            town: this.town,
+            county: this.county,
+            phone: this.phone,
+            address: this.address,
+          },
+          { withCredentials: true }
+        )
+        .then((response) => {
+          console.log(response.data);
+        });
     },
 
     calcCost() {

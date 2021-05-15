@@ -14,17 +14,18 @@
           :photosProd="item.Product.photos"
         />
       </div>
-      <div v-else style="margin-top: 5%; text-align: center">
+      <div v-else style="margin-top: 10%; text-align: center">
         <div
           style="
             font-family: 'Montserrat', sans-serif;
             font-weight: bold;
             font-size: 150%;
+            color:#383838
           "
         >
           Nu aveti produse favorite!
         </div>
-        <img style="width:30%" src="photos/empty_cart.jpg"/>
+        <img style="width:40%;margin-top:5%" src="photos/empty_cart.png"/>
       </div>
     </div>
   </div>

@@ -1,9 +1,8 @@
 const express = require("express");
-const router = express.Router()
-const controllers=require('../controllers').cart
-const other=require('../controllers').other
+const router = express.Router();
+const controllers = require("../controllers").cart;
+const other = require("../controllers").other;
 
-router.get('/getCart',other.checkNotAuth, controllers.getCart)
-router.get('/orderCart',other.checkNotAuth, controllers.orderCart)
+router.get("/getCart", other.checkNotAuth, controllers.getCart);
 
-module.exports=router
+module.exports = router;

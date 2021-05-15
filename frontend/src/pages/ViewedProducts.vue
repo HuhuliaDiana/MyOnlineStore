@@ -13,15 +13,28 @@
           :photosProd="item.Product.photos"
         />
       </div>
-      <div v-else>
+      <div
+        v-else
+        style="
+          margin-top: 10%;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          text-align: center;
+        "
+      >
         <div
           style="
             font-family: 'Montserrat', sans-serif;
             font-weight: bold;
             font-size: 150%;
+            color: #383838;
           "
         >
           Nu ati vizualizat inca niciun produs!
+        </div>
+        <div>
+          <img style="width: 40%; margin-top: 5%" src="photos/empty_cart.png" />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div style="font-family: 'Montserrat', sans-serif">
+  <div>
     <div>
       <Toolbar />
     </div>
@@ -9,11 +9,9 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        font-family: 'Montserrat', sans-serif;
       "
     >
-      <!-- <span style="font-size: 900%; color: #26a69b" class="material-icons">
-        account_circle
-      </span> -->
       <img style="width: 7%" src="photos/bee.png" />
       <span
         style="

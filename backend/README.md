@@ -8,7 +8,7 @@ id, quantity, price, (photo)
 Body: dimensions, weight, SIM?
 Memory: cardSlot?, RAM, internal
 Camera: main, selfie
-Battery: capacity, removable?, 
+Battery: capacity, removable?,
 Display: type, size, resolution, protection
 Comms: netspeed, WI-FI, bluetooth, USB, ports, GPS, NFC
 Platform: OS, CPU)
@@ -42,7 +42,7 @@ Pagini noi:
 -> vezi ultimele produse accesate
 
 -> realizeaza filtrarea imediata dupa fiecare filtru individual ales
--> alege modalitate plata: cash sau card 
+-> alege modalitate plata: cash sau card
 -> voucher (?)
 -> favorite
 -> daca quantity=0 => dezactivare buton de adaugare in cos si afisare mesaj "stoc epuizat", altfel afisare mesaj "In stoc"
@@ -51,18 +51,15 @@ Pagini noi:
 quickMobile - vezi site:
 -> pe bara de sus: reduceri, noi produse, bara de seach + vezi ultimele produse vizitate, favorite, cos de cumparaturi, pagina profil personal
 
-
-
 https://www.cel.ro/telefoane-mobile/telefon-mobil-samsung-galaxy-a20e-a202-2019-32gb-dual-sim-4g-white-pMCYyMTwpMw-l/
 
 https://www.orange.ro/magazin-online/telefoane/huawei-p30-lite-128gb-dual-sim-black-reconditionat
 
 https://www.quickmobile.ro/telefoane/telefoane-mobile/xiaomi-redmi-note-9t-dual-sim-fizic-128gb-5g-violet-4gb-ram-52685
 
-
 //schimba ordinea produselor vizualizate
 // console.log(ids)//2,3,4,5
-    
+
     const newIndex=viewedProducts.length-1//3
     const oldIndex=ids.indexOf(foundProduct.id)-1//0
 
@@ -75,13 +72,13 @@ https://www.quickmobile.ro/telefoane/telefoane-mobile/xiaomi-redmi-note-9t-dual-
       oldIndex < newIndex
     ) {
 
-      //schimb ordinea elementelor in TABELA 
+      //schimb ordinea elementelor in TABELA
 
       splice(newIndex, 0, viewedProducts.splice(oldIndex, 1)[0]);
 
       res.status(200).send(viewedProducts)
 
-    } 
+    }
       updateRating: async (req, res) => {
     const userRating = req.body.rating;
     const ratingProduct = await RatingProductDB.findOne({
@@ -122,21 +119,21 @@ https://www.quickmobile.ro/telefoane/telefoane-mobile/xiaomi-redmi-note-9t-dual-
           res.status(500).send(err);
         });
     }
-  },
-   getRatingProduct: async (req, res) => {
-    RatingProductDB.findOne({
-      where: {
-        ProductId: req.params.id,
-      },
-    })
-      .then((result) => {
-        res.status(200).send(result);
-      })
-      .catch((err) => {
-        res.status(500).send(err);
-      });
-  },
 
+},
+getRatingProduct: async (req, res) => {
+RatingProductDB.findOne({
+where: {
+ProductId: req.params.id,
+},
+})
+.then((result) => {
+res.status(200).send(result);
+})
+.catch((err) => {
+res.status(500).send(err);
+});
+},
 
     https://docs.appdynamics.com/display/PRO21/Hide+All+or+Parts+of+the+URL+Query+String
 
@@ -161,7 +158,6 @@ https://www.quickmobile.ro/telefoane/telefoane-mobile/xiaomi-redmi-note-9t-dual-
 
 //change route and make an filter null when disable a radio button
 
-
   <div class="q-pa-md" :key="item">
               <q-carousel animated v-model="slide" arrows navigation infinite>
                 <q-carousel-slide
@@ -173,20 +169,19 @@ https://www.quickmobile.ro/telefoane/telefoane-mobile/xiaomi-redmi-note-9t-dual-
               </q-carousel>
             </div>
 
-  // products.findAll({
-    //   where: {
-    //     reduction: {
-    //       [Op.not]: null,
-    //     },
-    //   },
-    // })
-    //   .then((result) => {
-    //     res.status(200).send(result);
-    //   })
-    //   .catch((err) => {
-    //     res.status(500).send(err);
-    //   });
-
+// products.findAll({
+// where: {
+// reduction: {
+// [Op.not]: null,
+// },
+// },
+// })
+// .then((result) => {
+// res.status(200).send(result);
+// })
+// .catch((err) => {
+// res.status(500).send(err);
+// });
 
      ProductDB.findAll({
       where: {
@@ -246,9 +241,64 @@ https://www.quickmobile.ro/telefoane/telefoane-mobile/xiaomi-redmi-note-9t-dual-
       const newPrice=cart.totalPrice-product.price
       cart.update({
         totalPrice: newPrice
-        
+
       }).then((result) => {
         res.status(200).send(result);
       });
-      
-  },
+
+},
+
+//primesc id-ul cartProduct-ului si trebuie sa gasesc product-ul corespunzator
+const cartProduct = await CartProductDB.findOne({
+where: {
+ProductId: req.params.id,
+},
+});
+
+    // console.log("cart product" + cartProduct);
+
+    const quantity = cartProduct.quantity;
+    const diff = quantity - new_quantity;
+
+    const cartProductUpdated = await cartProduct.update({
+      quantity: new_quantity,
+    });
+    // .then(() => {
+    //   res.status(200).send(cartProduct);
+    // })
+    // .catch((err) => {
+    //   res.status(500).send(err);
+    // });
+    // console.log("cart productUpdated" + cartProductUpdated);
+
+    //modifica cantitatea produsului din ProductDB
+    const product = await ProductDB.findByPk(req.params.id);
+
+    const newQuantity = product.quantity + diff;
+
+    const productUpdated = await product.update({
+      quantity: newQuantity,
+    });
+    // .then((result) => {
+    //   res.status(200).send(result);
+    // })
+    // .catch((err) => {
+    //   res.status(500).send(err);
+    // });
+    // console.log("produsul meu" + productUpdated);
+
+    //modifica valoarea cosului de cumparaturi
+    const cart = await controller.getCart(req, res);
+    const newPrice =
+      cart.totalPrice -
+      (product.price - (product.price * product.discount) / 100) * diff;
+    const cartUpdated = await cart.update({
+      totalPrice: newPrice,
+    });
+    // .then((result) => {
+    //   res.status(200).send(result);
+    // })
+    // .catch((err) => {
+    //   res.status(500).send(err);
+    // });
+    // console.log("cart updated" + cartUpdated);

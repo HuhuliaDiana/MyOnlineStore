@@ -103,7 +103,9 @@ const controllers = {
       }
 
       //calculeaza pretul cosului de cumparaturi
-      const newPrice = userCart.totalPrice + product.price;
+      const newPrice =
+        userCart.totalPrice +
+        (product.price - (product.price * product.discount) / 100);
       userCart
         .update({
           totalPrice: newPrice,
