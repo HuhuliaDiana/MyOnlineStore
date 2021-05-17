@@ -10,8 +10,10 @@
         :town="order.town"
         :county="order.county"
         :phone="order.phone"
+        :price="order.price"
         :address="order.address"
         :lastname="order.lastname"
+        :paymentMethod="order.paymentMethod"
         :firstname="order.firstname"
       />
     </div>

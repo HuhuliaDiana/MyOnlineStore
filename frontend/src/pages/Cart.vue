@@ -97,6 +97,7 @@
               :options="optionsPlata"
               color="secondary"
               inline
+              @input="onClickPaymentMethod(plata)"
             />
           </div>
           <div style="margin-top: 3%; text-align: center; margin-bottom: 8%">
@@ -146,11 +147,11 @@ export default {
       optionsPlata: [
         {
           label: "Ramburs",
-          value: "op2",
+          value: "Ramburs",
         },
         {
           label: "Card online",
-          value: "op3",
+          value: "Card online",
         },
       ],
       val: [],
@@ -161,6 +162,7 @@ export default {
       phone: null,
       lastname: null,
       firstname: null,
+      paymentMethod: null,
     };
   },
 
@@ -176,6 +178,9 @@ export default {
     },
   },
   methods: {
+    onClickPaymentMethod(value) {
+      this.paymentMethod = value;
+    },
     getTown(value) {
       this.town = value;
       console.log(this.town);
@@ -215,6 +220,7 @@ export default {
             address: this.address,
             lastname: this.lastname,
             firstname: this.firstname,
+            paymentMethod: this.paymentMethod,
           },
           { withCredentials: true }
         )

@@ -4,26 +4,6 @@
       <Toolbar />
     </div>
     <div class="myDiv">
-      <!-- 
- -->
-
-      <!-- <div class="q-pa-md">
-      <div class="q-gutter-y-md column">
-        <q-rating
-          v-model="setRating"
-          max="5"
-          size="3em"
-          color="yellow"
-          icon="star_border"
-          icon-selected="star"
-          icon-half="star_half"
-          no-dimming
-          @click="setRatingProduct"
-          :disable="setRating !== null"
-        />
-      </div>
-    </div>
-   -->
       <div class="body" style="font-family: 'Montserrat', sans-serif">
         <div style="height: 560px; width: 450px">
           <div :key="product">
@@ -112,18 +92,63 @@
                 disable
               />
             </div>
+
             <div
               style="
                 color: grey;
                 margin-top: 20px;
-                margin-left: 10px;
+                margin-left: 5%;
                 font-size: 95%;
               "
             >
               {{ nrReviews }} reviews
             </div>
           </div>
-          <div class="fav" style="display: flex; margin-top: 10%">
+
+          <div style="display: flex; align-items: center">
+            <div
+              style="margin-top: auto; width: 37%"
+              class="q-gutter-y-md column"
+            >
+              <q-slider
+                v-model="setRating"
+                :min="0"
+                :max="5"
+                color="secondary"
+                @click="setRatingProduct"
+                :disable="setRating !== null"
+              />
+              <q-tooltip
+                v-if="setRating === null"
+                anchor="top middle"
+                transition-show="scale"
+                transition-hide="scale"
+                content-style="font-size: 12px;text-align:center;background-color:#ffe5b4; color:black; font-family: 'Montserrat', sans-serif"
+              >
+                Acorda o nota acestui produs comandat!
+              </q-tooltip>
+              <q-tooltip
+                v-if="setRating !== null"
+                anchor="top middle"
+                transition-show="scale"
+                transition-hide="scale"
+                content-style="font-size: 12px;text-align:center;background-color:#ffe5b4; color:black; font-family: 'Montserrat', sans-serif"
+              >
+                Ai acordat o nota acestui produs!
+              </q-tooltip>
+            </div>
+            <div
+              style="
+                margin-top: 4%;
+                margin-left: 7%;
+                color: grey;
+                font-size: 90%;
+              "
+            >
+              Nota {{ setRating }} din 5
+            </div>
+          </div>
+          <div class="fav" style="display: flex; margin-top: 5%">
             <!-- <div class="material-icons" style="font-size: 200%; color: orange">
               favorite
             </div> -->
@@ -329,7 +354,7 @@ export default {
 
   data() {
     return {
-      setRating: null,
+      setRating: 0,
       getRating: 0,
       message: null,
       product: null,

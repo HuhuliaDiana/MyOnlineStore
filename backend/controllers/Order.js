@@ -18,6 +18,24 @@ const controllers = {
       res.status(200).send(result);
     });
   },
+  getProductsFromOrder: async (req, res) => {
+    const order = await OrderDB.findByPk(req.params.id);
+    CartProductDB.findAll({
+      where: {
+        CartId: order.CartId,
+      },
+      include: {
+        model: ProductDB,
+        as: "Product",
+      },
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  },
   getUserOrders: async (req, res) => {
     const currentUser = await req.user;
     const allOrders = await OrderDB.findAll();
@@ -63,6 +81,7 @@ const controllers = {
       address: req.body.address,
       lastname: req.body.lastname,
       firstname: req.body.firstname,
+      paymentMethod: req.body.paymentMethod,
       price: cart.totalPrice + 17.5,
     };
 
