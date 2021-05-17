@@ -7,6 +7,8 @@ const controller = {
       county: req.body.county,
       phone: req.body.phone,
       address: req.body.address,
+      lastname: req.body.lastname,
+      firstname: req.body.firstname,
     };
 
     let errors = [];
@@ -14,7 +16,9 @@ const controller = {
       !userContact.town ||
       !userContact.county ||
       !userContact.phone ||
-      !userContact.address
+      !userContact.address ||
+      !userContact.lastname ||
+      !userContact.firstname
     ) {
       errors.push("Empty fields!");
       console.log("Empty fields!");
@@ -22,6 +26,14 @@ const controller = {
     if (userContact.town < 3) {
       errors.push("Invalid name of town!");
       console.log("Invalid name of town!");
+    }
+    if (userContact.lastname < 3) {
+      errors.push("Invalid lastname!");
+      console.log("Invalid lastname!");
+    }
+    if (userContact.firstname< 3) {
+      errors.push("Invalid firstname!");
+      console.log("Invalid firstname!");
     }
     if (userContact.county < 3) {
       errors.push("Invalid name of county!");
@@ -46,12 +58,13 @@ const controller = {
     if (errors.length === 0) {
       try {
         UserContactDB.create(userContact).then((result) => {
-         
-          result.update({
-            UserId:currentUser.id
-          }).then(()=>{
-            console.log("The user id was set!")
-          })
+          result
+            .update({
+              UserId: currentUser.id,
+            })
+            .then(() => {
+              console.log("The user id was set!");
+            });
           res.status(200).send({ message: "Succesfully created!" });
         });
       } catch (err) {
@@ -63,25 +76,44 @@ const controller = {
   },
   getCurrentUserContacts: async (req, res) => {
     const currentUser = await req.user;
-    const userContacts = UserContactDB.findAll({
+    UserContactDB.findAll({
       where: {
         UserId: currentUser.id,
       },
-    }).then((result)=>{
+    }).then((result) => {
       res.status(200).send(result);
-
-    })
+    });
   },
 
   updateUserContact: async (req, res) => {
-    const userContact = await UserContactDB.findByPk(req.params.id)
+    const userContact = await UserContactDB.findByPk(req.params.id);
 
     const newUserContact = {
       town: req.body.town,
       county: req.body.county,
       phone: req.body.phone,
       address: req.body.address,
+      lastname: req.body.lastname,
+      firstname: req.body.firstname,
     };
+    if (newUserContact.lastname !== userContact.lastname) {
+      userContact
+        .update({
+          lastname: newUserContact.lastname,
+        })
+        .then(() => {
+          console.log("Lastname updated!");
+        });
+    }
+    if (newUserContact.firstname !== userContact.firstname) {
+      userContact
+        .update({
+          firstname: newUserContact.firstname,
+        })
+        .then(() => {
+          console.log("Firstname updated!");
+        });
+    }
 
     if (newUserContact.town !== userContact.town) {
       userContact
@@ -89,7 +121,7 @@ const controller = {
           town: newUserContact.town,
         })
         .then(() => {
-          console.log( "Town updated!" );
+          console.log("Town updated!");
         });
     }
     if (newUserContact.county !== userContact.county) {
@@ -98,7 +130,7 @@ const controller = {
           county: newUserContact.county,
         })
         .then(() => {
-          console.log( "County updated!" );
+          console.log("County updated!");
         });
     }
     if (newUserContact.phone !== userContact.phone) {
@@ -107,7 +139,7 @@ const controller = {
           phone: newUserContact.phone,
         })
         .then(() => {
-          console.log( "Phone updated!" );
+          console.log("Phone updated!");
         });
     }
     if (newUserContact.address !== userContact.address) {
@@ -116,14 +148,11 @@ const controller = {
           address: newUserContact.address,
         })
         .then(() => {
-          console.log( "Address updated!" );
+          console.log("Address updated!");
         });
     }
 
-    res.status(200).send(userContact)
-
+    res.status(200).send(userContact);
   },
-
-  
 };
 module.exports = controller;

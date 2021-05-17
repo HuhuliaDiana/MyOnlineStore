@@ -47,6 +47,8 @@
           <div>
             <Order
               v-on:sendTown="getTown"
+              v-on:sendLastname="getLastname"
+              v-on:sendFirstname="getFirstname"
               v-on:sendAddress="getAddress"
               v-on:sendPhone="getPhone"
               v-on:sendCounty="getCounty"
@@ -119,7 +121,7 @@ import axios from "../boot/axios";
 import CartProduct from "../components/CartProduct";
 import CartPrice from "../components/CartPrice";
 import Toolbar from "../components/Toolbar.vue";
-import Order from "../components/Order.vue";
+import Order from "../components/DeliveryData.vue";
 
 export default {
   name: "Cart",
@@ -157,6 +159,8 @@ export default {
       county: null,
       address: null,
       phone: null,
+      lastname: null,
+      firstname: null,
     };
   },
 
@@ -176,6 +180,14 @@ export default {
       this.town = value;
       console.log(this.town);
     },
+    getFirstname(value) {
+      this.firstname = value;
+      console.log(this.firstname);
+    },
+    getLastname(value) {
+      this.lastname = value;
+      console.log(this.lastname);
+    },
     getAddress(value) {
       this.address = value;
       console.log(this.address);
@@ -193,7 +205,6 @@ export default {
       this.$router.go();
     },
     sendOrder() {
-      console.log(this.town);
       axios
         .post(
           "http://localhost:8082/orderCart",
@@ -202,6 +213,8 @@ export default {
             county: this.county,
             phone: this.phone,
             address: this.address,
+            lastname: this.lastname,
+            firstname: this.firstname,
           },
           { withCredentials: true }
         )

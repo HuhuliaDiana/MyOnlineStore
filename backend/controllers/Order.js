@@ -2,18 +2,51 @@ const ProductDB = require("../models").Product;
 const CartProductDB = require("../models").CartProduct;
 const CartDB = require("../models").Cart;
 const OrderDB = require("../models").Order;
+const Sequelize = require("sequelize");
+
 const controller = require("./Cart");
+const Op = Sequelize.Op;
 
 const controllers = {
   getAllOrders: async (req, res) => {
-    const orders = await OrderDB.findAll().then((result) => {
+    OrderDB.findAll().then((result) => {
       res.status(200).send(result);
     });
   },
   getOrder: async (req, res) => {
-    const order = await OrderDB.findByPk(req.params.id).then((result) => {
+    OrderDB.findByPk(req.params.id).then((result) => {
       res.status(200).send(result);
     });
+  },
+  getUserOrders: async (req, res) => {
+    const currentUser = await req.user;
+    const allOrders = await OrderDB.findAll();
+    const cartIds = allOrders.map((order) => order.CartId); //1
+    const userCarts = await CartDB.findAll({
+      where: {
+        UserId: currentUser.id,
+      },
+    });
+    const userCartsIds = userCarts.map((cart) => cart.id); //1 2
+
+    //gaseste id urile carturilor userului
+    const filteredArray = cartIds.filter((value) =>
+      userCartsIds.includes(value)
+    ); //1
+
+    OrderDB.findAll({
+      where: {
+        CartId: {
+          [Op.in]: filteredArray,
+        },
+      },
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err.message);
+      });
   },
   orderCart: async (req, res) => {
     const currentUser = await req.user;
@@ -28,6 +61,8 @@ const controllers = {
       county: req.body.county,
       phone: req.body.phone,
       address: req.body.address,
+      lastname: req.body.lastname,
+      firstname: req.body.firstname,
       price: cart.totalPrice + 17.5,
     };
 

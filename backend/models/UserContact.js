@@ -4,5 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     county: DataTypes.STRING,
     phone: DataTypes.STRING,
     address: DataTypes.STRING,
+    lastname: DataTypes.STRING,
+    firstname: DataTypes.STRING,
   });
 };

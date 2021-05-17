@@ -19,8 +19,8 @@ const Order = OrderModel(db, Sequelize);
 const UserContactModel = require("./UserContact");
 const UserContact = UserContactModel(db, Sequelize);
 
-const NewCategoryProductModel = require("./NewCategoryProduct");
-const NewCategoryProduct = NewCategoryProductModel(db, Sequelize);
+// const NewCategoryProductModel = require("./NewCategoryProduct");
+// const NewCategoryProduct = NewCategoryProductModel(db, Sequelize);
 
 const ViewedProductModel = require("./ViewedProduct");
 const ViewedProduct = ViewedProductModel(db, Sequelize);
@@ -40,7 +40,7 @@ module.exports = {
   ProductSugestion,
   Cart,
   Order,
-  NewCategoryProduct,
+ // NewCategoryProduct,
   RatingProduct,
   ViewedProduct,
   FavouriteProduct,
@@ -102,8 +102,8 @@ ProductSugestion.belongsTo(User);
 
 //new cart
 
-User.hasMany(NewCategoryProduct);
-NewCategoryProduct.belongsTo(User);
+// User.hasMany(NewCategoryProduct);
+// NewCategoryProduct.belongsTo(User);
 
-NewCategoryProduct.belongsTo(Product);
-Product.hasOne(NewCategoryProduct);
+// NewCategoryProduct.belongsTo(Product);
+// Product.hasOne(NewCategoryProduct);
