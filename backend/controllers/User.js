@@ -1,5 +1,14 @@
 const UserDB = require("../models").User;
+const Sequelize = require("sequelize");
+
 const bcrypt = require("bcrypt");
+const CartDB = require("../models").Cart;
+const OrderDB = require("../models").Order;
+const CartProductDB = require("../models").CartProduct;
+
+const Op = Sequelize.Op;
+
+const ProductSugestionDB = require("../models").ProductSugestion;
 
 const controller = {
   addUser: async (req, res) => {
@@ -150,6 +159,100 @@ const controller = {
     }
 
     res.status(200).send(currentUser);
+  },
+
+  getDiscountForSendingSuggestion: async (req, res) => {
+    //user trimite sugestie lui user: userId, product: productId
+    //daca user a cumparat product: cartProduct: productId= productId, cartId, userId in carts;
+    //sugestia trimisa inainte de a se cumpara produsul: productsugestions: userId: userCurent,productId: productId; createdAt> createdAt:order cart unde se afla produsul
+
+    const currentUser = await req.user;
+    const sentSuggestions = await ProductSugestionDB.findAll({
+      where: {
+        UserId: currentUser.id,
+      },
+    });
+    //id urile produselor sugerate de userul curent
+    const suggestedProducts = sentSuggestions.map((suggestion) => {
+      return {
+        productId: suggestion.ProductId,
+        to: suggestion.to,
+      };
+    });
+
+    //vezi daca to a comandat produsul respectiv dupa ce user curent a trimis sugestia
+    suggestedProducts.forEach(async (pair) => {
+      //find user
+      const user = await UserDB.findOne({
+        where: {
+          email: pair.to,
+        },
+      });
+
+      //orders ale lui user
+      const carts = await CartDB.findAll({
+        where: {
+          UserId: user.id,
+        },
+      });
+
+      const idCarts = carts.map((cart) => cart.id);
+      const orderedCarts = await OrderDB.findAll({
+        where: {
+          CartId: {
+            [Op.in]: idCarts,
+          },
+        },
+      });
+      const idOrderedCarts = orderedCarts.map((order) => order.CartId);
+
+      //cauta cartproducts cu cartId in idOrderedCarts and ProductId in = pair.productId
+      CartProductDB.findAll({
+        where: {
+          CartId: {
+            [Op.in]: idOrderedCarts,
+          },
+          ProductId: pair.productId,
+        },
+      }).then((result) => {
+        if (result) {
+          //acorda discount userilor
+          const ids = [currentUser.id, user.id];
+          UserDB.update(
+            {
+              discount: 10,
+            },
+            {
+              where: {
+                id: ids,
+              },
+            }
+          )
+            .then((result) => {
+              res
+                .status(200)
+                .send({ message: "S-a acordat un discount de 10%!" });
+            })
+            .catch((err) => {
+              res.status(500).send(err);
+            });
+        }
+      });
+    });
+  },
+  deleteDiscount: async (req, res) => {
+    const currentUser = await req.user;
+    const initDiscount = req.body.initialDiscount;
+    currentUser
+      .update({
+        discount: initDiscount,
+      })
+      .then((result) => {
+        res.status(200).send({ message: "Ai aplicat discountul de 10%!" });
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
   },
 };
 module.exports = controller;

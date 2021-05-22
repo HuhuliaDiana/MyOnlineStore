@@ -269,7 +269,6 @@ const controllers = {
       ratingProduct
         .update({
           rating: userRating,
-          UserId: currentUser.id,
         })
         .then((result) => {
           res.status(200).send(result);
@@ -317,7 +316,11 @@ const controllers = {
       },
     })
       .then((result) => {
-        res.status(200).send({ rating: result.rating });
+        if (result) {
+          res.status(200).send({ rating: result.rating });
+        } else {
+          res.status(200).send({ rating: 0 });
+        }
       })
       .catch((err) => {
         res.status(500).send(err);

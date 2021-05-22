@@ -1,60 +1,117 @@
 <template>
   <div>
-    <div>Comanda nr. {{ id }}</div>
-    <div>Plasata pe {{ dataPlasare }}</div>
-    <div>Livrat catre: {{ lastname }} {{ firstname }}</div>
-    <div>Adresa: {{ address }}, {{ town }}, {{ county }}</div>
-    <div>Modalitate livrare: Prin curier</div>
-    <div>Modalitate de plata: {{ paymentMethod }}</div>
-    <div>Total plata: {{ price }} lei</div>
-    <div style="width: 40%" class="q-pa-md">
-      <q-carousel
-        swipeable
-        style="height: 200px"
-        animated
-        v-model="slide"
-        ref="carousel"
-        infinite
+    <div style="display: flex; justify-content: space-between; margin-left: 3%">
+      <div
+        class="orderInfo"
+        style="display: flex; padding: 3%; flex-direction: column; width: 48%"
       >
-        <q-carousel-slide :name="1" >
-          <OrderedProduct
-            v-for="item in products"
-            :key="item.Product.id"
-            :idCartProd="item.id"
-            :idProd="item.Product.id"
-            :priceProd="item.Product.price"
-            :photosProd="item.Product.photos"
-            :quantityProd="item.quantity"
-          />
-        </q-carousel-slide>
+        <div style="display: flex; justify-content: space-between">
+          <div style="display: flex; align-items: center">
+            <div style="font-size: 180%" class="material-icons-outlined">
+              local_shipping
+            </div>
+            <div style="margin-left: 15px"><b>Modalitate de livrare:</b></div>
+          </div>
+          <div>Prin curier</div>
+        </div>
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5%"
+        >
+          <div style="display: flex; align-items: center">
+            <div style="font-size: 180%" class="material-icons-outlined">
+              paid
+            </div>
+            <div style="margin-left: 15px"><b>Modalitate de plata:</b></div>
+          </div>
+          <div>{{ paymentMethod }}</div>
+        </div>
+      </div>
+      <div
+        class="orderInfo"
+        style="display: flex; padding: 3%; flex-direction: column; width: 48%"
+      >
+        <div style="display: flex; justify-content: space-between">
+          <div style="display: flex; align-items: center; height: fit-content">
+            <div style="font-size: 180%" class="material-icons-outlined">
+              account_circle
+            </div>
+            <div style="margin-left: 15px"><b>Livrat catre:</b></div>
+          </div>
 
-        <template v-slot:control>
-          <q-carousel-control
-            position="bottom-right"
-            :offset="[18, 18]"
-            class="q-gutter-xs"
+          <div>
+            <div>{{ lastname }} {{ firstname }}</div>
+            <div>{{ phone }}</div>
+          </div>
+        </div>
+        <div
+          style="display: flex; justify-content: space-between; margin-top: 5%"
+        >
+          <div style="display: flex; align-items: center; height: fit-content">
+            <div style="font-size: 180%" class="material-icons-outlined">
+              home
+            </div>
+            <div style="margin-left: 15px"><b>Adresa:</b></div>
+          </div>
+          <div>
+            <div>{{ address }}</div>
+            <div>{{ town }}, {{ county }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="q-pa-md">
+        <q-carousel
+          swipeable
+          style="height: 250px"
+          animated
+          v-model="slide"
+          ref="carousel"
+          infinite
+        >
+          <q-carousel-slide
+            :name="products.indexOf(item)"
+            :key="item.id"
+            v-for="item in products"
           >
-            <q-btn
-              push
-              round
-              dense
-              color="orange"
-              text-color="black"
-              icon="arrow_left"
-              @click="$refs.carousel.previous()"
+            <OrderedProduct
+              :key="item.Product.id"
+              :idCartProd="item.id"
+              :idProd="item.Product.id"
+              :priceProd="item.Product.price"
+              :photosProd="item.Product.photos"
+              :quantityProd="item.quantity"
             />
-            <q-btn
-              push
-              round
-              dense
-              color="orange"
-              text-color="black"
-              icon="arrow_right"
-              @click="$refs.carousel.next()"
-            />
-          </q-carousel-control>
-        </template>
-      </q-carousel>
+          </q-carousel-slide>
+
+          <template v-slot:control>
+            <q-carousel-control
+              position="bottom-right"
+              :offset="[18, 18]"
+              class="q-gutter-xs"
+            >
+              <q-btn
+                push
+                round
+                dense
+                color="orange"
+                text-color="black"
+                icon="arrow_left"
+                @click="$refs.carousel.previous()"
+              />
+              <q-btn
+                push
+                round
+                dense
+                color="orange"
+                text-color="black"
+                icon="arrow_right"
+                @click="$refs.carousel.next()"
+              />
+            </q-carousel-control>
+          </template>
+        </q-carousel>
+      </div>
     </div>
   </div>
 </template>
@@ -75,6 +132,7 @@ export default {
     "address",
     "town",
     "price",
+    "phone",
     "county",
     "lastname",
     "firstname",
@@ -84,8 +142,13 @@ export default {
     return {
       slide: 1,
       products: [],
-      autoplay: false,
+      render: true,
     };
+  },
+  watch: {
+    render(n, o) {
+      this.render = n;
+    },
   },
   mounted() {
     axios
@@ -94,7 +157,7 @@ export default {
       })
       .then((result) => {
         this.products = result.data;
-        console.log(this.products);
+        console.log("hei");
       })
       .catch((err) => {
         console.log(err);
@@ -104,5 +167,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.orderInfo {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
 </style>

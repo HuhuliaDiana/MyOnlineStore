@@ -1,6 +1,6 @@
 <template>
   <div style="font-family: 'Montserrat', sans-serif">
-    <div class="product" v-on:click.self="seeProduct()" style="display: flex">
+    <div class="product" style="display: flex" v-on:click="seeProduct()">
       <div style="display: flex">
         <div class="divPhoto">
           <img
@@ -83,6 +83,7 @@ export default {
       })
       .then((response) => {
         this.product = response.data;
+        console.log(this.product);
         this.calcSubtotal();
       })
       .catch((err) => {

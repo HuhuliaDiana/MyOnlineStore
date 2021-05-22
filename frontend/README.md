@@ -584,3 +584,138 @@ export default {
                   </q-card>
                 </q-expansion-item>
               </q-list>
+
+
+              /////////////////////////////////////////////////////////////////////////////////////////////////
+              <template>
+  <div>
+    <div><Toolbar /></div>
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        margin-top: 5%;
+      "
+    >
+      <div style="width: 20%">
+        <div
+          class="orderInfo"
+          v-for="order in orders"
+          :key="order.id"
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10%;
+          "
+          @mouseover="getOrder(order.id)"
+        >
+          <div style="background-color: #f0f0f0" v-if="order.id % 2 === 0">
+            <div
+              style="
+                font-size: 170%;
+                margin-top: 15%;
+                padding: 20px;
+                color: #26a69b;
+              "
+            >
+              Comanda nr.
+            </div>
+            <div style="padding: 20px">
+              Plasata pe: <b>{{ order.createdAt }}</b
+              ><br />Total plata:
+              <b>{{ order.price }} lei</b>
+            </div>
+          </div>
+          <div v-else>
+            <div style="font-size: 170%; color: #26a69b">Comanda nr.</div>
+            <div style="margin-top: 20%">
+              Plasata pe: <b>{{ order.createdAt }}</b
+              ><br />Total plata:
+              <b>{{ order.price }} lei</b>
+            </div>
+          </div>
+          <div style="color: #26a69b; font-size: 700%">{{ order.id }}</div>
+        </div>
+      </div>
+
+      <div style="width: 50%; margin-left: 5%">
+        <Order
+          :shouldRender="render"
+          v-if="order !== null"
+          :id="order.id"
+          :dataPlasare="order.createdAt"
+          :town="order.town"
+          :county="order.county"
+          :phone="order.phone"
+          :price="order.price"
+          :address="order.address"
+          :lastname="order.lastname"
+          :paymentMethod="order.paymentMethod"
+          :firstname="order.firstname"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "../boot/axios";
+
+import Toolbar from "../components/Toolbar.vue";
+import Order from "../components/Order.vue";
+
+export default {
+  name: "Orders",
+  components: {
+    Toolbar,
+    Order,
+  },
+  data() {
+    return {
+      orders: [],
+      order: null,
+      render: null,
+    };
+  },
+  watch: {
+    order(n, o) {
+      this.order = n;
+      this.render = true;
+    },
+    render(n, o) {
+      this.render = n;
+    },
+  },
+  mounted() {
+    axios
+      .get("http://localhost:8082/getUserOrders", { withCredentials: true })
+      .then((res) => {
+        this.orders = res.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+  methods: {
+    getOrder(key) {
+      axios
+        .get(`http://localhost:8082/getOrder/${key}`, { withCredentials: true })
+        .then((res) => {
+          this.order = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+};
+</script>
+
+<style scoped>
+.orderInfo {
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+</style>

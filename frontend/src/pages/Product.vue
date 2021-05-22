@@ -115,11 +115,9 @@
                 :min="0"
                 :max="5"
                 color="secondary"
-                @click="setRatingProduct"
-                :disable="setRating !== null"
               />
               <q-tooltip
-                v-if="setRating === null"
+                v-if="setRating === 0"
                 anchor="top middle"
                 transition-show="scale"
                 transition-hide="scale"
@@ -128,7 +126,7 @@
                 Acorda o nota acestui produs comandat!
               </q-tooltip>
               <q-tooltip
-                v-if="setRating !== null"
+                v-if="setRating !== 0"
                 anchor="top middle"
                 transition-show="scale"
                 transition-hide="scale"
@@ -146,6 +144,14 @@
               "
             >
               Nota {{ setRating }} din 5
+            </div>
+            <div>
+              <q-btn
+                color="secondary"
+                label="Submit"
+                style="font-size: 70%; margin-top: 20%; margin-left: 50%"
+                @click="setRatingProduct"
+              />
             </div>
           </div>
           <div class="fav" style="display: flex; margin-top: 5%">
@@ -372,6 +378,9 @@ export default {
   },
 
   watch: {
+    nrReviews(n, o) {
+      this.nrReviews = n;
+    },
     email(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.email = newVal;
@@ -566,6 +575,7 @@ export default {
         )
         .then((result) => {
           this.getRating = this.setRating;
+          this.getNrReviews()
         })
         .catch((err) => {
           console.log(err);
