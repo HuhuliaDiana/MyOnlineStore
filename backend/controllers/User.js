@@ -110,6 +110,22 @@ const controller = {
     res.status(200).send(currentUser);
   },
 
+  verifyExistingThesePersonalData: async (req, res) => {
+    UserContactDB.findAll({
+      town: req.body.town,
+      county: req.body.county,
+      phone: req.body.phone,
+      address: req.body.address,
+      lastname: req.body.lastname,
+      firstname: req.body.firstname,
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  },
   editProfile: async (req, res) => {
     const user = {
       firstname: req.body.firstname,
@@ -243,10 +259,16 @@ const controller = {
   deleteDiscount: async (req, res) => {
     const currentUser = await req.user;
     const initDiscount = req.body.initialDiscount;
-    currentUser
-      .update({
+    UserDB.update(
+      {
         discount: initDiscount,
-      })
+      },
+      {
+        where: {
+          id: currentUser.id,
+        },
+      }
+    )
       .then((result) => {
         res.status(200).send({ message: "Ai aplicat discountul de 10%!" });
       })

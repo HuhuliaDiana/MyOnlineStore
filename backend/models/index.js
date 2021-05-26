@@ -40,7 +40,7 @@ module.exports = {
   ProductSugestion,
   Cart,
   Order,
- // NewCategoryProduct,
+  // NewCategoryProduct,
   RatingProduct,
   ViewedProduct,
   FavouriteProduct,
@@ -99,11 +99,3 @@ ProductSugestion.belongsTo(Product);
 //un user poate trimite mai multe sugestii de produs
 User.hasMany(ProductSugestion);
 ProductSugestion.belongsTo(User);
-
-//new cart
-
-// User.hasMany(NewCategoryProduct);
-// NewCategoryProduct.belongsTo(User);
-
-// NewCategoryProduct.belongsTo(Product);
-// Product.hasOne(NewCategoryProduct);

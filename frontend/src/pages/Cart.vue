@@ -45,7 +45,7 @@
             Detalii livrare
           </div>
           <div>
-            <Order
+            <DeliveryData
               v-on:sendTown="getTown"
               v-on:sendLastname="getLastname"
               v-on:sendFirstname="getFirstname"
@@ -103,7 +103,7 @@
           <div style="margin-top: 3%; text-align: center; margin-bottom: 8%">
             <q-btn
               color="secondary"
-              :disable="cost === 0"
+              :disabled="validation"
               label="Trimite comanda"
               @click="sendOrder"
             />
@@ -111,7 +111,7 @@
         </div>
       </div>
       <div class="flex-child orderSummary" style="margin-left: 3%">
-        <CartPrice style="width: 60%" />
+        <CartPrice style="width: 60%" v-on:transmitFinalCost="getFinalCost" />
       </div>
     </div>
   </div>
@@ -122,7 +122,7 @@ import axios from "../boot/axios";
 import CartProduct from "../components/CartProduct";
 import CartPrice from "../components/CartPrice";
 import Toolbar from "../components/Toolbar.vue";
-import Order from "../components/DeliveryData.vue";
+import DeliveryData from "../components/DeliveryData.vue";
 
 export default {
   name: "Cart",
@@ -130,7 +130,7 @@ export default {
     CartProduct,
     CartPrice,
     Toolbar,
-    Order,
+    DeliveryData,
   },
   data() {
     return {
@@ -160,6 +160,7 @@ export default {
       county: null,
       address: null,
       phone: null,
+      validation: null,
       lastname: null,
       firstname: null,
       paymentMethod: null,
@@ -167,17 +168,38 @@ export default {
   },
 
   watch: {
-    shouldRender(n, o) {
-      this.shouldRender = n;
+    shouldRender() {},
+    val() {},
+    cost() {
+      console.log(this.cost);
     },
-    val(newVal, oldVal) {
-      this.getTheProducts();
+    plata() {},
+    county() {
+      this.getValidation();
     },
-    cost(n, o) {
-      this.cost = n;
+    town() {
+      this.getValidation();
+    },
+    address() {
+      this.getValidation();
+    },
+    phone() {
+      this.getValidation();
+    },
+    lastname() {
+      this.getValidation();
+    },
+    firstname() {
+      this.getValidation();
+    },
+    paymentMethod() {
+      this.getValidation();
     },
   },
   methods: {
+    getFinalCost(value) {
+      this.cost = value;
+    },
     onClickPaymentMethod(value) {
       this.paymentMethod = value;
     },
@@ -221,19 +243,31 @@ export default {
             lastname: this.lastname,
             firstname: this.firstname,
             paymentMethod: this.paymentMethod,
+            price: this.cost,
           },
           { withCredentials: true }
         )
         .then((response) => {
           console.log(response.data);
+          
+          axios
+            .get("http://localhost:8082/getDiscountForSendingSuggestion", {
+              withCredentials: true,
+            })
+            .then((result) => {
+              console.log(result.data.message);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         });
     },
 
-    calcCost() {
-      this.products.forEach((prod) => {
-        this.cost += prod.Product.price * prod.quantity;
-      });
-    },
+    // calcCost() {
+    //   this.products.forEach((prod) => {
+    //     this.cost += prod.Product.price * prod.quantity;
+    //   });
+    // },
     getProducts(value) {
       this.val = value;
     },
@@ -244,12 +278,24 @@ export default {
           this.products = response.data;
 
           //calculeaza cost produse
-          this.calcCost();
+          // this.calcCost();
         });
+    },
+    getValidation() {
+      this.validation =
+        this.cost === 0 ||
+        !this.paymentMethod ||
+        !this.town ||
+        !this.county ||
+        !this.phone ||
+        !this.address ||
+        !this.lastname ||
+        !this.firstname;
     },
   },
 
   mounted() {
+    this.getValidation();
     this.getTheProducts();
   },
 };

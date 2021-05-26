@@ -93,7 +93,25 @@
                 @click="updateUserContact"
               />
             </div>
-            <div>
+            <div v-if="verifyExistingData === true">
+              <q-tooltip
+                anchor="top middle"
+                self="bottom middle"
+                :offset="[10, 10]"
+                content-style="font-size: 12px;text-align:center;background-color:#ffe5b4;color:black;
+            font-family: 'Montserrat', sans-serif"
+              >
+                Aceste date de livrare sunt deja salvate!
+              </q-tooltip>
+              <q-btn
+                color="secondary"
+                label="Save"
+                :disabled="true"
+                style="font-family: 'Montserrat', sans-serif"
+                @click="saveUserContact"
+              />
+            </div>
+            <div v-else>
               <q-tooltip
                 anchor="top middle"
                 self="bottom middle"
@@ -107,6 +125,7 @@
               <q-btn
                 color="secondary"
                 label="Save"
+                :disabled="false"
                 style="font-family: 'Montserrat', sans-serif"
                 @click="saveUserContact"
               />
@@ -128,6 +147,8 @@ export default {
       town: null,
       county: null,
       lastname: null,
+      verifyExistingData: null,
+
       firstname: null,
       chosenContact: null,
       phone: null,
@@ -137,7 +158,11 @@ export default {
     };
   },
   watch: {
+    verifyExistingData() {},
+
     town(newValue, oldValue) {
+      this.verify();
+
       this.$emit("sendTown", newValue);
       if (this.chosenContact && newValue !== this.chosenContact.town) {
         btnUpdateContact.style.display = "inherit";
@@ -146,6 +171,8 @@ export default {
       }
     },
     lastname(newValue, oldValue) {
+      this.verify();
+
       this.$emit("sendLastname", newValue);
       if (this.chosenContact && newValue !== this.chosenContact.lastname) {
         btnUpdateContact.style.display = "inherit";
@@ -154,6 +181,8 @@ export default {
       }
     },
     firstname(newValue, oldValue) {
+      this.verify();
+
       this.$emit("sendFirstname", newValue);
       if (this.chosenContact && newValue !== this.chosenContact.firstname) {
         btnUpdateContact.style.display = "inherit";
@@ -162,6 +191,8 @@ export default {
       }
     },
     county(newValue, oldValue) {
+      this.verify();
+
       this.$emit("sendCounty", newValue);
 
       if (this.chosenContact && newValue !== this.chosenContact.county) {
@@ -171,6 +202,8 @@ export default {
       }
     },
     address(newValue, oldValue) {
+      this.verify();
+
       this.$emit("sendAddress", newValue);
 
       if (this.chosenContact && newValue !== this.chosenContact.address) {
@@ -180,6 +213,8 @@ export default {
       }
     },
     phone(newValue, oldValue) {
+      this.verify();
+
       this.$emit("sendPhone", newValue);
 
       if (this.chosenContact && newValue !== this.chosenContact.phone) {
@@ -195,8 +230,8 @@ export default {
         withCredentials: true,
       })
       .then((result) => {
-        //ia userContacts din orders current user
         this.userContacts = result.data;
+        this.verify();
       })
       .catch((err) => {
         console.log(err);
@@ -214,6 +249,33 @@ export default {
       });
   },
   methods: {
+    validation() {
+      return (
+        !this.town ||
+        !this.county ||
+        !this.address ||
+        !this.phone ||
+        !this.lastname ||
+        !this.firstname
+      );
+    },
+    verify() {
+      const array = this.userContacts.filter((e) => {
+        return (
+          e.town === this.town &&
+          e.county === this.county &&
+          e.phone === this.phone &&
+          e.address === this.address &&
+          e.lastname === this.lastname &&
+          e.firstname === this.firstname
+        );
+      });
+      if (array.length > 0 || this.validation()) {
+        this.verifyExistingData = true;
+      } else {
+        this.verifyExistingData = false;
+      }
+    },
     saveUserContact() {
       const userContact = {
         town: this.town,

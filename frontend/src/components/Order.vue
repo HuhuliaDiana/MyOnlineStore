@@ -1,6 +1,16 @@
 <template>
   <div>
-    <div style="display: flex; justify-content: space-between; margin-left: 3%">
+    <div style="text-align: center">
+      <img style="width: 12%" src="photos/packing-list.png" />
+    </div>
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        margin-left: 3%;
+        margin-top: 5%;
+      "
+    >
       <div
         class="orderInfo"
         style="display: flex; padding: 3%; flex-direction: column; width: 48%"
@@ -59,8 +69,8 @@
         </div>
       </div>
     </div>
-    <div>
-      <div class="q-pa-md">
+    <div style="">
+      <div class="q-pa-md" style="">
         <q-carousel
           swipeable
           style="height: 250px"
@@ -70,11 +80,12 @@
           infinite
         >
           <q-carousel-slide
-            :name="products.indexOf(item)"
+            :name="products.indexOf(item) + 1"
             :key="item.id"
             v-for="item in products"
           >
             <OrderedProduct
+              :shouldRender="render"
               :key="item.Product.id"
               :idCartProd="item.id"
               :idProd="item.Product.id"
@@ -83,34 +94,15 @@
               :quantityProd="item.quantity"
             />
           </q-carousel-slide>
-
-          <template v-slot:control>
-            <q-carousel-control
-              position="bottom-right"
-              :offset="[18, 18]"
-              class="q-gutter-xs"
-            >
-              <q-btn
-                push
-                round
-                dense
-                color="orange"
-                text-color="black"
-                icon="arrow_left"
-                @click="$refs.carousel.previous()"
-              />
-              <q-btn
-                push
-                round
-                dense
-                color="orange"
-                text-color="black"
-                icon="arrow_right"
-                @click="$refs.carousel.next()"
-              />
-            </q-carousel-control>
-          </template>
         </q-carousel>
+        <div class="row justify-center">
+          <q-btn-toggle
+            toggle-color="secondary"
+            keep-color
+            v-model="slide"
+            :options="options"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -142,12 +134,16 @@ export default {
     return {
       slide: 1,
       products: [],
-      render: true,
+      options: [],
+      render: false,
     };
   },
   watch: {
     render(n, o) {
-      this.render = n;
+      this.render = true;
+    },
+    products(n, o) {
+      this.products = n;
     },
   },
   mounted() {
@@ -157,13 +153,23 @@ export default {
       })
       .then((result) => {
         this.products = result.data;
-        console.log("hei");
+        this.render = !this.render;
+        this.getOptions();
       })
       .catch((err) => {
         console.log(err);
       });
   },
-  methods: {},
+  methods: {
+    getOptions() {
+      this.products.forEach((product) => {
+        this.options.push({
+          label: this.products.indexOf(product) + 1,
+          value: this.products.indexOf(product) + 1,
+        });
+      });
+    },
+  },
 };
 </script>
 

@@ -1,5 +1,11 @@
 <template>
-  <div style="font-family: 'Montserrat', sans-serif">
+  <div
+    style="
+      font-family: 'Montserrat', sans-serif;
+      display: flex;
+      justify-content: center;
+    "
+  >
     <div class="product" style="display: flex" v-on:click="seeProduct()">
       <div style="display: flex">
         <div class="divPhoto">
@@ -41,7 +47,7 @@
             product.price - (product.price * product.discount) / 100
           }}&nbsp;lei
         </div>
-        <div style="border-bottom: 1px solid grey">
+        <div>
           <div
             style="
               display: flex;
@@ -75,7 +81,11 @@ export default {
       subtotal: 0,
     };
   },
-
+  watch: {
+    product(n, o) {
+      this.product = n;
+    },
+  },
   mounted() {
     axios
       .get(`http://localhost:8082/getProduct/${this.idProd}`, {
@@ -83,7 +93,7 @@ export default {
       })
       .then((response) => {
         this.product = response.data;
-        console.log(this.product);
+        console.log("orderedproduct");
         this.calcSubtotal();
       })
       .catch((err) => {

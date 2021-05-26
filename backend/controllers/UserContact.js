@@ -1,6 +1,26 @@
 //in Order always display the last address set
 const UserContactDB = require("../models").UserContact;
 const controller = {
+  verifyExistingThesePersonalData: async (req, res) => {
+    const currentUser = await req.user;
+    UserContactDB.findAll({
+      where: {
+        town: req.params.town,
+        county: req.params.county,
+        phone: req.params.phone,
+        address: req.params.address,
+        lastname: req.params.lastname,
+        firstname: req.params.firstname,
+        UserId: currentUser.id,
+      },
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  },
   setUserContact: async (req, res) => {
     const userContact = {
       town: req.body.town,
@@ -31,7 +51,7 @@ const controller = {
       errors.push("Invalid lastname!");
       console.log("Invalid lastname!");
     }
-    if (userContact.firstname< 3) {
+    if (userContact.firstname < 3) {
       errors.push("Invalid firstname!");
       console.log("Invalid firstname!");
     }

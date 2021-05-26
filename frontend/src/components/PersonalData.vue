@@ -26,7 +26,7 @@
       >
         <span>Lastname:</span>
         <!-- <input v-model="lastname" /> -->
-        <q-input color="teal" filled v-model="lastname" style="font-size: 80%;">
+        <q-input color="teal" filled v-model="lastname" style="font-size: 80%">
           <template v-slot:prepend>
             <q-icon name="badge" />
           </template>
@@ -80,7 +80,12 @@
       </div>
     </div>
     <div style="margin-top: 10%">
-      <q-btn color="secondary" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;" label="Save" @click="updatePersonalData" />
+      <q-btn
+        color="secondary"
+        style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
+        label="Save"
+        @click="updatePersonalData"
+      />
     </div>
   </div>
 </template>
@@ -98,7 +103,9 @@ export default {
       email: null,
     };
   },
+  
   methods: {
+   
     updatePersonalData() {
       axios
         .patch(
@@ -111,9 +118,7 @@ export default {
           },
           { withCredentials: true }
         )
-        .then((result) => {
-          console.log(result.data);
-        })
+        .then((result) => {})
         .catch((err) => {
           console.log(err);
         });

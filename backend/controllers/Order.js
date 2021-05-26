@@ -82,7 +82,7 @@ const controllers = {
       lastname: req.body.lastname,
       firstname: req.body.firstname,
       paymentMethod: req.body.paymentMethod,
-      price: cart.totalPrice + 17.5,
+      price: req.body.price,
     };
 
     OrderDB.create(order)

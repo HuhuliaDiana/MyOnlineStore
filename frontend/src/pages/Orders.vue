@@ -5,100 +5,83 @@
       style="
         display: flex;
         justify-content: center;
+        margin-top: 5%;
         font-family: 'Montserrat', sans-serif;
       "
     >
-      <div style="width: 20%">
-        <div
-          class="orderInfo"
-          v-for="order in orders"
-          :key="order.id"
-          @mouseover="getOrder(order.id)"
+      <div class="q-ma-md" style="width: 23%">
+        <q-scroll-area
+          :thumb-style="thumbStyle"
+          :bar-style="barStyle"
+          :visible="visible"
+          style="height: 610px"
         >
-          <div v-if="order.id % 2 === 0">
+          <!-- <div style="width: 20%; border: 1px solid"> -->
+          <div class="q-py-xs" v-for="order in orders" :key="order.id">
             <div
-              style="
-                font-size: 170%;
-                margin-top: 15%;
-                padding: 20px;
-                color: #26a69b;
-              "
-            >
-              Comanda nr. {{ order.id }}
-            </div>
-            <div
+              class="orders"
               style="
                 display: flex;
-                flex-direction: column;
-                padding: 20px;
-                width: 55%;
+                margin-bottom: 30px;
+                margin-right: 10%;
+                justify-content: space-between;
+                align-items: center;
               "
             >
-              <div style="display: flex; justify-content: space-between">
-                <div>Plasata pe:</div>
-                <div style="margin-left: 15px">
-                  <b> {{ order.createdAt }}</b>
+              <div style="width: 70%; margin-left: 10px">
+                <div style="font-size: 170%; padding: 20px; color: #26a69b">
+                  Comanda nr. {{ order.id }}
+                </div>
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    padding: 20px;
+                    width: 80%;
+                  "
+                >
+                  <div style="display: flex; justify-content: space-between">
+                    <div>Plasata pe:</div>
+                    <div style="margin-left: 15px">
+                      <b> {{ order.createdAt }}</b>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      margin-top: 5%;
+                    "
+                  >
+                    <div>Total plata:</div>
+                    <div style="margin-left: 15px">
+                      <b> {{ order.price }} lei</b>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  margin-top: 5%;
-                "
-              >
-                <div>Total plata:</div>
-                <div style="margin-left: 15px">
-                  <b> {{ order.price }} lei</b>
-                </div>
+              <div>
+                <q-icon
+                  name="chevron_right"
+                  style="
+                    margin-left: 17%;
+                    font-size: 200%;
+                    margin-right: 20px;
+                    color: #26a69b;
+                  "
+                  class="cursor-pointer"
+                  @click="getOrder(order.id)"
+                />
               </div>
             </div>
           </div>
-          <div v-else>
-            <div
-              style="
-                font-size: 170%;
-                margin-top: 15%;
-                padding: 20px;
-                color: #26a69b;
-              "
-            >
-              Comanda nr. {{ order.id }}
-            </div>
-            <div
-              style="
-                display: flex;
-                flex-direction: column;
-                padding: 20px;
-                width: 55%;
-              "
-            >
-              <div style="display: flex; justify-content: space-between">
-                <div>Plasata pe:</div>
-                <div style="margin-left: 15px">
-                  <b> {{ order.createdAt }}</b>
-                </div>
-              </div>
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  margin-top: 5%;
-                "
-              >
-                <div>Total plata:</div>
-                <div style="margin-left: 15px">
-                  <b> {{ order.price }} lei</b>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          <!-- </div> -->
+        </q-scroll-area>
       </div>
 
-      <div style="width: 50%; margin-top: 3%; margin-left: 5%">
+      <div style="width: 50%; margin-left: 5%">
         <Order
-          :shouldRender="render"
+          :key="render"
           v-if="order !== null"
           :id="order.id"
           :dataPlasare="order.createdAt"
@@ -132,16 +115,31 @@ export default {
     return {
       orders: [],
       order: null,
-      render: null,
+      visible: true,
+      render: false,
+      thumbStyle: {
+        right: "4px",
+        borderRadius: "5px",
+        backgroundColor: "#26a69b",
+        width: "5px",
+        opacity: 0.75,
+      },
+
+      barStyle: {
+        right: "2px",
+        borderRadius: "9px",
+        backgroundColor: "#26a69b",
+        width: "9px",
+        opacity: 0.2,
+      },
     };
   },
   watch: {
     order(n, o) {
       this.order = n;
-      this.render = true;
     },
     render(n, o) {
-      this.render = n;
+      console.log("a randat......." + this.render);
     },
   },
   mounted() {
@@ -149,6 +147,7 @@ export default {
       .get("http://localhost:8082/getUserOrders", { withCredentials: true })
       .then((res) => {
         this.orders = res.data;
+        console.log(this.orders);
       })
       .catch((err) => {
         console.log(err);
@@ -160,6 +159,9 @@ export default {
         .get(`http://localhost:8082/getOrder/${key}`, { withCredentials: true })
         .then((res) => {
           this.order = res.data;
+          this.render = !this.render;
+          console.log("am apasat");
+          console.log(this.order);
         })
         .catch((err) => {
           console.log(err);
@@ -170,8 +172,17 @@ export default {
 </script>
 
 <style scoped>
-.orderInfo {
+.orders {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+.orders {
+  background: -webkit-linear-gradient(
+    left,
+    #26a69b,
+    #26a69b 1%,
+    #ffffff 1%,
+    #ffffff
+  );
 }
 </style>

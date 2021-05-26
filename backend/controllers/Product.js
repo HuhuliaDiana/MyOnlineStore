@@ -370,7 +370,7 @@ const controllers = {
         email: email,
       },
     });
-    if (user) {
+    if (user && user.email !== currentUser.email) {
       const productSugestion = {
         UserId: currentUser.id,
         to: email,

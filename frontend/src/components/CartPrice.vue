@@ -76,6 +76,7 @@ export default {
   watch: {
     costF(n, o) {
       this.costF = n;
+      this.$emit("transmitFinalCost", this.costF);
     },
     discount(n, o) {
       this.discount = n;
@@ -95,6 +96,7 @@ export default {
         )
         .then((result) => {
           this.costF = this.costF - this.costF / 10;
+          this.$emit("transmitFinalCost", this.costF);
           this.discount = 0;
         })
         .catch((err) => {
@@ -105,6 +107,7 @@ export default {
     },
   },
   mounted() {
+   
     axios
       .get("http://localhost:8082/getCartProducts", { withCredentials: true })
       .then((result) => {
