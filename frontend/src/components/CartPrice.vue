@@ -43,6 +43,7 @@
       <div>Total:</div>
       <div>{{ costF }} lei</div>
     </div>
+    <div>{{ date }}</div>
     <div v-if="discount !== 0" style="margin-top: 15%; text-align: center">
       <q-btn
         color="secondary"
@@ -64,6 +65,8 @@
 import axios from "../boot/axios";
 
 export default {
+  props: ["date","ceva"],
+
   data() {
     return {
       products: [],
@@ -73,17 +76,33 @@ export default {
       costLivrare: 0,
     };
   },
+
   watch: {
+    cost() {
+      
+    },
     costF(n, o) {
-      this.costF = n;
+      // this.costF = n;
       this.$emit("transmitFinalCost", this.costF);
     },
     discount(n, o) {
       this.discount = n;
     },
+    
   },
 
   methods: {
+    calc() {
+      //la incarcarea paginii primeste this.date ca fiind gol
+      // if (this.date.length > 0) {
+      //   console.log("he");
+      //   this.costLivrare = 17.5;
+      //   this.date.forEach((element) => {
+      //     this.cost += element.price * element.number;
+      //   });
+      // }
+      // this.costF = this.cost + this.costLivrare;
+    },
     applyDiscount() {
       //sterge discountul din userDB
       axios
@@ -107,25 +126,27 @@ export default {
     },
   },
   mounted() {
-   
-    axios
-      .get("http://localhost:8082/getCartProducts", { withCredentials: true })
-      .then((result) => {
-        this.products = result.data;
-        this.products.forEach((prod) => {
-          this.cost +=
-            (prod.Product.price -
-              (prod.Product.price * prod.Product.discount) / 100) *
-            prod.quantity;
-        });
-        if (this.cost > 0) {
-          this.costLivrare = 17.5;
-        }
-        this.costF = this.cost + this.costLivrare;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.ceva()
+    this.calc();
+
+    // axios
+    //   .get("http://localhost:8082/getCartProducts", { withCredentials: true })
+    //   .then((result) => {
+    //     this.products = result.data;
+    //     this.products.forEach((prod) => {
+    //       this.cost +=
+    //         (prod.Product.price -
+    //           (prod.Product.price * prod.Product.discount) / 100) *
+    //         prod.quantity;
+    //     });
+    //     if (this.cost > 0) {
+    //       this.costLivrare = 17.5;
+    //     }
+    //     this.costF = this.cost + this.costLivrare;
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
 
     axios
       .get("http://localhost:8082/getCurrentUser", {

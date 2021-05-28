@@ -111,7 +111,12 @@
         </div>
       </div>
       <div class="flex-child orderSummary" style="margin-left: 3%">
-        <CartPrice style="width: 60%" v-on:transmitFinalCost="getFinalCost" />
+        <CartPrice
+          style="width: 60%"
+          v-on:transmitFinalCost="getFinalCost"
+          :date="noiDate"
+          :ceva="ceva"
+        />
       </div>
     </div>
   </div>
@@ -164,15 +169,15 @@ export default {
       lastname: null,
       firstname: null,
       paymentMethod: null,
+      noiDate: [],
     };
   },
 
   watch: {
+    noiDate() {},
     shouldRender() {},
     val() {},
-    cost() {
-      console.log(this.cost);
-    },
+    cost() {},
     plata() {},
     county() {
       this.getValidation();
@@ -197,6 +202,16 @@ export default {
     },
   },
   methods: {
+    ceva() {
+      // if (this.noiDate.length > 0) {
+      console.log("he");
+      // this.costLivrare = 17.5;
+      // this.date.forEach((element) => {
+      //   this.cost += element.price * element.number;
+      // });
+      // }
+      //this.costF = this.cost + this.costLivrare;
+    },
     getFinalCost(value) {
       this.cost = value;
     },
@@ -228,8 +243,14 @@ export default {
       console.log(this.phone);
     },
     listModified(value) {
-      this.shouldRender = !this.shouldRender;
-      this.$router.go();
+      // this.shouldRender = !this.shouldRender;
+      // this.$router.go();
+
+      //update the prod with id 1 to receive quantity=value.quantity
+      const x = this.noiDate.find((data) => {
+        return data["id"] === value.id;
+      });
+      x["number"] = value.number;
     },
     sendOrder() {
       axios
@@ -249,7 +270,7 @@ export default {
         )
         .then((response) => {
           console.log(response.data);
-          
+
           axios
             .get("http://localhost:8082/getDiscountForSendingSuggestion", {
               withCredentials: true,
@@ -277,6 +298,8 @@ export default {
         .then((response) => {
           this.products = response.data;
 
+          this.sendDataToCartPrice();
+
           //calculeaza cost produse
           // this.calcCost();
         });
@@ -291,6 +314,17 @@ export default {
         !this.address ||
         !this.lastname ||
         !this.firstname;
+    },
+    sendDataToCartPrice() {
+      this.products.forEach((product) => {
+        this.noiDate.push({
+          id: product.id,
+          number: product.quantity,
+          price:
+            product.Product.price -
+            (product.Product.price * product.Product.discount) / 100,
+        });
+      });
     },
   },
 

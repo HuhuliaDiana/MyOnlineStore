@@ -1,9 +1,9 @@
 <template>
   <div>
     <div
-      style="font-family: 'Montserrat', sans-serif"
+      style="font-family: 'Montserrat', sans-serif;"
       class="product"
-      v-on:click.self="seeProduct()"
+      v-on:click="seeProduct()"
     >
       <div
         style="
@@ -30,7 +30,7 @@
           icon="favorite_border"
           icon-selected="favorite"
           no-dimming
-          @click="onFav"
+          v-on:click.stop.prevent="onFav"
         />
       </div>
       <div>
@@ -87,7 +87,7 @@
             round
             icon="add"
             color="secondary"
-            @click="addProductInCart()"
+            v-on:click.stop.prevent="addProductInCart"
           />
         </div>
         <div

@@ -173,7 +173,7 @@ export default {
 
   watch: {
     number(newVal, oldVal) {
-      console.log(this.idProd);
+      //console.log(this.idProd);
       if (newVal !== oldVal) {
         axios
           .patch(
@@ -228,11 +228,19 @@ export default {
   methods: {
     minus_1() {
       this.number--;
-      this.$emit("productListModified", true);
+      // this.$emit("productListModified", true);
+      this.$emit("productListModified", {
+        id: this.idProd,
+        number: this.number,
+      });
     },
     plus_1() {
       this.number++;
-      this.$emit("productListModified", true);
+      //this.$emit("productListModified", true);
+      this.$emit("productListModified", {
+        id: this.idProd,
+        number: this.number,
+      });
     },
     deleteProduct() {
       axios
@@ -256,7 +264,7 @@ export default {
             withCredentials: true,
           })
           .then((response) => {
-            console.log(response.data.message);
+            // console.log(response.data.message);
           })
           .catch((err) => {
             console.log(err);
@@ -269,7 +277,7 @@ export default {
             withCredentials: true,
           })
           .then((response) => {
-            console.log(response.data.message);
+            // console.log(response.data.message);
           })
           .catch((err) => {
             console.log(err);
@@ -295,7 +303,7 @@ export default {
         })
         .then((response) => {
           this.quantity = response.data.quantity;
-          console.log(this.quantity);
+          // console.log(this.quantity);
         })
         .catch((err) => {
           console.log(err);
@@ -309,7 +317,7 @@ export default {
           withCredentials: true,
         })
         .then((response) => {
-          console.log(response.data);
+          //   console.log(response.data);
         })
         .catch((err) => {
           console.log(err);
