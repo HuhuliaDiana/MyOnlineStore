@@ -53,6 +53,12 @@
           "
         >
           <div>
+            <q-tooltip
+              v-if="userContacts.length === 0"
+              content-style="font-size: 12px;text-align:center;background-color:#ffe5b4; color:black; font-family: 'Montserrat', sans-serif"
+            >
+              Nu exista date de livrare salvate!
+            </q-tooltip>
             <q-btn-dropdown
               color="secondary"
               style="font-family: 'Montserrat', sans-serif"
@@ -292,6 +298,12 @@ export default {
         })
         .then((response) => {
           console.log(response);
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Ai salvat datele de livrare!",
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -329,6 +341,12 @@ export default {
         )
         .then((response) => {
           console.log(response);
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Ai actualizat datele de livrare!",
+          });
         })
         .catch((err) => {
           console.log(err);

@@ -3,6 +3,10 @@ module.exports=(sequelize, DataTypes)=>{
 
         note: DataTypes.STRING(255),
         to: DataTypes.STRING,
+        discountUsed: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+          },
 
     })
 

@@ -5,7 +5,7 @@
     </div>
     <div class="body">
       <div class="flex-child products">
-        <div v-if="cost !== 0">
+        <div v-if="costProduse !== 0">
           <CartProduct
             v-on:childToParent="getProducts"
             v-on:productListModified="listModified"
@@ -115,10 +115,51 @@
           style="width: 60%"
           v-on:transmitFinalCost="getFinalCost"
           :date="noiDate"
-          :ceva="ceva"
+          :costProduse="costProduse"
+          :costLivrare="costLivrare"
+          :costF="costF"
         />
       </div>
     </div>
+    <q-dialog v-model="confirm" persistent>
+      <q-card style="font-family: 'Montserrat', sans-serif; width: 400px">
+        <q-card-section class="row items-center">
+          <span style="color: #26a69b; font-size: 300%" class="material-icons">
+            check_circle
+          </span>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              margin-left: 5%;
+              margin-top: 5px;
+            "
+          >
+            <div>
+              Comanda cu <b style="color: #26a69b">nr. {{ nrOrder }}</b> a fost
+              realizata!
+            </div>
+            <div>
+              Total plata: <b style="color: #26a69b">{{ costF }} lei</b>
+            </div>
+          </div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="OK"
+            color="secondary"
+            v-close-popup
+            @click="
+              () => {
+                this.$router.go();
+              }
+            "
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -140,6 +181,8 @@ export default {
   data() {
     return {
       products: [],
+      confirm: false,
+      nrOrder: null,
       optionsLivrare: [
         {
           label: "Prin curier",
@@ -170,13 +213,20 @@ export default {
       firstname: null,
       paymentMethod: null,
       noiDate: [],
+      costProduse: 0,
+      costLivrare: 0,
+      costF: 0,
     };
   },
 
   watch: {
+    products() {},
     noiDate() {},
     shouldRender() {},
-    val() {},
+    nrOrder() {},
+    val(n, o) {
+      this.products = n;
+    },
     cost() {},
     plata() {},
     county() {
@@ -200,58 +250,76 @@ export default {
     paymentMethod() {
       this.getValidation();
     },
+    costProduse() {},
+    costLivrare() {},
+    costF() {},
   },
+
   methods: {
+    //sa calculez aici cost produse, cost livrare si cost final si sa le transmit lui cartprice
     ceva() {
-      // if (this.noiDate.length > 0) {
-      console.log("he");
-      // this.costLivrare = 17.5;
-      // this.date.forEach((element) => {
-      //   this.cost += element.price * element.number;
-      // });
-      // }
-      //this.costF = this.cost + this.costLivrare;
+      this.costLivrare = 17.5;
+      this.noiDate.forEach((element) => {
+        this.costProduse += element.price * element.number;
+      });
+      console.log("heia" + this.costProduse);
+      this.costF = this.costProduse + this.costLivrare;
     },
     getFinalCost(value) {
-      this.cost = value;
+      this.costF = value;
     },
     onClickPaymentMethod(value) {
       this.paymentMethod = value;
     },
     getTown(value) {
       this.town = value;
-      console.log(this.town);
+      //console.log(this.town);
     },
     getFirstname(value) {
       this.firstname = value;
-      console.log(this.firstname);
+      // console.log(this.firstname);
     },
     getLastname(value) {
       this.lastname = value;
-      console.log(this.lastname);
+      // console.log(this.lastname);
     },
     getAddress(value) {
       this.address = value;
-      console.log(this.address);
+      // console.log(this.address);
     },
     getCounty(value) {
       this.county = value;
-      console.log(this.county);
+      // console.log(this.county);
     },
     getPhone(value) {
       this.phone = value;
-      console.log(this.phone);
+      //  console.log(this.phone);
     },
     listModified(value) {
-      // this.shouldRender = !this.shouldRender;
-      // this.$router.go();
-
       //update the prod with id 1 to receive quantity=value.quantity
+
+      console.log(this.noiDate);
+      console.log(value);
+
       const x = this.noiDate.find((data) => {
         return data["id"] === value.id;
       });
+
       x["number"] = value.number;
+      console.log(x);
+
+      console.log("kk");
+
+      this.costProduse = 0;
+      this.noiDate.forEach((element) => {
+        this.costProduse += element.price * element.number;
+      });
+
+      console.log("heia" + this.costProduse);
+      console.log("weell");
+      this.costF = this.costProduse + this.costLivrare;
     },
+
     sendOrder() {
       axios
         .post(
@@ -264,31 +332,17 @@ export default {
             lastname: this.lastname,
             firstname: this.firstname,
             paymentMethod: this.paymentMethod,
-            price: this.cost,
+            price: this.costF,
           },
           { withCredentials: true }
         )
         .then((response) => {
           console.log(response.data);
-
-          axios
-            .get("http://localhost:8082/getDiscountForSendingSuggestion", {
-              withCredentials: true,
-            })
-            .then((result) => {
-              console.log(result.data.message);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          this.nrOrder = response.data.id;
+          this.confirm = true;
         });
     },
 
-    // calcCost() {
-    //   this.products.forEach((prod) => {
-    //     this.cost += prod.Product.price * prod.quantity;
-    //   });
-    // },
     getProducts(value) {
       this.val = value;
     },
@@ -297,16 +351,14 @@ export default {
         .get("http://localhost:8082/getCartProducts", { withCredentials: true })
         .then((response) => {
           this.products = response.data;
+          
 
           this.sendDataToCartPrice();
-
-          //calculeaza cost produse
-          // this.calcCost();
         });
     },
     getValidation() {
       this.validation =
-        this.cost === 0 ||
+        this.costF === 0 ||
         !this.paymentMethod ||
         !this.town ||
         !this.county ||
@@ -318,13 +370,14 @@ export default {
     sendDataToCartPrice() {
       this.products.forEach((product) => {
         this.noiDate.push({
-          id: product.id,
+          id: product.Product.id,
           number: product.quantity,
           price:
             product.Product.price -
             (product.Product.price * product.Product.discount) / 100,
         });
       });
+      this.ceva();
     },
   },
 

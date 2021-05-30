@@ -21,7 +21,7 @@
             color: #383838;
           "
         >
-          Nu aveti sugestii de produse!
+          Nu ati primit sugestii de produse!
         </div>
         <img style="width: 30%; margin-top: 5%" src="photos/empty_cart.png" />
       </div>

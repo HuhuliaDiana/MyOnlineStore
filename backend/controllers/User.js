@@ -7,7 +7,8 @@ const OrderDB = require("../models").Order;
 const CartProductDB = require("../models").CartProduct;
 
 const Op = Sequelize.Op;
-
+const controllers = require("./Order");
+const controllerCart = require("./Cart");
 const ProductSugestionDB = require("../models").ProductSugestion;
 
 const controller = {
@@ -223,45 +224,36 @@ const controller = {
       const idOrderedCarts = orderedCarts.map((order) => order.CartId);
 
       //cauta cartproducts cu cartId in idOrderedCarts and ProductId in = pair.productId
-      CartProductDB.findAll({
+      const cartProducts = await CartProductDB.findAll({
         where: {
           CartId: {
             [Op.in]: idOrderedCarts,
           },
           ProductId: pair.productId,
         },
-      }).then((result) => {
-        if (result) {
-          //acorda discount userilor
-          const ids = [currentUser.id, user.id];
-          UserDB.update(
-            {
-              discount: 10,
-            },
-            {
-              where: {
-                id: ids,
-              },
-            }
-          )
-            .then((result) => {
-              res
-                .status(200)
-                .send({ message: "S-a acordat un discount de 10%!" });
-            })
-            .catch((err) => {
-              res.status(500).send(err);
-            });
-        }
       });
+      if (cartProducts) {
+        //acorda discount userilor
+        const ids = [currentUser.id, user.id];
+        const updates = await UserDB.update(
+          {
+            discount: 10,
+          },
+          {
+            where: {
+              id: ids,
+            },
+          }
+        );
+      }
     });
   },
+  //apply discount
   deleteDiscount: async (req, res) => {
     const currentUser = await req.user;
-    const initDiscount = req.body.initialDiscount;
     UserDB.update(
       {
-        discount: initDiscount,
+        discount: 0,
       },
       {
         where: {
@@ -275,6 +267,15 @@ const controller = {
       .catch((err) => {
         res.status(500).send(err);
       });
+
+  },
+  cancelOrder: async (req, res) => {
+    const order = await OrderDB.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    const orders = await controllers.getUserOrders(req, res);
   },
 };
 module.exports = controller;

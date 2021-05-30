@@ -59,6 +59,7 @@
             {{ quantityProd }}&nbsp;buc.
           </div>
         </div>
+        <div style="border-bottom: 1px solid grey"></div>
 
         <div style="margin-top: 15%">
           &nbsp;<b style="font-size: 110%">{{ subtotal }}&nbsp;lei</b>

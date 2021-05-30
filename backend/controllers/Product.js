@@ -84,6 +84,7 @@ const controllers = {
           })
           .then((result) => {
             res.status(200).send(product);
+            //res.status(200).send({message:"Ai adaugat acest produs in cos!"});
           });
       } else {
         //produsul nu se afla in cos=>

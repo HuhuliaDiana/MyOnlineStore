@@ -248,8 +248,9 @@ export default {
           withCredentials: true,
         })
         .then((response) => {
+          this.number = 0;
           this.$emit("childToParent", response.data);
-          this.$emit("productListModified", true);
+          this.$emit("productListModified", { id: this.idProd, number: 0 });
         })
         .catch((err) => {
           console.log(err);

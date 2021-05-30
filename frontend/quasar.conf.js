@@ -9,6 +9,14 @@
 
 module.exports = function (/* ctx */) {
   return {
+    framework: {
+      plugins: [
+        'Loading'
+      ],
+      config: {
+        loading: { /* look at QUASARCONFOPTIONS from the API card (bottom of page) */ }
+      }
+    },
     // https://quasar.dev/quasar-cli/supporting-ts
     supportTS: false,
 

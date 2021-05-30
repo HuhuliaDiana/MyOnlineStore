@@ -225,7 +225,12 @@ export default {
         })
         .then((response) => {
           this.quantity = response.data.quantity;
-          console.log(this.quantity);
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Ai adaugat un produs in cos!",
+          });
         })
         .catch((err) => {
           console.log(err);

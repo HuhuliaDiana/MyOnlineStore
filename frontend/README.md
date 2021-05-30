@@ -719,3 +719,93 @@ export default {
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
 }
 </style>
+
+
+ const sentSuggestions = await ProductSugestionDB.findAll({
+      where: {
+        UserId: currentUser.id,
+        discountUsed: 0 //SUGESTIILE CU PRODUSE NEFOLOSITE PENTRU O COMANDA PE CARE S-A APLICAT DISCOUNT
+      }
+    });
+    console.log('..///////////////////////////////////////////////////////////////////////...................................................')
+    console.log(cart)
+    console.log(sentSuggestions)
+    console.log('..///////////////////////////////////////////////////////////////////////...................................................')
+
+    //id urile produselor sugerate de userul curent
+    const suggestedProducts = sentSuggestions.map((suggestion) => {
+      return {
+        productId: suggestion.ProductId,
+        to: suggestion.to,
+      };
+    });
+    console.log('..///////////////////////////////////////////////////////////////////////...................................................')
+    console.log(suggestedProducts)
+    console.log('..///////////////////////////////////////////////////////////////////////...................................................')
+
+    //vezi daca to a comandat produsul respectiv dupa ce user curent a trimis sugestia
+    suggestedProducts.forEach(async (pair) => {
+      //find user
+      const user = await UserDB.findOne({
+        where: {
+          email: pair.to,
+        },
+      });
+
+      //orders ale lui user
+      const carts = await CartDB.findAll({
+        where: {
+          UserId: user.id,
+        },
+      });
+
+      const idCarts = carts.map((cart) => cart.id);
+      const orderedCarts = await OrderDB.findAll({
+        where: {
+          CartId: {
+            [Op.in]: idCarts,
+          },
+        },
+      });
+      const idOrderedCarts = orderedCarts.map((order) => order.CartId);
+
+      //cauta cartproducts cu cartId in idOrderedCarts and ProductId in = pair.productId
+      const cartProducts = await CartProductDB.findAll({
+        where: {
+          CartId: {
+            [Op.in]: idOrderedCarts,
+          },
+          ProductId: pair.productId,
+        },
+      });
+      console.log('..........................................................................................................')
+      console.log(cartProducts)
+      console.log('..........................................................................................................')
+
+      if (cartProducts.length > 0) {
+        //acorda discount userilor
+        const ids = [currentUser.id, user.id];
+        console.log('..///////////////////////////////////////////////////////////////////////...................................................')
+
+        console.log(ids)
+        console.log('..///////////////////////////////////////////////////////////////////////...................................................')
+
+        UserDB.update(
+          {
+            discount: 10,
+          },
+          {
+            where: {
+              id: ids,
+            },
+          }
+        )
+          .then((res) => {
+            res.stats(200).send(res);
+          })
+          .catch((err) => {
+            res.status(500).send(err);
+          });
+      }
+    });
+  },

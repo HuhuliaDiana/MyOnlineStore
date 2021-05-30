@@ -234,6 +234,7 @@
               "
               color="secondary"
               icon="shopping_cart"
+              :disabled="product.quantity === 0"
               label="Adauga in cos"
               @click="addProductInCart"
             />
@@ -442,6 +443,12 @@ export default {
         .then((response) => {
           this.quantity = response.data.quantity;
           this.getStockStatus();
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Ai adaugat acest produs in cos!",
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -575,7 +582,14 @@ export default {
         )
         .then((result) => {
           this.getRating = this.setRating;
-          this.getNrReviews()
+          this.getNrReviews();
+
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Ai acordat o nota acestui produs!",
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -594,6 +608,12 @@ export default {
         })
         .then((result) => {
           console.log(result.data.message);
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Sugestie trimisa!",
+          });
         })
         .catch((err) => {
           const errors = Object.values(err.response.data);

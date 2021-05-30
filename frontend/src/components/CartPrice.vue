@@ -14,7 +14,7 @@
         "
       >
         <div>Cost produse:</div>
-        <div>{{ cost }} lei</div>
+        <div>{{ costProduse }} lei</div>
       </div>
       <div
         style="
@@ -43,10 +43,10 @@
       <div>Total:</div>
       <div>{{ costF }} lei</div>
     </div>
-    <div>{{ date }}</div>
     <div v-if="discount !== 0" style="margin-top: 15%; text-align: center">
       <q-btn
         color="secondary"
+        :disabled="costProduse === 0"
         label="Aplica reducere"
         style="font-size: 90%"
         @click="applyDiscount"
@@ -65,95 +65,56 @@
 import axios from "../boot/axios";
 
 export default {
-  props: ["date","ceva"],
+  props: ["ceva", "costProduse", "costLivrare", "costF"],
 
   data() {
     return {
       products: [],
       cost: 0,
       discount: 0,
-      costF: 0,
-      costLivrare: 0,
+      costFinal: 0,
     };
   },
 
   watch: {
-    cost() {
-      
-    },
-    costF(n, o) {
-      // this.costF = n;
-      this.$emit("transmitFinalCost", this.costF);
-    },
-    discount(n, o) {
-      this.discount = n;
-    },
-    
+    cost() {},
+    discount() {},
   },
 
   methods: {
-    calc() {
-      //la incarcarea paginii primeste this.date ca fiind gol
-      // if (this.date.length > 0) {
-      //   console.log("he");
-      //   this.costLivrare = 17.5;
-      //   this.date.forEach((element) => {
-      //     this.cost += element.price * element.number;
-      //   });
-      // }
-      // this.costF = this.cost + this.costLivrare;
-    },
     applyDiscount() {
-      //sterge discountul din userDB
       axios
         .patch(
           "http://localhost:8082/deleteDiscount",
-          { initialDiscount: 0 },
+          {},
           {
             withCredentials: true,
           }
         )
         .then((result) => {
-          this.costF = this.costF - this.costF / 10;
-          this.$emit("transmitFinalCost", this.costF);
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Ai aplicat reducerea de 10%!",
+          });
+          this.costFinal = this.costF - this.costF / 10;
+          this.$emit("transmitFinalCost", this.costFinal);
           this.discount = 0;
         })
         .catch((err) => {
           console.log(err);
         });
-
-      //aplica discount
     },
   },
   mounted() {
-    this.ceva()
-    this.calc();
-
-    // axios
-    //   .get("http://localhost:8082/getCartProducts", { withCredentials: true })
-    //   .then((result) => {
-    //     this.products = result.data;
-    //     this.products.forEach((prod) => {
-    //       this.cost +=
-    //         (prod.Product.price -
-    //           (prod.Product.price * prod.Product.discount) / 100) *
-    //         prod.quantity;
-    //     });
-    //     if (this.cost > 0) {
-    //       this.costLivrare = 17.5;
-    //     }
-    //     this.costF = this.cost + this.costLivrare;
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-
     axios
       .get("http://localhost:8082/getCurrentUser", {
         withCredentials: true,
       })
       .then((result) => {
         this.discount = result.data.discount;
+        console.log(this.discount);
       })
       .catch((err) => {
         console.log(err);

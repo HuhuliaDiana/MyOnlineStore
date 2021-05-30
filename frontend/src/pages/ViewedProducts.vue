@@ -31,7 +31,7 @@
             color: #383838;
           "
         >
-          Nu ati vizualizat inca niciun produs!
+          Nu ati vizualizat niciun produs!
         </div>
         <div>
           <img style="width: 40%; margin-top: 5%" src="photos/empty_cart.png" />

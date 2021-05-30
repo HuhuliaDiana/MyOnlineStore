@@ -16,66 +16,87 @@
           :visible="visible"
           style="height: 610px"
         >
-          <!-- <div style="width: 20%; border: 1px solid"> -->
           <div class="q-py-xs" v-for="order in orders" :key="order.id">
             <div
               class="orders"
               style="
                 display: flex;
-                margin-bottom: 30px;
-                margin-right: 10%;
-                justify-content: space-between;
+
+                flex-direction: column;
+                justify-content: center;
                 align-items: center;
+                width: 90%;
               "
             >
-              <div style="width: 70%; margin-left: 10px">
-                <div style="font-size: 170%; padding: 20px; color: #26a69b">
-                  Comanda nr. {{ order.id }}
-                </div>
-                <div
-                  style="
-                    display: flex;
-                    flex-direction: column;
-                    padding: 20px;
-                    width: 80%;
-                  "
-                >
-                  <div style="display: flex; justify-content: space-between">
-                    <div>Plasata pe:</div>
-                    <div style="margin-left: 15px">
-                      <b> {{ order.createdAt }}</b>
-                    </div>
+              <div
+                style="
+                  display: flex;
+                  margin-bottom: 5%;
+                  justify-content: space-between;
+
+                  width: 100%;
+                "
+              >
+                <div style="margin-left: 10px">
+                  <div style="font-size: 170%; padding: 20px; color: #26a69b">
+                    Comanda nr. {{ order.id }}
                   </div>
                   <div
                     style="
                       display: flex;
-                      justify-content: space-between;
-                      margin-top: 5%;
+                      flex-direction: column;
+                      padding: 20px;
+                      width: 110%;
                     "
                   >
-                    <div>Total plata:</div>
-                    <div style="margin-left: 15px">
-                      <b> {{ order.price }} lei</b>
+                    <div style="display: flex; justify-content: space-between">
+                      <div>Plasata pe:</div>
+                      <div style="margin-left: 15px">
+                        <b> {{ order.createdAt }}</b>
+                      </div>
+                    </div>
+                    <div
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        margin-top: 5%;
+                      "
+                    >
+                      <div>Total plata:</div>
+                      <div style="margin-left: 15px">
+                        <b> {{ order.price }} lei</b>
+                      </div>
                     </div>
                   </div>
                 </div>
+                <div style="margin-top: 26%; height: 100%">
+                  <q-icon
+                    name="chevron_right"
+                    style="
+                      margin-left: 17%;
+                      font-size: 200%;
+                      margin-right: 20px;
+                      color: #26a69b;
+                    "
+                    class="cursor-pointer"
+                    @click="getOrder(order.id)"
+                  />
+                </div>
               </div>
               <div>
-                <q-icon
-                  name="chevron_right"
+                <q-btn
                   style="
-                    margin-left: 17%;
-                    font-size: 200%;
-                    margin-right: 20px;
+                    font-size: 80%;
+                    font-weight: 400;
+                    margin-bottom: 15%;
                     color: #26a69b;
                   "
-                  class="cursor-pointer"
-                  @click="getOrder(order.id)"
+                  label="Anuleaza comanda"
+                  @click="ceva(order.id)"
                 />
               </div>
             </div>
           </div>
-          <!-- </div> -->
         </q-scroll-area>
       </div>
 
@@ -96,6 +117,28 @@
         />
       </div>
     </div>
+
+    <q-dialog v-model="confirm" persistent>
+      <q-card style="font-family: 'Montserrat', sans-serif; width: 400px">
+        <q-card-section
+          class="row items-center"
+          style="background-color: #26a69b; color: white; font-size: 120%"
+        >
+          <span class="q-ml-sm" style="margin-top:3%">Sigur doresti anularea comenzii?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="DA"
+            color="secondary"
+            v-close-popup
+            @click="cancelOrder"
+          />
+          <q-btn flat label="NU" color="secondary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -113,6 +156,7 @@ export default {
   },
   data() {
     return {
+      idOrderCancel: null,
       orders: [],
       order: null,
       visible: true,
@@ -124,6 +168,8 @@ export default {
         width: "5px",
         opacity: 0.75,
       },
+
+      confirm: false,
 
       barStyle: {
         right: "2px",
@@ -141,6 +187,8 @@ export default {
     render(n, o) {
       console.log("a randat......." + this.render);
     },
+    idOrderCancel() {},
+    orders() {},
   },
   mounted() {
     axios
@@ -154,6 +202,29 @@ export default {
       });
   },
   methods: {
+    ceva(key) {
+      this.confirm = true;
+      this.idOrderCancel = key;
+      console.log(this.idOrderCancel);
+    },
+    cancelOrder() {
+      axios
+        .delete(`http://localhost:8082/cancelOrder/${this.idOrderCancel}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          this.orders = res.data;
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Comanda a fost anulata!",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     getOrder(key) {
       axios
         .get(`http://localhost:8082/getOrder/${key}`, { withCredentials: true })
@@ -175,8 +246,6 @@ export default {
 .orders {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
     rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
-}
-.orders {
   background: -webkit-linear-gradient(
     left,
     #26a69b,
@@ -184,5 +253,8 @@ export default {
     #ffffff 1%,
     #ffffff
   );
+}
+.q-py-xs:not(:last-child) {
+  margin-bottom: 10%;
 }
 </style>

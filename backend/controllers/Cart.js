@@ -1,7 +1,10 @@
 const CartProductDB = require("../models").CartProduct;
-const ProductDB = require("../models").Product;
+const Sequelize = require("sequelize");
 const CartDB = require("../models").Cart;
+const UserDB = require("../models").User;
+const Op = Sequelize.Op;
 const OrderDB = require("../models").Order;
+const ProductSugestionDB = require("../models").ProductSugestion;
 
 const controllers = {
   getCart: async (req, res) => {
@@ -22,7 +25,6 @@ const controllers = {
 
       CartDB.create(cart)
         .then(() => {
-          //res.status(200).send({message:"s-a creat primul cos de cumparaturi pt acest user"})
           return cart;
         })
         .catch((err) => {
@@ -53,8 +55,6 @@ const controllers = {
       }
     }
   },
-
-  
 };
 
 module.exports = controllers;

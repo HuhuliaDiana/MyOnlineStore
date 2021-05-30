@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      style="font-family: 'Montserrat', sans-serif;"
+      style="font-family: 'Montserrat', sans-serif"
       class="product"
       v-on:click="seeProduct()"
     >
@@ -213,8 +213,13 @@ export default {
           withCredentials: true,
         })
         .then((response) => {
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Ai adaugat un produs in cos!",
+          });
           this.quantity = response.data.quantity;
-          console.log(this.quantity);
           this.getStockStatus();
         })
         .catch((err) => {

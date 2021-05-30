@@ -45,7 +45,7 @@ const controllers = {
   getCartProducts: async (req, res) => {
     //get cart products from user's cart
     const cart = await controller.getCart(req, res);
-    const cartProducts = await CartProductDB.findAll({
+    CartProductDB.findAll({
       where: {
         CartId: cart.id,
       },
@@ -53,9 +53,13 @@ const controllers = {
         model: ProductDB,
         as: "Product",
       },
-    });
-
-    res.status(200).send(cartProducts);
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
   },
 
   deleteCartProduct: async (req, res) => {
