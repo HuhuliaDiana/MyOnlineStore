@@ -155,9 +155,6 @@
             </div>
           </div>
           <div class="fav" style="display: flex; margin-top: 5%">
-            <!-- <div class="material-icons" style="font-size: 200%; color: orange">
-              favorite
-            </div> -->
             <div style="margin-right: 3%">
               <q-rating
                 v-model="fav"

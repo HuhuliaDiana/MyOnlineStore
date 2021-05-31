@@ -371,20 +371,34 @@ const controllers = {
         email: email,
       },
     });
-    if (user && user.email !== currentUser.email) {
-      const productSugestion = {
-        UserId: currentUser.id,
+    //iar produsul nu a mai fost sugerat de catre aceeasi persoana
+    const productSuggestedAlready = await ProductSugestionDB.findOne({
+      where: {
         to: email,
+        UserId: currentUser.id,
         ProductId: productId,
-        note: note,
-      };
-      ProductSugestionDB.create(productSugestion)
-        .then(() => {
-          res.status(200).send({ message: "Sugestion sent succesfully!" });
-        })
-        .catch((err) => {
-          res.status(500).send(err);
-        });
+      },
+    });
+    if (user && user.email !== currentUser.email) {
+      if (productSuggestedAlready) {
+        res
+          .status(400)
+          .send({ message: "Produsul poate fi sugerat o singura data!" });
+      } else {
+        const productSugestion = {
+          UserId: currentUser.id,
+          to: email,
+          ProductId: productId,
+          note: note,
+        };
+        ProductSugestionDB.create(productSugestion)
+          .then(() => {
+            res.status(200).send({ message: "Sugestion sent succesfully!" });
+          })
+          .catch((err) => {
+            res.status(500).send(err);
+          });
+      }
     } else {
       res.status(400).send({ message: "Email invalid!" });
     }

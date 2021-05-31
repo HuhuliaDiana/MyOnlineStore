@@ -23,13 +23,8 @@ const controllers = {
     if (userCarts.length === 0) {
       //creez un cart
 
-      CartDB.create(cart)
-        .then(() => {
-          return cart;
-        })
-        .catch((err) => {
-          res.status(500).send(err);
-        });
+      const myOwnCart = await CartDB.create(cart);
+      return myOwnCart;
     } else {
       //iau ultimul cart
       const userLastCart = userCarts[userCarts.length - 1];
@@ -42,11 +37,8 @@ const controllers = {
         //cartul exista in orders=>
 
         //creez cart nou
-        CartDB.create(cart).then(() => {
-          //res.status(201).send(cart)
-          return cart;
-        });
-
+        const myOtherCart = await CartDB.create(cart);
+        return myOtherCart;
         //cart-ul nu se gaseste in Order
       } else {
         //returnez cart-ul
