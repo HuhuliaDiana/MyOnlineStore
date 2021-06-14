@@ -35,9 +35,9 @@
         style="margin-right: 5%"
         @click="openPage(model)"
       >
-        <q-tab name="home" label="Shop" />
-        <q-tab name="discounts" label="Discounts" />
-        <q-tab name="new" label="New" />
+         <q-tab name="home" label="Magazin" />
+        <q-tab name="discounts" label="Reduceri" />
+        <q-tab name="new" label="Nou" />
       </q-tabs>
       <q-btn
         size="15px"

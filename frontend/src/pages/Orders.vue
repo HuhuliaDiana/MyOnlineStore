@@ -144,7 +144,6 @@
 
 <script>
 import axios from "../boot/axios";
-
 import Toolbar from "../components/Toolbar.vue";
 import Order from "../components/Order.vue";
 

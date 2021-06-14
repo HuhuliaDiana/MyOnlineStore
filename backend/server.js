@@ -1,4 +1,7 @@
+
 const express = require("express");
+const app = express();
+
 const bodyParser = require("body-parser");
 const controllers=require("./controllers").other
 
@@ -11,7 +14,7 @@ const session = require('express-session')
 const sequelize=require("./config/db")
 const cors = require('cors')
 
-const app = express();
+// const app = express();
 app.use(bodyParser.json());
 
 initPassport(
@@ -26,7 +29,6 @@ initPassport(
   }
 );
 
-
 app.use(
   session({
     secret: "secret",
@@ -39,8 +41,6 @@ app.use(
     }
   })
 );
-
-
 
 app.use(passport.initialize()); 
 app.use(passport.session()); 
@@ -71,7 +71,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-let port = 8082;
+// let port = 8082;
 
 sequelize
   .authenticate()
@@ -85,7 +85,7 @@ app.use("/", router);
 app.get("/reset",controllers.reset)
 
 
-
+let port = 8082;
 app.listen(port, () => {
   console.log("Server is running on " + port);
 

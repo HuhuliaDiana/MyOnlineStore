@@ -520,32 +520,32 @@ export default {
 
           this.options.push(
             {
-              label: "RAM",
+              label: "Memorie RAM",
               value: this.product.memRAM,
             },
             {
-              label: "Memory internal",
+              label: "Memorie internă",
               value: this.product.memInternal,
             },
             {
-              label: "Network speed",
+              label: "Viteză de internet",
               value: this.product.netSpeed,
             },
             {
-              label: "Main Cam",
+              label: "Camera spate",
               value: this.product.mainCam,
             },
             {
-              label: "Selfie Cam",
+              label: "Camera selfie",
               value: this.product.selfieCam,
             },
 
             {
-              label: "Display size",
+              label: "Dimensiune ecran",
               value: this.product.displaySize,
             },
             {
-              label: "Battery",
+              label: "Baterie",
               value: this.product.battery,
             },
             {
@@ -553,12 +553,16 @@ export default {
               value: this.product.USB,
             },
             {
-              label: "Display resolution",
+              label: "Rezoluție ecran",
               value: this.product.displayRes,
+            },
+             {
+              label: "Greutate",
+              value: this.product.weight,
             },
 
             {
-              label: "Dimensions",
+              label: "Dimensiuni",
               value: this.product.dimensions,
             }
           );

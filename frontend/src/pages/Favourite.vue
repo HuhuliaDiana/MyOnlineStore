@@ -44,7 +44,7 @@ export default {
   },
 
   watch: {
-    val(newVal, oldVal) {
+    val() {
       this.getTheProducts();
     },
   },
@@ -69,6 +69,7 @@ export default {
         });
     },
   },
+  //created
   mounted() {
     this.getTheProducts();
   },

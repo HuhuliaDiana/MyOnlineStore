@@ -9,7 +9,7 @@
           font-weight: bold;
         "
       >
-        RECOMANDARI
+        RECOMANDĂRI
       </div>
       <div
         style="
