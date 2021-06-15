@@ -27,7 +27,7 @@
               font-size: 150%;
             "
           >
-            Cosul de cumparaturi este gol!
+            Coșul de cumpărături este gol!
           </div>
         </div>
         <div style="font-family: 'Montserrat', sans-serif">
@@ -42,7 +42,7 @@
               padding-left: 20px;
             "
           >
-            Detalii livrare
+            Date de livrare
           </div>
           <div>
             <DeliveryData
@@ -66,7 +66,7 @@
               padding-left: 20px;
             "
           >
-            Modalitate livrare
+            Modalitate de livrare
           </div>
           <div class="q-pa-lg">
             <q-option-group
@@ -88,7 +88,7 @@
               padding-left: 20px;
             "
           >
-            Modalitate de plata
+            Modalitate de plată
           </div>
           <div class="q-pa-lg">
             <q-option-group
@@ -351,7 +351,6 @@ export default {
         .get("http://localhost:8082/getCartProducts", { withCredentials: true })
         .then((response) => {
           this.products = response.data;
-          
 
           this.sendDataToCartPrice();
         });

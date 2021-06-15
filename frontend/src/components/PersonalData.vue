@@ -24,7 +24,7 @@
           align-items: center;
         "
       >
-        <span>Lastname:</span>
+        <span>Nume:</span>
         <!-- <input v-model="lastname" /> -->
         <q-input color="teal" filled v-model="lastname" style="font-size: 80%">
           <template v-slot:prepend>
@@ -40,7 +40,7 @@
           align-items: center;
         "
       >
-        <span>Firstname:</span>
+        <span>Prenume:</span>
         <!-- <input outlined v-model="firstname" /> -->
         <q-input color="teal" filled v-model="firstname" style="font-size: 80%">
           <template v-slot:prepend>
@@ -55,7 +55,7 @@
           align-items: center;
         "
       >
-        <span>Username:</span>
+        <span>Nume de utilizator:</span>
         <!-- <input outlined v-model="username" /> -->
         <q-input color="teal" filled v-model="username" style="font-size: 80%">
           <template v-slot:prepend>
@@ -83,7 +83,7 @@
       <q-btn
         color="secondary"
         style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
-        label="Save"
+        label="Salvare"
         @click="updatePersonalData"
       />
     </div>
@@ -103,9 +103,8 @@ export default {
       email: null,
     };
   },
-  
+
   methods: {
-   
     updatePersonalData() {
       axios
         .patch(

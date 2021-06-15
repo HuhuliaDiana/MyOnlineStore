@@ -24,14 +24,14 @@
             justify-content: space-between;
           "
         >
-          <q-input outlined v-model="lastname" label="Lastname" />
-          <q-input outlined v-model="firstname" label="Firstname" />
+          <q-input outlined v-model="lastname" label="Nume" />
+          <q-input outlined v-model="firstname" label="Prenume" />
 
           <q-input
             outlined
             mask="(###) ### - ####"
             v-model="phone"
-            label="Phone"
+            label="Telefon"
           />
         </div>
         <div
@@ -41,28 +41,29 @@
             justify-content: space-between;
           "
         >
-          <q-input outlined v-model="town" label="Town" />
-          <q-input outlined v-model="county" label="County" />
-          <q-input outlined v-model="address" label="Address" />
+          <q-input outlined v-model="town" label="Oraș" />
+          <q-input outlined v-model="county" label="Județ" />
+          <q-input outlined v-model="address" label="Adresă" />
         </div>
         <div
           style="
             display: flex;
             flex-direction: column;
+            width: 30%;
             justify-content: space-between;
           "
         >
-          <div>
+          <div style="margin-left: 20%">
             <q-tooltip
               v-if="userContacts.length === 0"
               content-style="font-size: 12px;text-align:center;background-color:#ffe5b4; color:black; font-family: 'Montserrat', sans-serif"
             >
-              Nu exista date de livrare salvate!
+              Nu există date de livrare salvate!
             </q-tooltip>
             <q-btn-dropdown
               color="secondary"
               style="font-family: 'Montserrat', sans-serif"
-              label="Selecteaza date"
+              label="Selectează date"
             >
               <q-list v-for="contact in userContacts" :key="contact">
                 <q-item
@@ -94,7 +95,7 @@
                   display: none;
                   margin-right: 10px;
                 "
-                label="Update"
+                label="Actualizare"
                 color="secondary"
                 @click="updateUserContact"
               />
@@ -111,7 +112,7 @@
               </q-tooltip>
               <q-btn
                 color="secondary"
-                label="Save"
+                label="Salvare"
                 :disabled="true"
                 style="font-family: 'Montserrat', sans-serif"
                 @click="saveUserContact"
@@ -130,7 +131,7 @@
               </q-tooltip>
               <q-btn
                 color="secondary"
-                label="Save"
+                label="Salvare"
                 :disabled="false"
                 style="font-family: 'Montserrat', sans-serif"
                 @click="saveUserContact"

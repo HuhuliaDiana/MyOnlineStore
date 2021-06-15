@@ -91,7 +91,7 @@
                     margin-bottom: 15%;
                     color: #26a69b;
                   "
-                  label="Anuleaza comanda"
+                  label="Anulează comanda"
                   @click="ceva(order.id)"
                 />
               </div>

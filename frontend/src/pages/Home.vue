@@ -366,7 +366,7 @@ export default {
         if (element.quantity < 15 && element.quantity > 0) {
           return "Stoc limitat";
         } else if (element.quantity >= 15) {
-          return "In stoc";
+          return "În stoc";
         } else {
           return "Stoc epuizat";
         }

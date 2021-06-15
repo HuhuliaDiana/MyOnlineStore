@@ -2,7 +2,7 @@
   <div style="display: table; font-family: 'Montserrat', sans-serif">
     <div>
       <span style="width: 100%; font-size: 140%; font-weight: bold">
-        Sumar comanda
+        Sumar comandă
       </span>
     </div>
     <div style="display: table; margin-top: 10%; width: 100%">
@@ -54,7 +54,7 @@
         <q-tooltip
           content-style="font-size: 12px;text-align:center;background-color:#ffe5b4; color:black; font-family: 'Montserrat', sans-serif"
         >
-          Foloseste reducerea de<b> 10%</b> pentru aceasta comanda!
+          Folosește reducerea de<b> 10%</b> pentru această comandă!
         </q-tooltip>
       </q-btn>
     </div>

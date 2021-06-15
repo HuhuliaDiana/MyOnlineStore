@@ -158,7 +158,7 @@ export default {
         })
         .then((response) => {
           if (response.data !== null) {
-            this.isNew = "New!";
+            this.isNew = "Nou!";
             console.log(this.isNew);
           }
         })
@@ -201,7 +201,7 @@ export default {
         this.stockStatus = "Stoc limitat";
       } else if (this.quantity > 15) {
         this.color = "green";
-        this.stockStatus = "In stoc";
+        this.stockStatus = "În stoc";
       } else if (this.quantity == 0) {
         this.color = "red";
         this.stockStatus = "Stoc epuizat";
@@ -217,7 +217,7 @@ export default {
             color: "green-4",
             textColor: "white",
             icon: "cloud_done",
-            message: "Ai adaugat un produs in cos!",
+            message: "Ai adăugat un produs în coș!",
           });
           this.quantity = response.data.quantity;
           this.getStockStatus();

@@ -31,7 +31,7 @@
             <div style="font-size: 180%" class="material-icons-outlined">
               paid
             </div>
-            <div style="margin-left: 15px"><b>Modalitate de plata:</b></div>
+            <div style="margin-left: 15px"><b>Modalitate de plată:</b></div>
           </div>
           <div>{{ paymentMethod }}</div>
         </div>
@@ -45,7 +45,7 @@
             <div style="font-size: 180%" class="material-icons-outlined">
               account_circle
             </div>
-            <div style="margin-left: 15px"><b>Livrat catre:</b></div>
+            <div style="margin-left: 15px"><b>Livrat către:</b></div>
           </div>
 
           <div>

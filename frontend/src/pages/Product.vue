@@ -94,6 +94,7 @@
             </div>
 
             <div
+              v-if="nrReviews > 1 || nrReviews === 0"
               style="
                 color: grey;
                 margin-top: 20px;
@@ -101,7 +102,19 @@
                 font-size: 95%;
               "
             >
-              {{ nrReviews }} reviews
+              {{ nrReviews }} evaluări
+            </div>
+
+            <div
+              v-else
+              style="
+                color: grey;
+                margin-top: 20px;
+                margin-left: 5%;
+                font-size: 95%;
+              "
+            >
+              {{ nrReviews }} evaluare
             </div>
           </div>
 
@@ -148,7 +161,7 @@
             <div>
               <q-btn
                 color="secondary"
-                label="Submit"
+                label="Oferă"
                 style="font-size: 70%; margin-top: 20%; margin-left: 50%"
                 @click="setRatingProduct"
               />
@@ -186,7 +199,7 @@
             </div>
           </div>
           <div style="margin-top: 10%; font-size: 110%">
-            <span>Garantie standard:</span>
+            <span>Garanție standard:</span>
 
             <ul>
               <li>Persoane fizice: 24 luni</li>
@@ -210,7 +223,7 @@
                 style="font-size: 170%; margin-right: 5px"
                 >schedule</span
               >
-              <span>Livrare <b>1-3 zile</b> lucratoare</span>
+              <span>Livrare în <b>1-3 zile</b> lucrătoare</span>
             </div>
             <div style="display: flex; align-items: center; margin-top: 10px">
               <span
@@ -218,7 +231,7 @@
                 style="font-size: 170%; margin-right: 5px"
                 >forward_30</span
               >
-              <span>Retur gratuit in <b>30 de zile</b></span>
+              <span>Retur gratuit în <b>30 de zile</b></span>
             </div>
           </div>
           <div class="q-pa-md q-gutter-sm">
@@ -232,7 +245,7 @@
               color="secondary"
               icon="shopping_cart"
               :disabled="product.quantity === 0"
-              label="Adauga in cos"
+              label="Adaugă in coș"
               @click="addProductInCart"
             />
           </div>
@@ -255,9 +268,9 @@
               content-style="font-size: 12px;text-align:center;background-color:#ffe5b4;color:black;
             font-family: 'Montserrat', sans-serif"
             >
-              Recomanda acest produs unui prieten si in urma achizitiei<br />
-              beneficiati amandoi de <i>reducerea de 10%</i> la urmatoarea
-              comanda!
+              Recomandă acest produs unui prieten și în urma achiziției<br />
+              beneficiați amândoi de <i>reducerea de 10%</i> la următoarea
+              comandă!
             </q-tooltip>
           </div>
           <div
@@ -273,7 +286,7 @@
                 <q-input
                   id="qinput_email"
                   v-model="email"
-                  label="Catre:"
+                  label="Către:"
                   color="secondary"
                   hint="Email"
                 />
@@ -282,7 +295,7 @@
                   clearable
                   outlined
                   autogrow
-                  label="Nota:"
+                  label="Notă:"
                   style="margin-top: 30px"
                   color="secondary"
                 />
@@ -389,9 +402,9 @@ export default {
     },
     fav(n, o) {
       if (n === 1) {
-        this.message = "Ati apreciat acest produs!";
+        this.message = "Ați apreciat acest produs!";
       } else {
-        this.message = "Adaugati produsul in lista de preferate!";
+        this.message = "Adăugați produsul în lista de preferate!";
       }
     },
   },
@@ -444,7 +457,7 @@ export default {
             color: "green-4",
             textColor: "white",
             icon: "cloud_done",
-            message: "Ai adaugat acest produs in cos!",
+            message: "Ai adăugat acest produs in coș!",
           });
         })
         .catch((err) => {
@@ -500,7 +513,7 @@ export default {
         return "Stoc limitat";
       } else if (this.product.quantity > 15) {
         this.color = "green";
-        return "In stoc";
+        return "În stoc";
       } else if (this.product.quantity == 0) {
         this.color = "red";
         return "Stoc epuizat";
@@ -532,11 +545,11 @@ export default {
               value: this.product.netSpeed,
             },
             {
-              label: "Camera spate",
+              label: "Cameră spate",
               value: this.product.mainCam,
             },
             {
-              label: "Camera selfie",
+              label: "Cameră selfie",
               value: this.product.selfieCam,
             },
 
@@ -556,7 +569,7 @@ export default {
               label: "Rezoluție ecran",
               value: this.product.displayRes,
             },
-             {
+            {
               label: "Greutate",
               value: this.product.weight,
             },
