@@ -14,7 +14,7 @@ const routes = [
   },
   {
     path: '/submit',
-    component: () => import('pages/Submit.vue')
+    component: () => import('pages/Submit2.vue')
   },
   {
     path: '/orders',
