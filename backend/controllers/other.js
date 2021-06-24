@@ -12,25 +12,24 @@ const controller = {
         });
       })
       .catch((err) => {
-        res.status(500).send(err)
+        res.status(500).send(err);
       });
   },
 
   checkAuth: (req, res, next) => {
     if (req.isAuthenticated()) {
-      return res.redirect('/alreadyAuth')
+      return res.redirect("/alreadyAuth");
     }
     return next();
   },
 
-  checkNotAuth: (req, res, next)=> {
+  checkNotAuth: (req, res, next) => {
     if (req.isAuthenticated()) {
       return next();
     }
-    res.redirect('/notAuth');
-    
-}
-
+    res.redirect("/notAuth");
+  },
+ 
 };
 
 module.exports = controller;

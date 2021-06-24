@@ -57,6 +57,7 @@
               style="font-size: 30px"
               color="secondary"
               v-close-popup
+              @click="refreshPage"
             />
           </div>
           <div
@@ -348,6 +349,7 @@ export default {
       confirm: false,
       photos: "",
       changeLabel: false,
+      refreshPage: false,
     };
   },
 
@@ -366,9 +368,41 @@ export default {
       this.productEditPhotos.splice(this.productEditPhotos.indexOf(photo), 1);
     },
     editProduct(key) {
-      //axios edit product
       //verifica ce campuri se schimba, vefifica pozele, vefifica daca s-au incarcat poze- this.files!==null
-      
+      const product = {
+        quantity: this.quantity,
+        price: this.price,
+        brand: this.brand,
+        model: this.model,
+        dimensions: this.dimensions,
+        weight: this.weight,
+        memRAM: this.memRAM,
+        memInternal: this.memInternal,
+        selfieCam: this.selfieCam,
+        mainCam: this.mainCam,
+        battery: this.battery,
+        displayRes: this.displayRes,
+        displaySize: this.displaySize,
+        netSpeed: this.netSpeed,
+        USB: this.usb,
+        discount: this.discount,
+        photos: this.photos,
+      };
+
+      axios
+        .patch(`http://localhost:8082/getEditProduct/${key}`, product)
+        .then((res) => {
+          this.refreshPage = true;
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Ai modificat un produs!",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     onRowClick(evt, row) {
       this.productEdit = row;

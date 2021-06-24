@@ -403,29 +403,33 @@ const controllers = {
       res.status(400).send({ message: "Email invalid!" });
     }
   },
-  editProduct: async (req, res) => {
-    const product = await ProductDB.findByPk(req.params.id);
+  editProduct: async (req) => {
     const newProduct = req.body;
-    if (product.brand !== newProduct.brand) {
-      ProductDB.update(
+    let attributes = [];
+
+    const prod = await ProductDB.findByPk(req.params.id);
+    for (let att in prod.dataValues) {
+      if (
+        prod[att] !== newProduct[att] &&
+        att !== "createdAt" &&
+        att !== "updatedAt"
+      ) {
+        attributes.push(att);
+      }
+    }
+    attributes.forEach(async (att) => {
+      await ProductDB.update(
         {
-          brand: req.body.brand,
+          [att]: newProduct[att],
         },
         {
           where: {
             id: req.params.id,
           },
         }
-      )
-        .then(() => {
-          res.status(200).send({
-            message: "product updated",
-          });
-        })
-        .catch((err) => {
-          res.status(500).send(err);
-        });
-    }
+      );
+    });
+    
   },
 };
 module.exports = controllers;

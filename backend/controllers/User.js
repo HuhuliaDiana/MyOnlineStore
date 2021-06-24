@@ -4,12 +4,15 @@ const Sequelize = require("sequelize");
 const bcrypt = require("bcrypt");
 const CartDB = require("../models").Cart;
 const OrderDB = require("../models").Order;
+const ProductDB = require("../models").Product;
+
 const CartProductDB = require("../models").CartProduct;
 
 const Op = Sequelize.Op;
 const controllers = require("./Order");
 const controllerCart = require("./Cart");
 const ProductSugestionDB = require("../models").ProductSugestion;
+const controllerProduct = require("./Product");
 
 const controller = {
   addUser: async (req, res) => {
@@ -267,7 +270,6 @@ const controller = {
       .catch((err) => {
         res.status(500).send(err);
       });
-
   },
   cancelOrder: async (req, res) => {
     const order = await OrderDB.destroy({
@@ -276,6 +278,19 @@ const controller = {
       },
     });
     const orders = await controllers.getUserOrders(req, res);
+  },
+
+  getEditProduct: async (req, res) => {
+    await controllerProduct.editProduct(req, res);
+    await controllerProduct.editProduct(req, res);
+
+    ProductDB.findByPk(req.params.id)
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
   },
 };
 module.exports = controller;
