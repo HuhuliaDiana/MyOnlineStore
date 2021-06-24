@@ -25,7 +25,7 @@
         >
           Nu aveti produse favorite!
         </div>
-        <img style="width:40%;margin-top:5%" src="photos/empty_cart.png"/>
+        <img style="width:40%;margin-top:5%" src="photos/emptyCart.svg"/>
       </div>
     </div>
   </div>

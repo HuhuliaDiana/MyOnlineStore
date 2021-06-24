@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 
-const sequelize = new Sequelize("mybd", "root", "", {
+const sequelize = new Sequelize("WiseCellDB", "root", "", {
   dialect: "mysql",
   host: "localhost",
   port: 3307,
