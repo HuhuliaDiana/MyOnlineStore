@@ -403,5 +403,29 @@ const controllers = {
       res.status(400).send({ message: "Email invalid!" });
     }
   },
+  editProduct: async (req, res) => {
+    const product = await ProductDB.findByPk(req.params.id);
+    const newProduct = req.body;
+    if (product.brand !== newProduct.brand) {
+      ProductDB.update(
+        {
+          brand: req.body.brand,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      )
+        .then(() => {
+          res.status(200).send({
+            message: "product updated",
+          });
+        })
+        .catch((err) => {
+          res.status(500).send(err);
+        });
+    }
+  },
 };
 module.exports = controllers;

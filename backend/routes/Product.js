@@ -4,7 +4,8 @@ const controllers = require("../controllers").product;
 const other = require("../controllers").other;
 
 router.post("/addProduct", controllers.addProduct);
-router.get("/getAllProducts",  controllers.getAllProducts);
+router.patch("/editProduct/:id", controllers.editProduct);
+router.get("/getAllProducts", controllers.getAllProducts);
 router.post(
   "/addProductInCart",
   other.checkNotAuth,

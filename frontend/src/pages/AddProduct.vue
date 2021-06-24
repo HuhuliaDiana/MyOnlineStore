@@ -145,34 +145,59 @@
             class="flex flex-center q-pa-md"
             style="margin-top: 3%; flex-direction: column"
           >
-            <div class="q-gutter-md row items-start">
-              <div style="display:flex; border:1px solid;width:30%">
-                <div style=""
+            <div
+              class="q-gutter-md flex"
+              style="align-items: center; justify-content: center; width: 94%"
+            >
+              <div
+                v-if="changeLabel"
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  width: 520px;
+                  margin-right: 50px;
+                "
+              >
+                <div
                   v-for="photo in productEditPhotos"
                   :key="photo"
                   :name="productEditPhotos.indexOf(photo)"
+                  style="box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px"
                 >
-                  <img :src="`photos/${photo}`" />
+                  <div style="display: flex; justify-content: flex-end">
+                    <q-icon
+                      name="clear"
+                      class="cursor-pointer"
+                      style="font-size: 15px; padding: 5px"
+                      color="secondary"
+                      @click="deletePhoto(photo)"
+                    />
+                  </div>
+                  <div style="padding-top: 5px; padding-bottom: 10px">
+                    <img style="width: 150px" :src="`photos/${photo}`" />
+                  </div>
                 </div>
               </div>
+
               <div>
-              <q-uploader
-                style="width: 600px"
-                label="Încarcă poze"
-                @added="onFileAdd"
-                color="secondary"
-                max-files="3"
-                multiple
-                accept=".jpg"
-                @rejected="onRejected"
-              />
+                <q-uploader
+                  style="width: 600px"
+                  label="Încarcă poze"
+                  @added="onFileAdd"
+                  color="secondary"
+                  max-files="3"
+                  multiple
+                  accept=".jpg"
+                  @rejected="onRejected"
+                />
               </div>
             </div>
+
             <div style="margin-top: 3%">
               <q-btn
                 flat
                 :label="changeLabel ? 'Modifică' : 'Adaugă'"
-                @click="changeLabel ? editProduct : saveProduct"
+                @click="changeLabel ? editProduct(productEdit.id) : saveProduct"
                 style="
                   background-color: #26a69b;
                   color: white;
@@ -300,6 +325,7 @@ export default {
       ],
       files: [],
       product: null,
+      productEdit: null,
 
       products: [],
       productEditPhotos: [],
@@ -330,18 +356,24 @@ export default {
       .get("http://localhost:8082/getAllProducts")
       .then((res) => {
         this.rows = res.data;
-        console.log(this.rows);
       })
       .catch((err) => {
         console.log(err);
       });
   },
   methods: {
-    editProduct() {},
+    deletePhoto(photo) {
+      this.productEditPhotos.splice(this.productEditPhotos.indexOf(photo), 1);
+    },
+    editProduct(key) {
+      //axios edit product
+      //verifica ce campuri se schimba, vefifica pozele, vefifica daca s-au incarcat poze- this.files!==null
+      
+    },
     onRowClick(evt, row) {
-      this.productEditPhotos = row.photos.split(", ");
-      console.log(this.productEditPhotos);
+      this.productEdit = row;
 
+      this.productEditPhotos = row.photos.split(", ");
       this.confirm = true;
       this.brand = row.brand;
       this.model = row.model;
