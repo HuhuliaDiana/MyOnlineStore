@@ -11,10 +11,70 @@ const controller = require("./Cart");
 const Op = Sequelize.Op;
 
 const controllers = {
+  // getAllOrdersComplete: async (req, res) => {
+  //   const orders = await OrderDB.findAll();
+  //   let idOrders = orders.map((order) => order.id); //1 2
+  //   var array = [];
+
+  //   await Promise.all(
+  //     idOrders.map(async (id) => {
+  //       var order = await OrderDB.findOne(
+  //         {
+  //           where: {
+  //             id: id,
+  //           },
+  //         },
+  //         {
+  //           include: {
+  //             model: CartDB,
+  //             include: {
+  //               model: UserDB,
+  //               as: "User",
+  //             },
+  //             as: "Cart",
+  //           },
+  //         }
+  //       );
+  //       var products = await CartProductDB.findAll(
+  //         {
+  //           where: {
+  //             CartId: order.CartId,
+  //           },
+  //         },
+  //         {
+  //           include: {
+  //             model: ProductDB,
+  //             as: "Product",
+  //           },
+  //         }
+  //       );
+        
+  //       products.forEach((product) => {
+  //         order=Object.assign(order, product);
+  //       });
+  //       // let completeOrder = Object.assign(order, products);
+  //       array.push(order);
+  //     })
+  //   );
+  //   res.status(200).send(array);
+  // },
   getAllOrders: async (req, res) => {
-    OrderDB.findAll().then((result) => {
-      res.status(200).send(result);
-    });
+    OrderDB.findAll({
+      include: {
+        model: CartDB,
+        include: {
+          model: UserDB,
+          as: "User",
+        },
+        as: "Cart",
+      },
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
   },
   getOrder: async (req, res) => {
     OrderDB.findByPk(req.params.id).then((result) => {

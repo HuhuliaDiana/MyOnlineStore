@@ -53,11 +53,10 @@
           <div style="display: flex; justify-content: flex-end">
             <q-icon
               name="clear"
-              class="cursor-pointer"
               style="font-size: 30px"
               color="secondary"
-              v-close-popup
               @click="refreshPage"
+              v-close-popup
             />
           </div>
           <div
@@ -102,7 +101,7 @@
                   <q-input v-model="memRAM" label="Memorie RAM" />
                 </div>
                 <div>
-                  <q-input v-model="memInt" label="Memorie internă" />
+                  <q-input v-model="memInternal" label="Memorie internă" />
                 </div>
               </div>
               <div style="display: flex; justify-content: space-between">
@@ -349,7 +348,7 @@ export default {
       confirm: false,
       photos: "",
       changeLabel: false,
-      refreshPage: false,
+      refresh: false,
     };
   },
 
@@ -364,6 +363,11 @@ export default {
       });
   },
   methods: {
+    refreshPage() {
+      if (this.refresh) {
+        this.$router.go();
+      }
+    },
     deletePhoto(photo) {
       this.productEditPhotos.splice(this.productEditPhotos.indexOf(photo), 1);
     },
@@ -392,7 +396,7 @@ export default {
       axios
         .patch(`http://localhost:8082/getEditProduct/${key}`, product)
         .then((res) => {
-          this.refreshPage = true;
+          this.refresh = true;
           this.$q.notify({
             color: "green-4",
             textColor: "white",
@@ -419,6 +423,7 @@ export default {
       this.mainCam = row.mainCam;
       this.battery = row.battery;
       this.displaySize = row.displaySize;
+      this.netSpeed = row.netSpeed;
       this.usb = row.USB;
       this.discount = row.discount;
       this.displayRes = row.displayRes;
@@ -437,6 +442,7 @@ export default {
       this.memInternal = null;
       this.selfieCam = null;
       this.mainCam = null;
+      this.netSpeed = null;
       this.battery = null;
       this.displaySize = null;
       this.usb = null;

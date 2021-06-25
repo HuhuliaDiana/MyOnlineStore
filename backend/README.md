@@ -302,3 +302,49 @@ ProductId: req.params.id,
     //   res.status(500).send(err);
     // });
     // console.log("cart updated" + cartUpdated);
+
+
+  OrderDB.findOne(
+            {
+              where: {
+                id: id,
+              },
+            },
+            {
+              include: {
+                model: CartDB,
+                include: {
+                  model: UserDB,
+                  as: "User",
+                },
+                as: "Cart",
+              },
+            }
+          )
+            .then((order) => {
+              CartProductDB.findAll(
+                {
+                  where: {
+                    CartId: order.CartId,
+                  },
+                },
+                {
+                  include: {
+                    model: ProductDB,
+                    as: "Product",
+                  },
+                }
+              )
+                .then((result) => {
+                  let completeOrder = Object.assign(order, result);
+                  array.push(completeOrder);
+                  console.log(completeOrder);
+
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            })
+            .catch((err) => {
+              console.log(err);
+            });

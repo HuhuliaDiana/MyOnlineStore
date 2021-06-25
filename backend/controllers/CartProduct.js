@@ -5,6 +5,24 @@ const OrderDB = require("../models").Order;
 const controller = require("./Cart");
 
 const controllers = {
+  getProductsFromCart: async (req, res) => {
+    CartProductDB.findAll({
+      where: {
+        CartId: req.params.id,
+      },
+
+      include: {
+        model: ProductDB,
+        as: "Product",
+      },
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  },
   modifyQuantity: async (req, res) => {
     const new_quantity = req.body.quantity;
     const cart = await controller.getCart(req, res);

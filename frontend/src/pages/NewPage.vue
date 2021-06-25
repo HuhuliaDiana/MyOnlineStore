@@ -13,19 +13,15 @@
       "
     >
       <div style="font-size: 250%; margin-top: 1%">COMENZI</div>
+
       <div class="q-pa-md" style="margin-top: 2%">
         <q-table
-          class="my-sticky-header-table"
-          style="font-family: 'Montserrat', sans-serif"
           :data="rows"
           :columns="columns"
           row-key="name"
           :key="componentKey"
-          flat
-          bordered
-          @row-click="onRowClick"
         >
-          <template :header="props">
+          <template v-slot:header="props">
             <q-tr :props="props">
               <q-th auto-width />
               <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -34,7 +30,7 @@
             </q-tr>
           </template>
 
-          <template :body="props">
+          <template v-slot:body="props">
             <q-tr :props="props">
               <q-td auto-width>
                 <q-btn
@@ -43,7 +39,11 @@
                   round
                   dense
                   @click="props.expand = !props.expand"
-                  :icon="props.expand ? 'remove' : 'add'"
+                  :icon="
+                    props.expand
+                      ? ('remove', getProductsFromCart(props.row.id))
+                      : 'add'
+                  "
                 />
               </q-td>
               <q-td v-for="col in props.cols" :key="col.name" :props="props">
@@ -53,7 +53,7 @@
             <q-tr v-show="props.expand" :props="props">
               <q-td colspan="100%">
                 <div class="text-left">
-                  This is expand slot for row above: {{ props.row.name }}.
+                  <div :v-for="product in products">{{product.quantity}}</div>
                 </div>
               </q-td>
             </q-tr>
@@ -63,14 +63,11 @@
     </div>
   </div>
 </template>
-        
-
 <script>
-import axios from "../boot/axios";
 import ToolbarAdmin from "../components/ToolbarAdmin.vue";
+import axios from "../boot/axios";
 
 export default {
-  name: "AllOrders",
   components: {
     ToolbarAdmin: ToolbarAdmin,
   },
@@ -79,6 +76,7 @@ export default {
     return {
       componentKey: true,
       rows: [],
+      products: [],
       //pune contul de pe care s a fct comanda le expand in table quasar
       columns: [
         {
@@ -141,6 +139,19 @@ export default {
       ],
     };
   },
+  methods: {
+    getProductsFromCart(key) {
+      axios
+        .get(`http://localhost:8082/getProductsFromCart/${key}`)
+        .then((res) => {
+          console.log("hei");
+          this.products = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
   mounted() {
     axios
       .get("http://localhost:8082/getAllOrders")
@@ -153,6 +164,5 @@ export default {
   },
 };
 </script>
-
-<style>
+<style scoped>
 </style>
