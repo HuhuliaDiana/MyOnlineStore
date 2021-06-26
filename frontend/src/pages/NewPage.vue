@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="font-family: 'Montserrat', sans-serif">
     <div>
       <ToolbarAdmin />
     </div>
@@ -12,19 +12,30 @@
         flex-direction: column;
       "
     >
-      <div style="font-size: 250%; margin-top: 1%">COMENZI</div>
+      <div style="margin-top: 2%">
+        <img style="width: 150px" src="photos/checklist.png" />
+      </div>
 
-      <div class="q-pa-md" style="margin-top: 2%">
+      <div class="q-pa-md" style="margin-top: 2%; width: 80%">
         <q-table
           :data="rows"
           :columns="columns"
-          row-key="name"
+          row-key="id"
+          class="my-sticky-header-table"
           :key="componentKey"
         >
           <template v-slot:header="props">
             <q-tr :props="props">
-              <q-th auto-width />
-              <q-th v-for="col in props.cols" :key="col.name" :props="props">
+              <q-th
+                auto-width
+                style="background-color: rgb(38, 166, 155, 0.3)"
+              />
+              <q-th
+                style="background-color: rgb(38, 166, 155, 0.3)"
+                v-for="col in props.cols"
+                :key="col.name"
+                :props="props"
+              >
                 {{ col.label }}
               </q-th>
             </q-tr>
@@ -35,25 +46,35 @@
               <q-td auto-width>
                 <q-btn
                   size="sm"
-                  color="accent"
                   round
+                  color="secondary"
                   dense
                   @click="props.expand = !props.expand"
-                  :icon="
-                    props.expand
-                      ? ('remove', getProductsFromCart(props.row.id))
-                      : 'add'
-                  "
+                  :icon="props.expand ? 'remove' : 'add'"
                 />
               </q-td>
               <q-td v-for="col in props.cols" :key="col.name" :props="props">
                 {{ col.value }}
               </q-td>
             </q-tr>
-            <q-tr v-show="props.expand" :props="props">
+            <q-tr v-show="props.expand" :props="props" class="expandProducts">
               <q-td colspan="100%">
-                <div class="text-left">
-                  <div :v-for="product in products">{{product.quantity}}</div>
+                <div class="flex flex-center">
+                  <table style="width: 60%">
+                    <tr>
+                      <th>Id produs</th>
+                      <th>Produs</th>
+                      <th>Cantitate</th>
+                    </tr>
+                    <tr v-for="produs in props.row.produse" :key="produs.id">
+                      <td>{{ produs.id }}</td>
+                      <td>
+                        {{ produs.Product.brand }} {{ produs.Product.model }}
+                      </td>
+
+                      <td>{{ produs.quantity }}</td>
+                    </tr>
+                  </table>
                 </div>
               </q-td>
             </q-tr>
@@ -71,13 +92,11 @@ export default {
   components: {
     ToolbarAdmin: ToolbarAdmin,
   },
-
+  // , getProductsFromCart(props.row.id)
   data() {
     return {
-      componentKey: true,
       rows: [],
-      products: [],
-      //pune contul de pe care s a fct comanda le expand in table quasar
+      // products: [],
       columns: [
         {
           name: "id",
@@ -136,27 +155,34 @@ export default {
           required: true,
           field: "paymentMethod",
         },
+        {
+          name: "email",
+          label: "Cont",
+          align: "center",
+          required: true,
+          field: (row) => row.Cart.User.email,
+        },
       ],
     };
   },
-  methods: {
-    getProductsFromCart(key) {
-      axios
-        .get(`http://localhost:8082/getProductsFromCart/${key}`)
-        .then((res) => {
-          console.log("hei");
-          this.products = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-  },
+
   mounted() {
     axios
       .get("http://localhost:8082/getAllOrders")
-      .then((res) => {
-        this.rows = res.data;
+      .then((result) => {
+        this.rows = result.data;
+        this.rows.forEach((element) => {
+          axios
+            .get(`http://localhost:8082/getProductsFromCart/${element.id}`)
+            .then((res) => {
+              element["produse"] = res.data;
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        });
+
+        console.log(this.rows);
       })
       .catch((err) => {
         console.log(err);
@@ -165,4 +191,28 @@ export default {
 };
 </script>
 <style scoped>
+th,
+td {
+  text-align: center;
+}
+.expandProducts {
+  background-color: rgba(216, 226, 223, 0.158);
+}
+</style>
+<style lang="sass">
+.my-sticky-header-table
+
+  .q-table__top,
+  .q-table__bottom,
+  thead tr:first-child th
+    background-color: rgb(38,166,155,0.3)
+
+  thead tr th
+    position: sticky
+    z-index: 1
+  thead tr:first-child th
+    top: 0
+
+  &.q-table--loading thead tr:last-child th
+    top: 48px
 </style>

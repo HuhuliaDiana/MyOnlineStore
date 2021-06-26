@@ -3,6 +3,9 @@ import VueRouter from 'vue-router'
 
 import routes from './routes'
 
+import VueCompositionAPI from '@vue/composition-api'
+
+Vue.use(VueCompositionAPI)
 Vue.use(VueRouter)
 
 /*

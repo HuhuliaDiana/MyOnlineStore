@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="font-family: 'Montserrat', sans-serif">
     <div>
       <ToolbarAdmin />
     </div>
@@ -20,19 +20,46 @@
           flex-direction: column;
         "
       >
-        <div style="font-size: 250%; margin-top: 1%">PRODUSE</div>
+        <!-- <div style="font-size: 250%; margin-top: 1%">PRODUSE</div> -->
         <div style="margin-top: 2%">
+          <img style="width: 150px" src="photos/ecommerce.png" />
+        </div>
+        <div>
+          <div class="flex" style="justify-content: flex-end">
+            <q-select
+              v-model="visibleColumns"
+              multiple
+              outlined
+              dense
+              options-dense
+              :display-value="$q.lang.table.columns"
+              emit-value
+              map-options
+              :options="columns"
+              option-value="name"
+              options-cover
+              style="min-width: 150px; background-color: #ffffff"
+            />
+          </div>
           <q-table
+            style="margin-top: 20px"
             class="my-sticky-header-table"
-            style="font-family: 'Montserrat', sans-serif"
             :data="rows"
             :columns="columns"
-            row-key="name"
+            row-key="id"
             :key="componentKey"
             flat
             bordered
             @row-click="onRowClick"
-          />
+            selection="multiple"
+            :selected.sync="selectedRows"
+            :visible-columns="visibleColumns"
+            :selected-rows-label="getSelected"
+          >
+            <!-- <template v-slot:top>
+              <q-space />
+            </template> -->
+          </q-table>
         </div>
       </div>
 
@@ -41,14 +68,22 @@
           display: flex;
           width: 100%;
           justify-content: flex-end;
-          margin-right: 11%;
+          margin-right: 8%;
         "
       >
         <q-btn round fab icon="add" color="secondary" @click="addProduct" />
+        <q-btn
+          style="margin-left: 15px"
+          round
+          fab
+          color="red"
+          icon="delete_forever"
+          @click="deleteProducts"
+        />
       </div>
     </div>
     <q-dialog v-model="confirm" persistent>
-      <q-card style="font-family: 'Montserrat', sans-serif; max-width: 90vw">
+      <q-card style="max-width: 90vw; font-family: 'Montserrat', sans-serif">
         <q-card-section class="scroll items-center">
           <div style="display: flex; justify-content: flex-end">
             <q-icon
@@ -222,11 +257,16 @@ export default {
   components: {
     ToolbarAdmin: ToolbarAdmin,
   },
+  watch: {
+    rows() {},
+  },
 
   data() {
     return {
+      visibleColumns: [],
       componentKey: true,
       rows: [],
+      selectedRows: [],
       columns: [
         {
           name: "id",
@@ -327,7 +367,6 @@ export default {
       product: null,
       productEdit: null,
 
-      products: [],
       productEditPhotos: [],
 
       dimensions: null,
@@ -353,16 +392,41 @@ export default {
   },
 
   mounted() {
-    axios
-      .get("http://localhost:8082/getAllProducts")
-      .then((res) => {
-        this.rows = res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.getAllProducts();
+    this.getVisibleColumns();
   },
+
   methods: {
+    getVisibleColumns() {
+      this.columns.forEach((column) => {
+        this.visibleColumns.push(column.name);
+      });
+    },
+    getAllProducts() {
+      axios
+        .get("http://localhost:8082/getAllProducts")
+        .then((res) => {
+          this.rows = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    deleteProducts() {
+      if (this.selectedRows.length > 0) {
+        axios
+          .patch("http://localhost:8082/deleteProducts", {
+            array: this.selectedRows,
+          })
+          .then((res) => {
+            console.log(res);
+            this.getAllProducts();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
     refreshPage() {
       if (this.refresh) {
         this.$router.go();

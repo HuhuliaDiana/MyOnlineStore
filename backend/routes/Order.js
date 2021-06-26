@@ -3,7 +3,7 @@ const router = express.Router();
 const controllers = require("../controllers").order;
 const other = require("../controllers").other;
 
-// router.get("/getAllOrdersComplete", controllers.getAllOrdersComplete);
+router.get("/getAllOrdersComplete", controllers.getAllOrdersComplete);
 
 router.get("/getAllOrders", controllers.getAllOrders);
 router.get("/getOrder/:id", controllers.getOrder);

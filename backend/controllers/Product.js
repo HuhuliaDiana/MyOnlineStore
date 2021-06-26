@@ -12,6 +12,25 @@ const Op = Sequelize.Op;
 const controller = require("./Cart");
 
 const controllers = {
+  deleteProducts: async (req, res) => {
+    //array of json objects, get id from every json obj
+    let array = req.body.array;
+    array = array.map((obj) => obj.id);
+
+    ProductDB.destroy({
+      where: {
+        id: {
+          [Op.in]: array,
+        },
+      },
+    })
+      .then((result) => {
+        res.status(200).send({ message: "Produse eliminate!" });
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  },
   addProduct: async (req, res) => {
     const product = req.body;
 
@@ -429,7 +448,6 @@ const controllers = {
         }
       );
     });
-    
   },
 };
 module.exports = controllers;

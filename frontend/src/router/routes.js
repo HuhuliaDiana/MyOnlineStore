@@ -32,10 +32,7 @@ const routes = [
     path: '/new',
     component: () => import('pages/Home.vue')
   },
-  {
-    path: '/allOrders',
-    component: () => import('pages/AllOrders.vue')
-  },
+ 
   {
     path: '/newpage',
     component: () => import('pages/NewPage.vue')

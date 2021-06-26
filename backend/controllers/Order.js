@@ -11,53 +11,38 @@ const controller = require("./Cart");
 const Op = Sequelize.Op;
 
 const controllers = {
-  // getAllOrdersComplete: async (req, res) => {
-  //   const orders = await OrderDB.findAll();
-  //   let idOrders = orders.map((order) => order.id); //1 2
-  //   var array = [];
+  getAllOrdersComplete: async (req, res) => {
+    let orders = await OrderDB.findAll({
+      include: {
+        model: CartDB,
+        include: {
+          model: UserDB,
+          as: "User",
+        },
+        as: "Cart",
+      },
+    });
 
-  //   await Promise.all(
-  //     idOrders.map(async (id) => {
-  //       var order = await OrderDB.findOne(
-  //         {
-  //           where: {
-  //             id: id,
-  //           },
-  //         },
-  //         {
-  //           include: {
-  //             model: CartDB,
-  //             include: {
-  //               model: UserDB,
-  //               as: "User",
-  //             },
-  //             as: "Cart",
-  //           },
-  //         }
-  //       );
-  //       var products = await CartProductDB.findAll(
-  //         {
-  //           where: {
-  //             CartId: order.CartId,
-  //           },
-  //         },
-  //         {
-  //           include: {
-  //             model: ProductDB,
-  //             as: "Product",
-  //           },
-  //         }
-  //       );
-        
-  //       products.forEach((product) => {
-  //         order=Object.assign(order, product);
-  //       });
-  //       // let completeOrder = Object.assign(order, products);
-  //       array.push(order);
-  //     })
-  //   );
-  //   res.status(200).send(array);
-  // },
+    orders.every((order) => {
+      CartProductDB.findAll({
+        where: {
+          CartId: order.id,
+        },
+
+        include: {
+          model: ProductDB,
+          as: "Product",
+        },
+      })
+        .then((result) => {
+          order["produse"] = result;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+    res.status(200).send(orders);
+  },
   getAllOrders: async (req, res) => {
     OrderDB.findAll({
       include: {
