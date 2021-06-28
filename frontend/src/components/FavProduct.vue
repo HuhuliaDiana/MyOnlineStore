@@ -5,7 +5,7 @@
       :style="myStyle"
       style="font-family: 'Montserrat', sans-serif"
       class="product"
-      v-on:click.self="seeProduct()"
+      v-on:click="seeProduct()"
     >
       <!-- div heart rating -->
       <div
@@ -33,7 +33,7 @@
           icon="favorite_border"
           icon-selected="favorite"
           no-dimming
-          @click="onFav"
+          v-on:click.stop.prevent="onFav"
         />
       </div>
 
@@ -89,7 +89,7 @@
 
       <!-- div buton + status stock -->
       <div
-        style="display: flex; justify-content: space-between; margin-top: 30px"
+        style="display: flex; justify-content: space-between; margin-top: 5%"
       >
         <div style="margin-left: 20px">
           <q-btn
@@ -97,7 +97,7 @@
             round
             icon="add"
             color="secondary"
-            @click="addProductInCart()"
+            v-on:click.stop.prevent="addProductInCart"
           />
         </div>
         <div

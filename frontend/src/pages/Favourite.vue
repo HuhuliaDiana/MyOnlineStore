@@ -4,28 +4,46 @@
       <Toolbar />
     </div>
     <div class="divProducts">
-      <div v-if="products.length > 0" class="products">
-        <FavProduct
-          v-on:childToParent="getProducts"
-          v-for="item in products"
-          :key="item.id"
-          :idProd="item.Product.id"
-          :priceProd="item.Product.price"
-          :photosProd="item.Product.photos"
-        />
+      <div
+        v-if="products.length > 0"
+        class="products"
+        style="display: flex; justify-content: space-between"
+      >
+        <div style="margin-right: 8%;margin-top:7%">
+          <img src="photos/love.svg" style="width:400px"/>
+        </div>
+        <div
+          style="
+            display: flex;
+            flex-flow: row wrap;
+            justify-content:space-between;
+            width: fit-content;
+            margin: auto;
+            
+          "
+        >
+          <FavProduct
+            v-on:childToParent="getProducts"
+            v-for="item in products"
+            :key="item.id"
+            :idProd="item.Product.id"
+            :priceProd="item.Product.price"
+            :photosProd="item.Product.photos"
+          />
+        </div>
       </div>
       <div v-else style="margin-top: 10%; text-align: center">
         <div
           style="
             font-family: 'Montserrat', sans-serif;
             font-weight: bold;
-            font-size: 150%;
-            color:#383838
+            font-size: 300%;
+            color: #383838;
           "
         >
-          Nu aveti produse favorite!
+          Nu aveți produse favorite!
         </div>
-        <img style="width:40%;margin-top:5%" src="photos/emptyCart.svg"/>
+        <img style="width: 20%; margin-top: 5%" src="photos/emptyCart.svg" />
       </div>
     </div>
   </div>
@@ -77,15 +95,9 @@ export default {
 </script>
 
 <style scoped>
-.products {
-  display: flex;
-  flex-flow: row wrap;
+.divProducts {
+  width: 90%;
   margin: auto;
   margin-top: 5%;
-  width: fit-content;
-}
-.divProducts {
-  width: 77%;
-  margin: auto;
 }
 </style>

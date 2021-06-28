@@ -10,7 +10,7 @@
         height: 85vh;
         flex-direction: column;
         justify-content: space-between;
-        font-family: 'Montserrat', sans-serif
+        font-family: 'Montserrat', sans-serif;
       "
     >
       <div
@@ -218,7 +218,7 @@
                   label="Încarcă poze"
                   @added="onFileAdd"
                   color="secondary"
-                  max-files="3"
+                  :max-files="maxFiles"
                   multiple
                   accept=".jpg"
                   @rejected="onRejected"
@@ -255,14 +255,19 @@ export default {
     ToolbarAdmin: ToolbarAdmin,
   },
   watch: {
+    maxFiles() {},
     rows() {},
     val(n, o) {
       this.rows = n;
+    },
+    photos() {
+      console.log(this.photos);
     },
   },
 
   data() {
     return {
+      maxFiles: null,
       visibleColumns: [],
       componentKey: true,
       rows: [],
@@ -437,10 +442,14 @@ export default {
       }
     },
     deletePhoto(photo) {
-      this.productEditPhotos.splice(this.productEditPhotos.indexOf(photo), 1);
+      this.productEditPhotos.splice(this.productEditPhotos.indexOf(photo), 1); //delete s3
+      this.photos = this.productEditPhotos.join(", "); //s1, s2
+      this.maxFiles = 3 - this.productEditPhotos.length;
+
+      //edit photos from product
     },
     editProduct(key) {
-      //verifica ce campuri se schimba, vefifica pozele, vefifica daca s-au incarcat poze- this.files!==null
+      //verifica ce campuri se schimba, vefifica pozele, verifica daca s-au incarcat poze- this.files!==null
       const product = {
         quantity: this.quantity,
         price: this.price,
@@ -480,6 +489,10 @@ export default {
       this.productEdit = row;
 
       this.productEditPhotos = row.photos.split(", ");
+
+      this.maxFiles = 3 - this.productEditPhotos.length;
+      console.log(this.maxFiles);
+
       this.confirm = true;
       this.brand = row.brand;
       this.model = row.model;
@@ -497,6 +510,7 @@ export default {
       this.displayRes = row.displayRes;
       this.quantity = row.quantity;
       this.price = row.price;
+      this.photos = row.photos;
       this.changeLabel = true;
     },
     addProduct() {
@@ -522,8 +536,6 @@ export default {
     onFileAdd(myFiles) {
       const filesNames = myFiles.map((file) => file.name);
       this.files = filesNames;
-    },
-    saveProduct() {
       this.files.forEach((file) => {
         if (this.photos !== "") {
           this.photos = this.photos.concat(", " + file);
@@ -531,6 +543,15 @@ export default {
           this.photos = this.photos.concat(file);
         }
       });
+    },
+    saveProduct() {
+      // this.files.forEach((file) => {
+      //   if (this.photos !== "") {
+      //     this.photos = this.photos.concat(", " + file);
+      //   } else {
+      //     this.photos = this.photos.concat(file);
+      //   }
+      // });
       const product = {
         quantity: this.quantity,
         price: this.price,

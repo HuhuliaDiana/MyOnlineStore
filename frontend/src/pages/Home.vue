@@ -1,11 +1,7 @@
 <template>
   <div>
     <div>
-      <Toolbar
-        v-on:childToParent="getRows"
-        :products="products"
-        :productsBeg="products"
-      />
+      <Toolbar v-on:childToParent="getRows" />
     </div>
     <div style="width: 100%" class="flex-container">
       <div class="flex-child filters">
@@ -191,7 +187,16 @@ export default {
     },
     products() {},
     $route(to, from) {
-      this.setURL(to);
+      if (to.path.includes("home")) {
+        this.path = "home";
+        this.url = "http://localhost:8082/getAllProducts";
+      } else if (to.path.includes("discounts")) {
+        this.path = "discounts";
+        this.url = "http://localhost:8082/getReducedProducts";
+      } else if (to.path.includes("new")) {
+        this.path = "new";
+        this.url = "http://localhost:8082/getNewProducts";
+      }
       axios
         .get(this.url, {
           withCredentials: true,
@@ -220,22 +225,20 @@ export default {
   },
 
   methods: {
-    setURL(key) {
-      if (key.includes("home")) {
+    getCurrentRoute() {
+      const currUrl = this.$router.currentRoute.path;
+      if (currUrl.includes("home")) {
         this.path = "home";
         this.url = "http://localhost:8082/getAllProducts";
-      } else if (key.includes("discounts")) {
+      } else if (currUrl.includes("discounts")) {
         this.path = "discounts";
         this.url = "http://localhost:8082/getReducedProducts";
-      } else if (key.includes("new")) {
+      } else if (currUrl.includes("new")) {
         this.path = "new";
         this.url = "http://localhost:8082/getNewProducts";
       }
     },
-    getCurrentRoute() {
-      const currUrl = this.$router.currentRoute.path;
-      this.setURL(currUrl);
-    },
+    //cautarea se
     getRows(value) {
       this.val = value;
     },

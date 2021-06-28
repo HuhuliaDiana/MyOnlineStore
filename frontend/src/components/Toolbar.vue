@@ -93,7 +93,7 @@
 import axios from "../boot/axios";
 
 export default {
-  props: ["disable", "products", "productsBeg"],
+  props: ["disable"],
   data() {
     return {
       search: "",
@@ -101,27 +101,44 @@ export default {
       fbrand: "",
       disabled: null,
       fram: "",
-      tab: "home",
       fmemInt: "",
+      path: null,
       fstock: "",
       fnet: "",
-      // products: [],
+      products: [],
       url: null,
     };
   },
   watch: {
-    products() {
-      console.log("beg");
-      console.log(this.productsBeg);
-    },
-    tab() {
-      this.getURL();
+    $route(to, from) {
+      if (to.path.includes("home")) {
+        this.path = "home";
+        this.url = "http://localhost:8082/getAllProducts";
+      } else if (to.path.includes("discounts")) {
+        this.path = "discounts";
+        this.url = "http://localhost:8082/getReducedProducts";
+      } else if (to.path.includes("new")) {
+        this.path = "new";
+        this.url = "http://localhost:8082/getNewProducts";
+      }
+      axios
+        .get(this.url, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          this.products = response.data;
+          this.filter();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     disabled() {},
+    products() {},
     search(newVal, oldVal) {
       console.log(this.search);
       axios
-        .get(this.url)
+        .get(this.url, { withCredentials: true })
         .then((response) => {
           this.products = response.data;
           this.searchProduct(newVal);
@@ -132,23 +149,33 @@ export default {
     },
   },
   mounted() {
-    this.disableSearch();
-    // this.getURL();
+    this.disableSearch(), this.getCurrentRoute(), this.getProducts();
   },
 
   methods: {
-  
-    // getProducts() {
-    //   axios
-    //     .get(this.url)
-    //     .then((response) => {
-    //       this.products = response.data;
-    //       this.searchProduct(newVal);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // },
+    getProducts() {
+      axios
+        .get(this.url, { withCredentials: true })
+        .then((response) => {
+          this.products = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getCurrentRoute() {
+      const currUrl = this.$router.currentRoute.path;
+      if (currUrl.includes("home")) {
+        this.path = "home";
+        this.url = "http://localhost:8082/getAllProducts";
+      } else if (currUrl.includes("discounts")) {
+        this.path = "discounts";
+        this.url = "http://localhost:8082/getReducedProducts";
+      } else if (currUrl.includes("new")) {
+        this.path = "new";
+        this.url = "http://localhost:8082/getNewProducts";
+      }
+    },
     searchProduct(newVal) {
       if (this.search !== "") {
         this.products = this.products.filter((product) => {
@@ -178,19 +205,8 @@ export default {
         this.disabled = true;
       }
     },
-    getURL() {
-      if (this.tab === "home") {
-        this.url = "http://localhost:8082/getAllProducts";
-      }
-      if (this.tab === "discounts") {
-        this.url = "http://localhost:8082/getReducedProducts";
-      }
-      if (this.tab === "new") {
-        this.url = "http://localhost:8082/getNewProducts";
-      }
-    },
+
     openPage(key) {
-      this.tab = key;
       this.$router
         .push(
           `/${key}/${this.fprice}${this.fbrand}${this.fram}${this.fmemInt}${this.fstock}${this.fnet}`

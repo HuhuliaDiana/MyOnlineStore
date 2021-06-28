@@ -3,6 +3,8 @@ const router = express.Router();
 const controllers = require("../controllers").product;
 const other = require("../controllers").other;
 
+// router.patch("/editPhotos/:id", controllers.editPhotos);
+
 router.patch("/deleteProducts", controllers.deleteProducts);
 router.post("/addProduct", controllers.addProduct);
 // router.patch("/editProduct/:id", controllers.editProduct);
