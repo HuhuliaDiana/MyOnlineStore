@@ -4,46 +4,32 @@
       <Toolbar />
     </div>
     <div class="divProducts">
-      <div
-        v-if="products.length > 0"
-        class="products"
-        style="display: flex; justify-content: space-between"
-      >
-        <div style="margin-right: 8%;margin-top:7%">
-          <img src="photos/love.svg" style="width:400px"/>
-        </div>
-        <div
-          style="
-            display: flex;
-            flex-flow: row wrap;
-            justify-content:space-between;
-            width: fit-content;
-            margin: auto;
-            
-          "
-        >
-          <FavProduct
-            v-on:childToParent="getProducts"
-            v-for="item in products"
-            :key="item.id"
-            :idProd="item.Product.id"
-            :priceProd="item.Product.price"
-            :photosProd="item.Product.photos"
-          />
-        </div>
+      <div style="text-align: center; margin-top: 5%">
+        <img src="photos/love.svg" style="width: 200px" />
+      </div>
+      <div v-if="products.length > 0" class="products">
+        <FavProduct
+          style="margin-right: 20px"
+          v-on:childToParent="getProducts"
+          v-for="item in products"
+          :key="item.id"
+          :idProd="item.Product.id"
+          :priceProd="item.Product.price"
+          :photosProd="item.Product.photos"
+        />
       </div>
       <div v-else style="margin-top: 10%; text-align: center">
         <div
           style="
             font-family: 'Montserrat', sans-serif;
             font-weight: bold;
-            font-size: 300%;
+            font-size: 150%;
             color: #383838;
           "
         >
-          Nu aveți produse favorite!
+          Nu aveti produse favorite!
         </div>
-        <img style="width: 20%; margin-top: 5%" src="photos/emptyCart.svg" />
+        <img style="width: 40%; margin-top: 5%" src="photos/emptyCart.svg" />
       </div>
     </div>
   </div>
@@ -53,14 +39,12 @@
 import axios from "../boot/axios";
 import FavProduct from "../components/FavProduct";
 import Toolbar from "../components/Toolbar";
-
 export default {
   name: "Favourite",
   components: {
     FavProduct,
     Toolbar,
   },
-
   watch: {
     val() {
       this.getTheProducts();
@@ -95,9 +79,15 @@ export default {
 </script>
 
 <style scoped>
-.divProducts {
-  width: 90%;
+.products {
+  display: flex;
+  flex-flow: row wrap;
   margin: auto;
   margin-top: 5%;
+  width: fit-content;
+}
+.divProducts {
+  width: 77%;
+  margin: auto;
 }
 </style>

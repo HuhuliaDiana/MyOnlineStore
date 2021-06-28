@@ -1,14 +1,18 @@
 <template>
   <div class="myDiv">
     <div>
-      <Toolbar disable="true"/>
+      <Toolbar disable="true" />
     </div>
     <div class="divProducts">
+      <div style="text-align: center; margin-top: 5%">
+        <img src="photos/viewed.svg" style="width: 230px" />
+      </div>
       <div v-if="products.length > 0" class="products">
         <FavProduct
           v-for="item in products"
           :key="item.id"
           :idProd="item.Product.id"
+          style="margin-right: 20px"
           :priceProd="item.Product.price"
           :photosProd="item.Product.photos"
         />
