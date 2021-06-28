@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div><Toolbar /></div>
+    <div><Toolbar disable="true"/></div>
     <div
       style="
         display: flex;

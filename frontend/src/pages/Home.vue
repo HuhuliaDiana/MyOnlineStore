@@ -1,92 +1,12 @@
 <template>
-  <div :style="myStyle">
-    <q-toolbar class="bg-secondary text-white q-my-md shadow-2">
-      <q-toolbar-title
-        style="font-style: italic; font-size: 200%; margin-left: 15%"
-      >
-        WiseCell</q-toolbar-title
-      >
-      <div class="q-pa-md">
-        <div class="q-gutter-y-md column" style="max-width: 100%">
-          <q-input
-            dark
-            dense
-            standout
-            v-model="search"
-            input-class="text-right"
-            class="q-ml-md"
-          >
-            <template v-slot:append>
-              <q-icon v-if="search === ''" name="search" />
-              <q-icon
-                v-else
-                name="clear"
-                class="cursor-pointer"
-                @click="search = ''"
-              />
-            </template>
-          </q-input>
-        </div>
-      </div>
-
-      <q-tabs
-        v-model="model"
-        size="15px"
-        style="margin-right: 5%"
-        @click="openPage(model)"
-      >
-        <q-tab name="home" label="Magazin" />
-        <q-tab name="discounts" label="Reduceri" />
-        <q-tab name="new" label="Nou" />
-      </q-tabs>
-      <q-btn
-        size="15px"
-        style="margin-right: 10px"
-        flat
-        round
-        dense
-        icon="favorite"
-        @click="getFavouriteProducts"
+  <div>
+    <div>
+      <Toolbar
+        v-on:childToParent="getRows"
+        :products="products"
+        :productsBeg="products"
       />
-
-      <q-btn
-        size="15px"
-        style="margin-right: 10px"
-        flat
-        round
-        dense
-        icon="history"
-        @click="getLastViewedProducts"
-      />
-      <q-btn
-        size="15px"
-        style="margin-right: 10px"
-        flat
-        round
-        dense
-        icon="shopping_cart"
-        @click="getCart"
-      />
-      <q-btn
-        size="15px"
-        style="margin-right: 10px"
-        flat
-        round
-        dense
-        icon="person"
-        @click="getProfile"
-      />
-      <q-btn
-        size="15px"
-        style="margin-right: 15%"
-        flat
-        round
-        dense
-        icon="logout"
-        @click="logout"
-      />
-    </q-toolbar>
-
+    </div>
     <div style="width: 100%" class="flex-container">
       <div class="flex-child filters">
         <div class="lb_qGroup">
@@ -218,10 +138,13 @@
 <script>
 import axios from "../boot/axios";
 import Product from "../components/Product";
+import Toolbar from "../components/Toolbar";
+
 export default {
   name: "Home",
   components: {
     Product,
+    Toolbar,
   },
 
   data() {
@@ -251,6 +174,8 @@ export default {
       allProducts: [],
       memRAM: [],
       memInternal: [],
+      val: [],
+
       search: "",
       ascDescPrice: [
         { label: "Preț crescător", value: "ascprice" },
@@ -261,18 +186,12 @@ export default {
     };
   },
   watch: {
-    //merge
+    val(n, o) {
+      this.products = n;
+    },
+    products() {},
     $route(to, from) {
-      if (to.path.includes("home")) {
-        this.path = "home";
-        this.url = "http://localhost:8082/getAllProducts";
-      } else if (to.path.includes("discounts")) {
-        this.path = "discounts";
-        this.url = "http://localhost:8082/getReducedProducts";
-      } else if (to.path.includes("new")) {
-        this.path = "new";
-        this.url = "http://localhost:8082/getNewProducts";
-      }
+      this.setURL(to);
       axios
         .get(this.url, {
           withCredentials: true,
@@ -280,21 +199,6 @@ export default {
         .then((response) => {
           this.products = response.data;
           this.filter();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-
-    //merge
-    search(newVal, oldVal) {
-      axios
-        .get(this.url, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          this.products = response.data;
-          this.searchProduct(newVal);
         })
         .catch((err) => {
           console.log(err);
@@ -316,6 +220,25 @@ export default {
   },
 
   methods: {
+    setURL(key) {
+      if (key.includes("home")) {
+        this.path = "home";
+        this.url = "http://localhost:8082/getAllProducts";
+      } else if (key.includes("discounts")) {
+        this.path = "discounts";
+        this.url = "http://localhost:8082/getReducedProducts";
+      } else if (key.includes("new")) {
+        this.path = "new";
+        this.url = "http://localhost:8082/getNewProducts";
+      }
+    },
+    getCurrentRoute() {
+      const currUrl = this.$router.currentRoute.path;
+      this.setURL(currUrl);
+    },
+    getRows(value) {
+      this.val = value;
+    },
     getNetSpeed() {
       const netSpeed = this.allProducts.map((element) => element.netSpeed);
       const newNetSpeed = [...new Set(netSpeed)];
@@ -384,7 +307,6 @@ export default {
         value: "",
       });
     },
-    getPrice() {},
     getBrands() {
       const brands = this.allProducts.map((element) => element.brand);
       const newBrands = [...new Set(brands)];
@@ -416,43 +338,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    //ruta se ia bine
-    getCurrentRoute() {
-      const currUrl = this.$router.currentRoute.path;
-      if (currUrl.includes("home")) {
-        this.path = "home";
-        this.url = "http://localhost:8082/getAllProducts";
-      } else if (currUrl.includes("discounts")) {
-        this.path = "discounts";
-        this.url = "http://localhost:8082/getReducedProducts";
-      } else if (currUrl.includes("new")) {
-        this.path = "new";
-        this.url = "http://localhost:8082/getNewProducts";
-      }
-    },
-    //cautarea se face bine
-    searchProduct(newVal) {
-      if (this.search !== "") {
-        this.products = this.products.filter((product) => {
-          if (
-            Object.keys(product).find(
-              (key) =>
-                //id si quantity nu vor fi afisate userului
-                key !== "id" &&
-                key !== "quantity" &&
-                product[key] &&
-                product[key]
-                  .toString()
-                  .toUpperCase()
-                  .trim()
-                  .includes(newVal.toUpperCase().trim()) //case insensitive
-            )
-          ) {
-            return product;
-          }
-        });
-      }
     },
     filter() {
       if (this.fprice === "ascprice") {
@@ -510,15 +395,6 @@ export default {
         }
       }
     },
-    openPage(key) {
-      this.$router
-        .push(
-          `/${key}/${this.fprice}${this.fbrand}${this.fram}${this.fmemInt}${this.fstock}${this.fnet}`
-        )
-        .then(() => {})
-        .catch((err) => {});
-    },
-
     onItemClickRAM(key) {
       this.fram = key;
       this.$router
@@ -568,20 +444,6 @@ export default {
           `/${this.path}/${this.fprice}${this.fbrand}${this.fram}${this.fmemInt}${this.fstock}${this.fnet}`
         )
         .catch((err) => {});
-    },
-
-    getCart() {
-      this.$router.push("/cart");
-    },
-
-    getLastViewedProducts() {
-      this.$router.push("/viewedProducts");
-    },
-    getProfile() {
-      this.$router.push("/profile");
-    },
-    getFavouriteProducts() {
-      this.$router.push("/favourite");
     },
   },
 };

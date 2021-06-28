@@ -1,5 +1,5 @@
 <template>
-  <div style="font-family: 'Montserrat', sans-serif">
+  <div>
     <div>
       <ToolbarAdmin />
     </div>
@@ -7,6 +7,7 @@
     <div
       class="q-pa-md flex"
       style="
+        font-family: 'Montserrat', sans-serif;
         justify-content: center;
         align-items: center;
         flex-direction: column;
@@ -87,16 +88,13 @@
 <script>
 import ToolbarAdmin from "../components/ToolbarAdmin.vue";
 import axios from "../boot/axios";
-
 export default {
   components: {
     ToolbarAdmin: ToolbarAdmin,
   },
-  // , getProductsFromCart(props.row.id)
   data() {
     return {
       rows: [],
-      // products: [],
       columns: [
         {
           name: "id",
@@ -165,7 +163,6 @@ export default {
       ],
     };
   },
-
   mounted() {
     axios
       .get("http://localhost:8082/getAllOrders")
@@ -181,7 +178,6 @@ export default {
               console.log(err);
             });
         });
-
         console.log(this.rows);
       })
       .catch((err) => {
@@ -201,18 +197,15 @@ td {
 </style>
 <style lang="sass">
 .my-sticky-header-table
-
   .q-table__top,
   .q-table__bottom,
   thead tr:first-child th
     background-color: rgb(38,166,155,0.3)
-
   thead tr th
     position: sticky
     z-index: 1
   thead tr:first-child th
     top: 0
-
   &.q-table--loading thead tr:last-child th
     top: 48px
 </style>

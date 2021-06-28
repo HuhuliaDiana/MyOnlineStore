@@ -20,6 +20,7 @@ const routes = [
     path: '/orders',
     component: () => import('pages/Orders.vue')
   },
+ 
   {
     path: '/discounts',
     component: () => import('pages/Home.vue')
@@ -34,12 +35,12 @@ const routes = [
   },
  
   {
-    path: '/newpage',
-    component: () => import('pages/NewPage.vue')
+    path: '/allOrders',
+    component: () => import('pages/AllOrders.vue')
   },
   {
-    path: '/addProduct',
-    component: () => import('pages/AddProduct.vue')
+    path: '/allProducts',
+    component: () => import('pages/AllProducts.vue')
   },
   {
     path: '/product/:id',

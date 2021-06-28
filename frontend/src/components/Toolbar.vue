@@ -12,6 +12,7 @@
             dark
             dense
             standout
+            :disable="disabled"
             v-model="search"
             input-class="text-right"
             class="q-ml-md"
@@ -89,20 +90,107 @@
 </template>
 
 <script>
+import axios from "../boot/axios";
+
 export default {
+  props: ["disable", "products", "productsBeg"],
   data() {
     return {
       search: "",
       fprice: "",
       fbrand: "",
+      disabled: null,
       fram: "",
+      tab: "home",
       fmemInt: "",
       fstock: "",
       fnet: "",
+      // products: [],
+      url: null,
     };
   },
+  watch: {
+    products() {
+      console.log("beg");
+      console.log(this.productsBeg);
+    },
+    tab() {
+      this.getURL();
+    },
+    disabled() {},
+    search(newVal, oldVal) {
+      console.log(this.search);
+      axios
+        .get(this.url)
+        .then((response) => {
+          this.products = response.data;
+          this.searchProduct(newVal);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+  mounted() {
+    this.disableSearch();
+    // this.getURL();
+  },
+
   methods: {
+  
+    // getProducts() {
+    //   axios
+    //     .get(this.url)
+    //     .then((response) => {
+    //       this.products = response.data;
+    //       this.searchProduct(newVal);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // },
+    searchProduct(newVal) {
+      if (this.search !== "") {
+        this.products = this.products.filter((product) => {
+          if (
+            Object.keys(product).find(
+              (key) =>
+                product[key] !== "id" &&
+                product[key] !== "quantity" &&
+                product[key] !== "photos" &&
+                product[key] &&
+                product[key]
+                  .toString()
+                  .toUpperCase()
+                  .trim()
+                  .includes(newVal.toUpperCase().trim()) //case insensitive
+            )
+          ) {
+            return product;
+          }
+        });
+        this.$emit("childToParent", this.products);
+        console.log(this.products);
+      }
+    },
+    disableSearch() {
+      if (this.disable) {
+        this.disabled = true;
+      }
+    },
+    getURL() {
+      if (this.tab === "home") {
+        this.url = "http://localhost:8082/getAllProducts";
+      }
+      if (this.tab === "discounts") {
+        this.url = "http://localhost:8082/getReducedProducts";
+      }
+      if (this.tab === "new") {
+        this.url = "http://localhost:8082/getNewProducts";
+      }
+    },
     openPage(key) {
+      this.tab = key;
       this.$router
         .push(
           `/${key}/${this.fprice}${this.fbrand}${this.fram}${this.fmemInt}${this.fstock}${this.fnet}`

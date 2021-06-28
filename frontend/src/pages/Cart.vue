@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <Toolbar />
+      <Toolbar :disable="true"/>
     </div>
     <div class="body">
       <div class="flex-child products">

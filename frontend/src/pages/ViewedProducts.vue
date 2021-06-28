@@ -1,7 +1,7 @@
 <template>
   <div class="myDiv">
     <div>
-      <Toolbar />
+      <Toolbar disable="true"/>
     </div>
     <div class="divProducts">
       <div v-if="products.length > 0" class="products">

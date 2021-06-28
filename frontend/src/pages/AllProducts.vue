@@ -1,7 +1,7 @@
 <template>
-  <div style="font-family: 'Montserrat', sans-serif">
+  <div>
     <div>
-      <ToolbarAdmin />
+      <ToolbarAdmin v-on:childToParent="getRows" />
     </div>
     <div
       class="flex-center page"
@@ -10,6 +10,7 @@
         height: 85vh;
         flex-direction: column;
         justify-content: space-between;
+        font-family: 'Montserrat', sans-serif
       "
     >
       <div
@@ -56,9 +57,6 @@
             :visible-columns="visibleColumns"
             :selected-rows-label="getSelected"
           >
-            <!-- <template v-slot:top>
-              <q-space />
-            </template> -->
           </q-table>
         </div>
       </div>
@@ -253,12 +251,14 @@ import axios from "../boot/axios";
 import ToolbarAdmin from "../components/ToolbarAdmin.vue";
 
 export default {
-  name: "AddProduct",
   components: {
     ToolbarAdmin: ToolbarAdmin,
   },
   watch: {
     rows() {},
+    val(n, o) {
+      this.rows = n;
+    },
   },
 
   data() {
@@ -388,6 +388,7 @@ export default {
       photos: "",
       changeLabel: false,
       refresh: false,
+      val: [],
     };
   },
 
@@ -397,6 +398,9 @@ export default {
   },
 
   methods: {
+    getRows(value) {
+      this.val = value;
+    },
     getVisibleColumns() {
       this.columns.forEach((column) => {
         this.visibleColumns.push(column.name);

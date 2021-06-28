@@ -79,7 +79,7 @@
       </div>
 
       <div
-        style="display: flex; margin-top: 30px; justify-content: space-between"
+        style="display: flex; margin-top:5%; justify-content: space-between"
       >
         <div style="margin-left: 20px">
           <q-btn
