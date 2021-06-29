@@ -164,6 +164,8 @@ export default {
         email: this.email,
         password: this.password,
       };
+      //unde pastrez datele administratorului
+      
       axios
         .post("http://localhost:8082/login", user, { withCredentials: true })
         .then((res) => {

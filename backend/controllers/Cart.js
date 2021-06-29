@@ -21,28 +21,19 @@ const controllers = {
     });
 
     if (userCarts.length === 0) {
-      //creez un cart
-
       const myOwnCart = await CartDB.create(cart);
       return myOwnCart;
     } else {
-      //iau ultimul cart
       const userLastCart = userCarts[userCarts.length - 1];
       const cartInOrders = await OrderDB.findAll({
         where: {
-          CartId: userLastCart.id,
+          CartId: userLastCart.id,ș
         },
       });
       if (cartInOrders.length > 0) {
-        //cartul exista in orders=>
-
-        //creez cart nou
         const myOtherCart = await CartDB.create(cart);
         return myOtherCart;
-        //cart-ul nu se gaseste in Order
       } else {
-        //returnez cart-ul
-        //res.status(201).send(userLastCart)
         return userLastCart;
       }
     }
