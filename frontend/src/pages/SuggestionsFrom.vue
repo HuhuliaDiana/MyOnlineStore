@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <Toolbar disable="true"/>
+      <Toolbar disable="true" />
     </div>
     <div class="body">
       <div v-if="users.length > 0" class="suggestions">
@@ -16,14 +16,13 @@
         <div
           style="
             font-family: 'Montserrat', sans-serif;
-            font-weight: bold;
-            font-size: 150%;
+            font-size: 300%;
             color: #383838;
           "
         >
-          Nu ati primit sugestii de produse!
+          Nu aveți recomandări de produse!
         </div>
-        <img style="width: 30%; margin-top: 5%" src="photos/emptyCart.svg" />
+        <img style="width: 16%; margin-top: 8%" src="photos/emptyCart.svg" />
       </div>
     </div>
   </div>

@@ -1,100 +1,121 @@
 <template>
   <div>
     <div
-      style="font-family: 'Montserrat', sans-serif"
+      style="
+        font-family: 'Montserrat', sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-bottom: 16px;
+      "
       class="product"
       v-on:click="seeProduct()"
     >
-      <div
-        style="
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-        "
-      >
-        <q-badge
-          font-size="15px"
-          text-color="white"
-          style="background-color: #ff4d4d; margin-left: 10px; margin-top: 10px"
-          :label="isNew"
-        />
-
-        <q-rating
-          style="margin-right: 10px; height: 100%; margin-top: 10px"
-          v-model="fav"
-          max="1"
-          size="2.5em"
-          color="orange"
-          color-selected="orange"
-          icon="favorite_border"
-          icon-selected="favorite"
-          no-dimming
-          v-on:click.stop.prevent="onFav"
-        />
-      </div>
       <div>
-        <img
-          class="photos"
-          v-bind:src="`../photos/${photosProd.split(', ')[0]}`"
-        />
-      </div>
-      <div style="margin-left: 20px">
-        <div style="font-size: 17px; margin-top: 20px; font-weight: bold">
-          {{ product.brand }}
-        </div>
-        <div>
-          {{ product.model }} {{ product.memInternal }} {{ product.netSpeed }}
-          {{ product.memRAM }}
-        </div>
-      </div>
-
-      <div
-        style="margin-top: 30px; margin-left: 20px; display: flex"
-        v-if="product.discount !== 0"
-      >
-        <div>
-          <div
-            style="text-decoration: line-through; color: grey; font-size: 15px"
-          >
-            {{ priceProd }} lei
-          </div>
-          <div style="font-size: 20px">
-            {{ product.price - (product.price * product.discount) / 100 }} lei
-          </div>
-        </div>
-
-        <div>
+        <div
+          style="
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
           <q-badge
-            color="red"
-            align="top"
-            style="margin-left: 20px; margin-top: 2px"
-            >- {{ product.discount }} %</q-badge
-          >
-        </div>
-      </div>
+            font-size="15px"
+            text-color="white"
+            style="
+              background-color: #ff4d4d;
+              margin-left: 10px;
+              margin-top: 10px;
+            "
+            :label="isNew"
+          />
 
-      <div style="margin-top: 52px; margin-left: 20px; font-size: 20px" v-else>
-        <div>{{ priceProd }} lei</div>
-      </div>
-
-      <div
-        style="display: flex; margin-top:5%; justify-content: space-between"
-      >
-        <div style="margin-left: 20px">
-          <q-btn
-            :disabled="quantity === 0"
-            round
-            icon="add"
-            color="secondary"
-            v-on:click.stop.prevent="addProductInCart"
+          <q-rating
+            style="margin-right: 10px; height: 100%; margin-top: 10px"
+            v-model="fav"
+            max="1"
+            size="2.5em"
+            color="orange"
+            color-selected="orange"
+            icon="favorite_border"
+            icon-selected="favorite"
+            no-dimming
+            v-on:click.stop.prevent="onFav"
           />
         </div>
+        <div>
+          <img
+            class="photos"
+            v-bind:src="`../photos/${photosProd.split(', ')[0]}`"
+          />
+        </div>
+        <div style="margin-left: 20px">
+          <div style="font-size: 17px; margin-top: 20px; font-weight: bold">
+            {{ product.brand }}
+          </div>
+          <div>
+            {{ product.model }} {{ product.memInternal }} {{ product.netSpeed }}
+            {{ product.memRAM }}
+          </div>
+        </div>
+      </div>
+
+      <div>
         <div
-          style="margin-right: 10%; margin-top: 4%"
-          :style="{ color: color }"
+          style="margin-top: 30px; margin-left: 20px; display: flex"
+          v-if="product.discount !== 0"
         >
-          {{ stockStatus }}
+          <div>
+            <div
+              style="
+                text-decoration: line-through;
+                color: grey;
+                font-size: 15px;
+              "
+            >
+              {{ priceProd }} lei
+            </div>
+            <div style="font-size: 20px">
+              {{ product.price - (product.price * product.discount) / 100 }} lei
+            </div>
+          </div>
+
+          <div>
+            <q-badge
+              color="red"
+              align="top"
+              style="margin-left: 20px; margin-top: 2px"
+              >- {{ product.discount }} %</q-badge
+            >
+          </div>
+        </div>
+
+        <div
+          style="margin-top: 52px; margin-left: 20px; font-size: 20px"
+          v-else
+        >
+          <div>{{ priceProd }} lei</div>
+        </div>
+
+        <div
+          style="display: flex; margin-top: 5%; justify-content: space-between"
+        >
+          <div style="margin-left: 20px">
+            <q-btn
+              :disabled="quantity === 0"
+              round
+              icon="add"
+              color="secondary"
+              v-on:click.stop.prevent="addProductInCart"
+            />
+          </div>
+          <div
+            style="margin-right: 10%; margin-top: 4%"
+            :style="{ color: color }"
+          >
+            {{ stockStatus }}
+          </div>
         </div>
       </div>
     </div>

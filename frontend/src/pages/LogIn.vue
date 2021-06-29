@@ -168,7 +168,7 @@ export default {
         .post("http://localhost:8082/login", user, { withCredentials: true })
         .then((res) => {
           this.getCart();
-          console.log("Succesfully logged in");
+          console.log("Te-ai autentificat cu succes!");
           this.$router.push("/home");
         })
         .catch((err) => {

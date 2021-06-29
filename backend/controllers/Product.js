@@ -248,13 +248,23 @@ const controllers = {
   },
 
   getLastViewedProducts: async (req, res) => {
-    const lastViewedProducts = await ViewedProductDB.findAll({
+    const currentUser = await req.user;
+    ViewedProductDB.findAll({
+      where: {
+        UserId: currentUser.id,
+      },
+
       include: {
         model: ProductDB,
         as: "Product",
       },
-    });
-    res.status(200).send(lastViewedProducts);
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
   },
 
   getNewProducts: async (req, res) => {

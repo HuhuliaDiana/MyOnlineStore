@@ -35,7 +35,7 @@ router.get("/success", async (req, res) => {
 });
 
 router.get("/fail", async (req, res) => {
-  res.status(403).send({ message: "Email or password does not match!" });
+  res.status(403).send({ message: "Email sau parolă incorectă!" });
 });
 
 router.get("/notAuth", async (req, res) => {

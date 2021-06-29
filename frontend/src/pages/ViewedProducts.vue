@@ -4,18 +4,24 @@
       <Toolbar disable="true" />
     </div>
     <div class="divProducts">
-      <div style="text-align: center; margin-top: 5%">
-        <img src="photos/viewed.svg" style="width: 230px" />
-      </div>
-      <div v-if="products.length > 0" class="products">
-        <FavProduct
-          v-for="item in products"
-          :key="item.id"
-          :idProd="item.Product.id"
-          style="margin-right: 20px"
-          :priceProd="item.Product.price"
-          :photosProd="item.Product.photos"
-        />
+      <div
+        v-if="products.length > 0"
+        style="display: flex; flex-direction: column; margin-top: 5%"
+      >
+        <div style="text-align: center">
+          <img src="photos/viewed.svg" style="width: 250px" />
+        </div>
+        <div class="products" style="display: flex; margin-top: 5%">
+          <FavProduct
+            style="margin-right: 20px"
+            v-on:childToParent="getProducts"
+            v-for="item in products"
+            :key="item.id"
+            :idProd="item.Product.id"
+            :priceProd="item.Product.price"
+            :photosProd="item.Product.photos"
+          />
+        </div>
       </div>
       <div
         v-else
@@ -30,15 +36,14 @@
         <div
           style="
             font-family: 'Montserrat', sans-serif;
-            font-weight: bold;
-            font-size: 150%;
+            font-size: 300%;
             color: #383838;
           "
         >
-          Nu ati vizualizat niciun produs!
+          Nu ați vizualizat niciun produs!
         </div>
         <div>
-          <img style="width: 40%; margin-top: 5%" src="photos/emptyCart.svg" />
+          <img style="width: 20%; margin-top: 10%" src="photos/emptyCart.svg" />
         </div>
       </div>
     </div>

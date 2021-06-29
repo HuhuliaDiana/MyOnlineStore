@@ -218,7 +218,7 @@
                   label="Încarcă poze"
                   @added="onFileAdd"
                   color="secondary"
-                  :max-files="maxFiles"
+                  :max-files="clickBtnAdd === true ? 3 : maxFiles"
                   multiple
                   accept=".jpg"
                   @rejected="onRejected"
@@ -257,6 +257,7 @@ export default {
   watch: {
     maxFiles() {},
     rows() {},
+    clickBtnAdd() {},
     val(n, o) {
       this.rows = n;
     },
@@ -268,6 +269,7 @@ export default {
   data() {
     return {
       maxFiles: null,
+      clickBtnAdd: false,
       visibleColumns: [],
       componentKey: true,
       rows: [],
@@ -449,6 +451,7 @@ export default {
       //edit photos from product
     },
     editProduct(key) {
+
       //verifica ce campuri se schimba, vefifica pozele, verifica daca s-au incarcat poze- this.files!==null
       const product = {
         quantity: this.quantity,
@@ -486,6 +489,8 @@ export default {
         });
     },
     onRowClick(evt, row) {
+      this.clickBtnAdd = false;
+
       this.productEdit = row;
 
       this.productEditPhotos = row.photos.split(", ");
@@ -514,6 +519,7 @@ export default {
       this.changeLabel = true;
     },
     addProduct() {
+      this.clickBtnAdd = true;
       this.changeLabel = false;
       this.confirm = true;
       this.brand = null;
