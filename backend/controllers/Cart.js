@@ -27,7 +27,7 @@ const controllers = {
       const userLastCart = userCarts[userCarts.length - 1];
       const cartInOrders = await OrderDB.findAll({
         where: {
-          CartId: userLastCart.id,ș
+          CartId: userLastCart.id,
         },
       });
       if (cartInOrders.length > 0) {

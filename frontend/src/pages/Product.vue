@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <Toolbar disable="true"/>
+      <Toolbar disable="true" />
     </div>
     <div class="myDiv">
       <div class="body" style="font-family: 'Montserrat', sans-serif">
@@ -58,7 +58,13 @@
                   {{ product.price }} lei
                 </div>
                 <div style="font-size: 35px">
-                  {{ product.price - (product.price * product.discount) / 100 }}
+                  {{
+                    Math.round(
+                      (product.price -
+                        (product.price * product.discount) / 100) *
+                        100
+                    ) / 100
+                  }}
                   lei
                 </div>
               </div>

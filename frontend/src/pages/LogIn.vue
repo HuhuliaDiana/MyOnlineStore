@@ -140,7 +140,7 @@
 import axios from "../boot/axios";
 
 export default {
-  name: "Register",
+  name: "LogIn",
   data() {
     return {
       email: null,
@@ -153,24 +153,31 @@ export default {
       axios
         .get("http://localhost:8082/getCart", { withCredentials: true })
         .then((res) => {
-          console.log(res.data);
+          console.log("hei");
         })
         .catch((err) => {
           console.log(err);
         });
     },
+
     onLoggedIn() {
       const user = {
         email: this.email,
         password: this.password,
       };
-      //unde pastrez datele administratorului
-      
+
       axios
-        .post("http://localhost:8082/login", user, { withCredentials: true })
+        .get(`http://localhost:8082/getUserByEmail/${this.email}`)
+        .then((res) => {
+          if (res.data.admin === 1) {
+            this.$router.push("/allProducts");
+          } else {
+      axios
+        .post("http://localhost:8082/login", user, {
+          withCredentials: true,
+        })
         .then((res) => {
           this.getCart();
-          console.log("Te-ai autentificat cu succes!");
           this.$router.push("/home");
         })
         .catch((err) => {
@@ -184,6 +191,16 @@ export default {
             });
           });
         });
+        }
+      })
+      .catch((err) => {
+        this.$q.notify({
+          color: "red-4",
+          textColor: "white",
+          icon: "warning",
+          message: err.data.message,
+        });
+      });
     },
   },
 };

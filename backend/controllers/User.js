@@ -15,6 +15,19 @@ const ProductSugestionDB = require("../models").ProductSugestion;
 const controllerProduct = require("./Product");
 
 const controller = {
+  getUserByEmail: async (req, res) => {
+    UserDB.findOne({
+      where: {
+        email: req.params.email,
+      },
+    })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(500).send({ message: "Email sau parolă invalidă!" });
+      });
+  },
   addUser: async (req, res) => {
     const user = {
       firstname: req.body.firstname,
@@ -22,6 +35,7 @@ const controller = {
       password: req.body.password,
       username: req.body.username,
       email: req.body.email,
+      admin: req.body.admin,
     };
 
     let errors = [];

@@ -88,7 +88,7 @@
                 {{ priceProd }} lei
               </div>
               <div style="font-size: 20px">
-                {{ product.price - (product.price * product.discount) / 100 }}
+                {{ priceReduced }}
                 lei
               </div>
             </div>
@@ -163,6 +163,7 @@ export default {
       fav: null,
       product: null,
       username: null,
+      priceReduced: null,
       reducedPrice: null,
       quantity: null,
       color: null,
@@ -173,7 +174,6 @@ export default {
 
   watch: {
     number(newVal, oldVal) {
-      //console.log(this.idProd);
       if (newVal !== oldVal) {
         axios
           .patch(
@@ -220,6 +220,10 @@ export default {
       .then((response) => {
         this.product = response.data;
         this.quantity = this.product.quantity;
+        const num =
+          this.product.price -
+          (this.product.price * this.product.discount) / 100;
+        this.priceReduced = Math.round(num * 100) / 100;
       })
       .catch((err) => {
         console.log(err);

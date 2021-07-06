@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       USB: DataTypes.STRING,
 
       discount: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.INTEGER,
         defaultValue: "0",
       },
       photos: DataTypes.STRING,

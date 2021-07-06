@@ -14,7 +14,6 @@ const session = require('express-session')
 const sequelize=require("./config/db")
 const cors = require('cors')
 
-// const app = express();
 app.use(bodyParser.json());
 
 initPassport(

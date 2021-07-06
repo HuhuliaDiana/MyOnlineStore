@@ -51,7 +51,12 @@
                 {{ priceProd }} lei
               </div>
               <div style="font-size: 20px">
-                {{ product.price - (product.price * product.discount) / 100 }}
+                {{
+                  Math.round(
+                    (product.price - (product.price * product.discount) / 100) *
+                      100
+                  ) / 100
+                }}
                 lei
               </div>
             </div>

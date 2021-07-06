@@ -227,7 +227,16 @@ export default {
     getFavouriteProducts() {
       this.$router.push("/favourite");
     },
-    logout() {},
+    logout() {
+      axios
+        .delete("http://localhost:8082/logout", {
+          withCredentials: true,
+        })
+        .then((res) => {
+          this.$router.push("/login");
+        })
+        .catch((err) => {});
+    },
   },
 };
 </script>

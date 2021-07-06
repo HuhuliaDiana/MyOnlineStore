@@ -14,7 +14,7 @@
         "
       >
         <div>Cost produse:</div>
-        <div>{{ costProduse }} lei</div>
+        <div>{{ Math.round(costProduse * 100) / 100 }} lei</div>
       </div>
       <div
         style="
@@ -41,7 +41,7 @@
       "
     >
       <div>Total:</div>
-      <div>{{ costF }} lei</div>
+      <div>{{ Math.round(costF * 100) / 100 }} lei</div>
     </div>
     <div v-if="discount !== 0" style="margin-top: 15%; text-align: center">
       <q-btn

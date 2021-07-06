@@ -346,10 +346,10 @@ export default {
           field: "netSpeed",
         },
         {
-          name: "usb",
+          name: "USB",
           label: "USB",
           align: "center",
-          field: "usb",
+          field: "USB",
         },
         {
           name: "discount",

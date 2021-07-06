@@ -140,7 +140,7 @@
               realizata!
             </div>
             <div>
-              Total plata: <b style="color: #26a69b">{{ costF }} lei</b>
+              Total plata: <b style="color: #26a69b">{{ Math.round(costF * 100) / 100 }} lei</b>
             </div>
           </div>
         </q-card-section>

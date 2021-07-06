@@ -44,7 +44,9 @@
           "
         >
           {{
-            product.price - (product.price * product.discount) / 100
+            Math.round(
+              (product.price - ((product.price * product.discount) / 100)) * 100
+            ) / 100
           }}&nbsp;lei
         </div>
         <div>
@@ -62,7 +64,7 @@
         <div style="border-bottom: 1px solid grey"></div>
 
         <div style="margin-top: 15%">
-          &nbsp;<b style="font-size: 110%">{{ subtotal }}&nbsp;lei</b>
+          &nbsp;<b style="font-size: 110%">{{ Math.round(subtotal*100)/100 }}&nbsp;lei</b>
         </div>
       </div>
     </div>

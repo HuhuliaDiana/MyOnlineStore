@@ -112,7 +112,9 @@ export default {
         console.log(this.rows);
       }
     },
-    logout() {},
+    logout() {
+      this.$router.push("/login");
+    },
 
     openPage(key) {
       this.$router

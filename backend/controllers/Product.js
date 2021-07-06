@@ -12,24 +12,7 @@ const Op = Sequelize.Op;
 const controller = require("./Cart");
 
 const controllers = {
-  // editPhotos: async (req, res) => {
-  //   ProductDB.update(
-  //     {
-  //       photos: req.body.photos,
-  //     },
-  //     {
-  //       where: {
-  //         id: req.params.id,
-  //       },
-  //     }
-  //   )
-  //     .then((result) => {
-  //       res.status(200).send(result);
-  //     })
-  //     .catch((err) => {
-  //       res.status(500).send(err);
-  //     });
-  // },
+
   deleteProducts: async (req, res) => {
     //array of json objects, get id from every json obj
     let array = req.body.array;
@@ -83,13 +66,10 @@ const controllers = {
       res.status(500).send({ message: "Server error!" });
     }
   },
-
   addProductInCart: async (req, res) => {
     const id = req.body.id;
     const product = await ProductDB.findByPk(id);
-
     const userCart = await controller.getCart(req, res);
-
     if (product.quantity > 0) {
       const newQuantProd = product.quantity - 1;
       product
@@ -100,108 +80,42 @@ const controllers = {
           console.log(result);
         });
     }
-
-    try {
-      const cartProductFound = await CartProductDB.findOne({
-        where: {
-          CartId: userCart.id,
-          ProductId: product.id,
-        },
-      });
-      console.log(cartProductFound);
-
-      if (cartProductFound) {
-        //produsul se afla deja in cos =>  cresc cantitatea cu o unitate
-
-        console.log("produsul se afla in cos");
-        const newQuantCartProd = cartProductFound.quantity + 1;
-        cartProductFound
-          .update({
-            quantity: newQuantCartProd,
-          })
-          .then((result) => {
-            res.status(200).send(product);
-            //res.status(200).send({message:"Ai adaugat acest produs in cos!"});
-          });
-      } else {
-        //produsul nu se afla in cos=>
-
-        console.log("produsul NU se afla in cos");
-        //creeaza cartProduct
-        const newCartProduct = {
-          CartId: userCart.id,
-          ProductId: product.id,
-        };
-        console.log(newCartProduct);
-
-        CartProductDB.create(newCartProduct).then((result) => {
-          console.log(newCartProduct);
-          res.status(200).send(product);
-        });
-      }
-
-      //calculeaza pretul cosului de cumparaturi
-      const newPrice =
-        userCart.totalPrice +
-        (product.price - (product.price * product.discount) / 100);
-      userCart
+    const cartProductFound = await CartProductDB.findOne({
+      where: {
+        CartId: userCart.id,
+        ProductId: product.id,
+      },
+    });
+    if (cartProductFound) {
+      const newQuantCartProd = cartProductFound.quantity + 1;
+      cartProductFound
         .update({
-          totalPrice: newPrice,
+          quantity: newQuantCartProd,
         })
         .then((result) => {
-          console.log(result);
+          res.status(200).send(product);
         });
-    } catch (err) {
-      console.log(err);
+    } else {
+      const newCartProduct = {
+        CartId: userCart.id,
+        ProductId: product.id,
+      };
+      CartProductDB.create(newCartProduct).then((result) => {
+        res.status(200).send(product);
+      });
     }
+    const newPrice =
+      userCart.totalPrice +
+      (product.price - (product.price * product.discount) / 100);
+    userCart
+      .update({
+        totalPrice: newPrice,
+      })
+      .then((result) => {
+        console.log(result);
+      });
   },
-
-  //filtrare produse
-
-  // getBrands: async (req, res) => {
-  //   const products = req.body
-  //   const brands = products.map((element) => element.brand);
-  //   const newBrands = [...new Set(brands)];
-  //   res.status(200).send(newBrands);
-  // },
-  // getRAM: async (req, res) => {
-  //   const products = await req.body
-
-  //   const memRAM = products.map((element) => element.memRAM);
-  //   const newMemRAM = [...new Set(memRAM)];
-  //   res.status(200).send(newMemRAM);
-  // },
-  // getStock: async (req, res) => {
-  //   const products = req.body
-  //   const stock = products.map((element) => {
-  //     if (element.quantity < 15 && element.quantity > 0) {
-  //       return "Stoc limitat";
-  //     } else if (element.quantity >= 15) {
-  //       return "In stoc";
-  //     } else {
-  //       return "Stoc epuizat";
-  //     }
-  //   });
-  //   const newStock = [...new Set(stock)];
-  //   res.status(200).send(newStock);
-  // },
-  // getMemInternal: async (req, res) => {
-  //   const products = req.body
-
-  //   const memInt = products.map((element) => element.memInternal);
-  //   const newMemInt = [...new Set(memInt)];
-  //   res.status(200).send(newMemInt);
-  // },
-  // getNetSpeed: async (req, res) => {
-  //   const products = req.body
-
-  //   const netSpeed = products.map((element) => element.netSpeed);
-  //   const newNetSpeed = [...new Set(netSpeed)];
-  //   res.status(200).send(newNetSpeed);
-  // },
   addToViewedProducts: async (req, res) => {
-    //se adauga produsul daca el nu se afla deja in ViewedProduct
-
     const id = req.body.id;
     const currentUser = await req.user;
 
@@ -229,7 +143,6 @@ const controllers = {
           },
         });
       }
-
       const viewedProduct = {
         UserId: currentUser.id,
         ProductId: id,

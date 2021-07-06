@@ -117,11 +117,7 @@ const controllers = {
   },
   orderCart: async (req, res) => {
     const currentUser = await req.user;
-
     const cart = await controller.getCart(req, res);
-
-    //calc price
-
     const order = {
       CartId: cart.id,
       town: req.body.town,
@@ -134,47 +130,30 @@ const controllers = {
       price: req.body.price,
     };
     const myOrder = await OrderDB.create(order);
-
-    //ofera discount celor doua persoane
-
-    //mie mi se trimite un produs, eu il comand, deci eu primesc discountul si apoi cealalta persoana
-
-    //1. sugestii pe care le-am primit
     const receivedSuggestions = await ProductSugestionDB.findAll({
       where: {
-        //UserId: currentUser.id,
         to: currentUser.email,
-        discountUsed: 0, //SUGESTIILE CU PRODUSE NEFOLOSITE PENTRU O COMANDA PE CARE S-A APLICAT DISCOUNT
+        discountUsed: 0, 
       },
     });
 
-    //id urile produselor sugerate
     const suggestedProducts = receivedSuggestions.map((suggestion) => {
       return {
-        productId: suggestion.ProductId, //1
+        productId: suggestion.ProductId, 
         userId: suggestion.UserId,
-        //to: suggestion.to,//eu
       };
     });
-
-    //vezi daca TO a comandat produsul respectiv (dupa ce user curent a trimis sugestia)
     suggestedProducts.forEach(async (pair) => {
-      //gasesc userul care mi-a sugerat
       const user = await UserDB.findOne({
         where: {
-          // email: pair.to,
           id: pair.userId, //2
         },
       });
-
-      //orders ale lui TO
       const carts = await CartDB.findAll({
         where: {
-          //UserId: user.id,
           UserId: currentUser.id,
         },
       });
-
       const idCarts = carts.map((cart) => cart.id); //1
       const orderedCarts = await OrderDB.findAll({
         where: {

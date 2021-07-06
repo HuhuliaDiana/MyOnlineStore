@@ -76,9 +76,7 @@
             >
               {{ priceProd }} lei
             </div>
-            <div style="font-size: 20px">
-              {{ product.price - (product.price * product.discount) / 100 }} lei
-            </div>
+            <div style="font-size: 20px">{{ priceReduced }} lei</div>
           </div>
 
           <div>
@@ -137,6 +135,7 @@ export default {
       reducedPrice: null,
       stockStatus: null,
       color: null,
+      priceReduced: null,
     };
   },
   watch: {
@@ -166,6 +165,10 @@ export default {
         this.product = response.data;
         this.quantity = this.product.quantity;
         this.getStockStatus();
+        const num =
+          this.product.price -
+          (this.product.price * this.product.discount) / 100;
+        this.priceReduced = Math.round(num * 100) / 100;
       })
       .catch((err) => {
         console.log(err);
