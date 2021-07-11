@@ -249,16 +249,7 @@
 <script>
 import axios from "../boot/axios";
 import ToolbarAdmin from "../components/ToolbarAdmin.vue";
-const multer=require('multer')
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, '../frontend/public/photos')
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  }
-})
-const upload = multer({ storage: storage })//limits:{filesize: ...}
+
 
 export default {
   components: {
@@ -281,6 +272,7 @@ export default {
       maxFiles: null,
       clickBtnAdd: false,
       visibleColumns: [],
+      filename:null,
       componentKey: true,
       rows: [],
       selectedRows: [],
@@ -550,15 +542,18 @@ export default {
       this.price = null;
     },
     onFileAdd(myFiles) {
-      const filesNames = myFiles.map((file) => file.name);
-      this.files = filesNames;
-      this.files.forEach((file) => {
-        if (this.photos !== "") {
-          this.photos = this.photos.concat(", " + file);
-        } else {
-          this.photos = this.photos.concat(file);
-        }
-      });
+      // const filesNames = myFiles.map((file) => file.name);
+      // this.files = filesNames;
+      // this.files.forEach((file) => {
+      //   if (this.photos !== "") {
+      //     this.photos = this.photos.concat(", " + file);
+      //   } else {
+      //     this.photos = this.photos.concat(file);
+      //   }
+      // });
+      this.filename=myFiles[0]
+      console.log(this.filename)
+      
     },
     saveProduct() {
       // this.files.forEach((file) => {
@@ -568,35 +563,63 @@ export default {
       //     this.photos = this.photos.concat(file);
       //   }
       // });
-      const product = {
-        quantity: this.quantity,
-        price: this.price,
-        brand: this.brand,
-        model: this.model,
-        dimensions: this.dimensions,
-        weight: this.weight,
-        memRAM: this.memRAM,
-        memInternal: this.memInternal,
-        selfieCam: this.selfieCam,
-        mainCam: this.mainCam,
-        battery: this.battery,
-        displayRes: this.displayRes,
-        displaySize: this.displaySize,
-        netSpeed: this.netSpeed,
-        USB: this.usb,
-        discount: this.discount,
-        photos: this.photos,
-      };
+      // const product = {
+      //   quantity: this.quantity,
+      //   price: this.price,
+      //   brand: this.brand,
+      //   model: this.model,
+      //   dimensions: this.dimensions,
+      //   weight: this.weight,
+      //   memRAM: this.memRAM,
+      //   memInternal: this.memInternal,
+      //   selfieCam: this.selfieCam,
+      //   mainCam: this.mainCam,
+      //   battery: this.battery,
+      //   displayRes: this.displayRes,
+      //   displaySize: this.displaySize,
+      //   netSpeed: this.netSpeed,
+      //   USB: this.usb,
+      //   discount: this.discount,
+      //   photos: this.photos,
+      // };
+      // axios
+      //   .post("http://localhost:8082/addProduct", product, {
+      //     withCredentials: true,
+      //   })
+      //   .then((result) => {
+      //     console.log(result.data.message);
+      //   })
+      //   .catch((err) => {
+      //     console.log(err);
+      //   });
+      
+
+      const url = "http://localhost:8082/addProduct";
+      const file = new FormData();
+      // const newName = this.product.id + "_" + this.filename.name;
+      const newName = this.filename.name;
+      file.append("product", this.filename, newName);
+      console.log(file);
+      const product={
+        brand:this.brand,
+        price:this.price,
+        // file:file
+      }
       axios
-        .post("http://localhost:8082/addProduct", product, {
-          withCredentials: true,
+        .post(url, product, { withCredentials: true })
+        .then(() => {
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "done",
+            message: "Fișier încărcat cu succes!"
+          });
+          console.log("Succes!");
         })
-        .then((result) => {
-          console.log(result.data.message);
-        })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
+
     },
   },
 };
