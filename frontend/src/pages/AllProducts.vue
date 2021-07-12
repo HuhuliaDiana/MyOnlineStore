@@ -55,7 +55,6 @@
             selection="multiple"
             :selected.sync="selectedRows"
             :visible-columns="visibleColumns"
-            :selected-rows-label="getSelected"
           >
           </q-table>
         </div>
@@ -221,7 +220,6 @@
                   :max-files="clickBtnAdd === true ? 3 : maxFiles"
                   multiple
                   accept=".jpg"
-                  @rejected="onRejected"
                 />
               </div>
             </div>
@@ -230,7 +228,7 @@
               <q-btn
                 flat
                 :label="changeLabel ? 'Modifică' : 'Adaugă'"
-                @click="changeLabel ? editProduct(productEdit.id) : saveProduct"
+                @click="changeLabel ? editProduct(productEdit.id) : saveProduct()"
                 style="
                   background-color: #26a69b;
                   color: white;
@@ -249,7 +247,16 @@
 <script>
 import axios from "../boot/axios";
 import ToolbarAdmin from "../components/ToolbarAdmin.vue";
-
+const multer=require('multer')
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../frontend/public/photos')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+const upload = multer({ storage: storage })//limits:{filesize: ...}
 
 export default {
   components: {
@@ -269,10 +276,10 @@ export default {
 
   data() {
     return {
+      filename:null,
       maxFiles: null,
       clickBtnAdd: false,
       visibleColumns: [],
-      filename:null,
       componentKey: true,
       rows: [],
       selectedRows: [],
@@ -375,7 +382,7 @@ export default {
       files: [],
       product: null,
       productEdit: null,
-
+      myFiles:null,
       productEditPhotos: [],
 
       dimensions: null,
@@ -384,6 +391,7 @@ export default {
       memRAM: null,
       memInternal: null,
       selfieCam: null,
+      model:null,
       mainCam: null,
       battery: null,
       displaySize: null,
@@ -540,10 +548,13 @@ export default {
       this.displayRes = null;
       this.quantity = null;
       this.price = null;
+      
     },
     onFileAdd(myFiles) {
-      // const filesNames = myFiles.map((file) => file.name);
-      // this.files = filesNames;
+      this.myFiles = myFiles
+
+      // this.myFiles = myFiles.map((file) => file.name);
+      
       // this.files.forEach((file) => {
       //   if (this.photos !== "") {
       //     this.photos = this.photos.concat(", " + file);
@@ -551,9 +562,7 @@ export default {
       //     this.photos = this.photos.concat(file);
       //   }
       // });
-      this.filename=myFiles[0]
-      console.log(this.filename)
-      
+      //this.filename=myFiles[0]
     },
     saveProduct() {
       // this.files.forEach((file) => {
@@ -563,63 +572,55 @@ export default {
       //     this.photos = this.photos.concat(file);
       //   }
       // });
+     
       // const product = {
-      //   quantity: this.quantity,
-      //   price: this.price,
-      //   brand: this.brand,
-      //   model: this.model,
-      //   dimensions: this.dimensions,
-      //   weight: this.weight,
-      //   memRAM: this.memRAM,
-      //   memInternal: this.memInternal,
-      //   selfieCam: this.selfieCam,
-      //   mainCam: this.mainCam,
-      //   battery: this.battery,
-      //   displayRes: this.displayRes,
-      //   displaySize: this.displaySize,
-      //   netSpeed: this.netSpeed,
-      //   USB: this.usb,
-      //   discount: this.discount,
-      //   photos: this.photos,
+      //   // brand: this.brand,
+      //   // quantity: this.quantity,
+      //   // price: this.price,
+      //   // model: this.model,
+      //   // dimensions: this.dimensions,
+      //   // weight: this.weight,
+      //   // memRAM: this.memRAM,
+      //   // memInternal: this.memInternal,
+      //   // selfieCam: this.selfieCam,
+      //   // mainCam: this.mainCam,
+      //   // battery: this.battery,
+      //   // displayRes: this.displayRes,
+      //   // displaySize: this.displaySize,
+      //   // netSpeed: this.netSpeed,
+      //   // USB: this.usb,
+      //   // discount: this.discount,
+      //   // photos: this.photos,
       // };
-      // axios
-      //   .post("http://localhost:8082/addProduct", product, {
-      //     withCredentials: true,
-      //   })
-      //   .then((result) => {
-      //     console.log(result.data.message);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
-      
+      // this.myFiles.forEach((myFile)=>{
+      //   var file = new FormData();
+      //   var newName=this.brand + "_" + myFile.name
+      //   file.append("product", myFile, newName);
+      //   console.log(file.get("product"))
+      //   this.files.push(file)
+      // })
+      // console.log(this.files)
+      // const files=this.files
 
-      const url = "http://localhost:8082/addProduct";
-      const file = new FormData();
-      // const newName = this.product.id + "_" + this.filename.name;
-      const newName = this.filename.name;
-      file.append("product", this.filename, newName);
-      console.log(file);
-      const product={
-        brand:this.brand,
-        price:this.price,
-        // file:file
-      }
+      let formData = new FormData();
+       for( var i = 0; i < this.myFiles.length; i++ ){
+          let file = this.myFiles[i];
+          var newName=this.brand + "_" + file.name
+          formData.append("product",file,newName);
+        }
+    
+      // const newName = this.brand + "_" + this.filename.name;
+      // file.append("product", this.filename, newName);
       axios
-        .post(url, product, { withCredentials: true })
-        .then(() => {
-          this.$q.notify({
-            color: "green-4",
-            textColor: "white",
-            icon: "done",
-            message: "Fișier încărcat cu succes!"
-          });
-          console.log("Succes!");
+        .post("http://localhost:8082/addProduct", formData, {
+          withCredentials: true,
         })
-        .catch(err => {
+        .then((result) => {
+          console.log(result.data);
+        })
+        .catch((err) => {
           console.log(err);
         });
-
     },
   },
 };

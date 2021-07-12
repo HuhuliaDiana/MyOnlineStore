@@ -12,30 +12,7 @@ const Op = Sequelize.Op;
 const controller = require("./Cart");
 
 const controllers = {
-  updatePhoto: async (req, res) => {
-    try {
-      const appointment = await AppointmentDB.findOne({
-        where: {
-          id: req.params.id,
-        },
-      });
-      if (appointment) {
-        appointment
-          .update({
-            analysisBulletin: `${req.file.filename}`,
-          })
-          .then(() =>
-            res.status(200).send({ message: "Analyasis bulletin updated." })
-          )
-          .catch((err) => res.status(500).send(err));
-      } else {
-        res.status(400).send({ message: "The id does not exist." });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-    
-  },
+
   deleteProducts: async (req, res) => {
     //array of json objects, get id from every json obj
     let array = req.body.array;
@@ -56,28 +33,32 @@ const controllers = {
       });
   },
   addProduct: async (req, res) => {
+    
+    const reqFiles = await req.files
+    console.log(reqFiles)
+    const files= reqFiles.map(function(file) {
+      return file.filename;
+    });
+    // let myPhotos=""
+    // files.forEach((file) => {
+    //     if (myPhotos !== "") {
+    //       myPhotos = myPhotos.concat(", " + file);
+    //     } else {
+    //       myPhotos = myPhotos.concat(file);
+    //     }
+    //   });
+
     const product = {
-      brand: req.body.brand,
-      price: req.body.price,
-      photos:`${req.file.filename}`
+      // photos:myPhotos
+      photos:files.toString()
     }
 
     let errors = [];
 
-    if (!product.brand) {
-      errors.push("Set a brand for the product!");
-    }
-    if (!product.price) {
-      console.log("Set a price for the product!");
-      errors.push("Set a price for the product!");
-    }
-
-
     if (errors.length === 0) {
       try {
-
-        ProductDB.create(product).then(() =>
-          res.status(201).send({ message: "Product succesfully added!" })
+        ProductDB.create(product).then((result) =>
+          res.status(201).send(result)
         );
       } catch (err) {
         res.status(500).send(err);
