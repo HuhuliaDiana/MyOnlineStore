@@ -35,23 +35,33 @@ const controllers = {
   addProduct: async (req, res) => {
     
     const reqFiles = await req.files
-    console.log(reqFiles)
     const files= reqFiles.map(function(file) {
       return file.filename;
     });
-    // let myPhotos=""
-    // files.forEach((file) => {
-    //     if (myPhotos !== "") {
-    //       myPhotos = myPhotos.concat(", " + file);
-    //     } else {
-    //       myPhotos = myPhotos.concat(file);
-    //     }
-    //   });
+
+    const body = await req.body.bodyProduct
+    const bodyProduct=JSON.parse(body)
 
     const product = {
-      // photos:myPhotos
+      brand: bodyProduct.brand,
+      quantity: bodyProduct.quantity,
+      price: bodyProduct.price,
+      model: bodyProduct.model,
+      dimensions: bodyProduct.dimensions,
+      weight: bodyProduct.weight,
+      memRAM: bodyProduct.memRAM,
+      memInternal: bodyProduct.memInternal,
+      selfieCam: bodyProduct.selfieCam,
+      mainCam: bodyProduct.mainCam,
+      battery: bodyProduct.battery,
+      displayRes: bodyProduct.displayRes,
+      displaySize: bodyProduct.displaySize,
+      netSpeed: bodyProduct.netSpeed,
+      USB: bodyProduct.usb,
+      discount: bodyProduct.discount,
       photos:files.toString()
     }
+    console.log(product)
 
     let errors = [];
 

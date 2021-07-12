@@ -552,67 +552,39 @@ export default {
     },
     onFileAdd(myFiles) {
       this.myFiles = myFiles
-
-      // this.myFiles = myFiles.map((file) => file.name);
-      
-      // this.files.forEach((file) => {
-      //   if (this.photos !== "") {
-      //     this.photos = this.photos.concat(", " + file);
-      //   } else {
-      //     this.photos = this.photos.concat(file);
-      //   }
-      // });
-      //this.filename=myFiles[0]
     },
     saveProduct() {
-      // this.files.forEach((file) => {
-      //   if (this.photos !== "") {
-      //     this.photos = this.photos.concat(", " + file);
-      //   } else {
-      //     this.photos = this.photos.concat(file);
-      //   }
-      // });
-     
-      // const product = {
-      //   // brand: this.brand,
-      //   // quantity: this.quantity,
-      //   // price: this.price,
-      //   // model: this.model,
-      //   // dimensions: this.dimensions,
-      //   // weight: this.weight,
-      //   // memRAM: this.memRAM,
-      //   // memInternal: this.memInternal,
-      //   // selfieCam: this.selfieCam,
-      //   // mainCam: this.mainCam,
-      //   // battery: this.battery,
-      //   // displayRes: this.displayRes,
-      //   // displaySize: this.displaySize,
-      //   // netSpeed: this.netSpeed,
-      //   // USB: this.usb,
-      //   // discount: this.discount,
-      //   // photos: this.photos,
-      // };
-      // this.myFiles.forEach((myFile)=>{
-      //   var file = new FormData();
-      //   var newName=this.brand + "_" + myFile.name
-      //   file.append("product", myFile, newName);
-      //   console.log(file.get("product"))
-      //   this.files.push(file)
-      // })
-      // console.log(this.files)
-      // const files=this.files
+
+      const product = {
+        brand: this.brand,
+        quantity: this.quantity,
+        price: this.price,
+        model: this.model,
+        dimensions: this.dimensions,
+        weight: this.weight,
+        memRAM: this.memRAM,
+        memInternal: this.memInternal,
+        selfieCam: this.selfieCam,
+        mainCam: this.mainCam,
+        battery: this.battery,
+        displayRes: this.displayRes,
+        displaySize: this.displaySize,
+        netSpeed: this.netSpeed,
+        USB: this.usb,
+        discount: this.discount,
+        // photos: this.photos,
+      };
 
       let formData = new FormData();
+      formData.append("bodyProduct",JSON.stringify(product));
        for( var i = 0; i < this.myFiles.length; i++ ){
           let file = this.myFiles[i];
-          var newName=this.brand + "_" + file.name
+          var newName=this.brand + "_" + file.name//adauga si id-ul care stiu ca l ar primi produsul
           formData.append("product",file,newName);
-        }
+        }        
     
-      // const newName = this.brand + "_" + this.filename.name;
-      // file.append("product", this.filename, newName);
       axios
-        .post("http://localhost:8082/addProduct", formData, {
+        .post("http://localhost:8082/addProduct",formData, {
           withCredentials: true,
         })
         .then((result) => {
