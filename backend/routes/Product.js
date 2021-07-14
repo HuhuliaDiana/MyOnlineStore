@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
   }
 })
 const upload = multer({ storage: storage })//limits:{filesize: ...}
-
+router.get("/getLastId",controllers.getLastId)
 router.patch("/deleteProducts", controllers.deleteProducts);
 router.post("/addProduct", upload.array("product",3), controllers.addProduct);
 

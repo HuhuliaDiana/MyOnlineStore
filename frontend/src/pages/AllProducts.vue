@@ -228,7 +228,9 @@
               <q-btn
                 flat
                 :label="changeLabel ? 'Modifică' : 'Adaugă'"
-                @click="changeLabel ? editProduct(productEdit.id) : saveProduct()"
+                @click="
+                  changeLabel ? editProduct(productEdit.id) : saveProduct()
+                "
                 style="
                   background-color: #26a69b;
                   color: white;
@@ -247,16 +249,16 @@
 <script>
 import axios from "../boot/axios";
 import ToolbarAdmin from "../components/ToolbarAdmin.vue";
-const multer=require('multer')
+const multer = require("multer");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '../frontend/public/photos')
+    cb(null, "../frontend/public/photos");
   },
   filename: function (req, file, cb) {
-    cb(null, file.originalname)
-  }
-})
-const upload = multer({ storage: storage })//limits:{filesize: ...}
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage: storage }); //limits:{filesize: ...}
 
 export default {
   components: {
@@ -276,10 +278,11 @@ export default {
 
   data() {
     return {
-      filename:null,
+      filename: null,
       maxFiles: null,
       clickBtnAdd: false,
       visibleColumns: [],
+      lastProductId: null,
       componentKey: true,
       rows: [],
       selectedRows: [],
@@ -382,7 +385,7 @@ export default {
       files: [],
       product: null,
       productEdit: null,
-      myFiles:null,
+      myFiles: null,
       productEditPhotos: [],
 
       dimensions: null,
@@ -391,7 +394,7 @@ export default {
       memRAM: null,
       memInternal: null,
       selfieCam: null,
-      model:null,
+      model: null,
       mainCam: null,
       battery: null,
       displaySize: null,
@@ -461,7 +464,6 @@ export default {
       //edit photos from product
     },
     editProduct(key) {
-
       //verifica ce campuri se schimba, vefifica pozele, verifica daca s-au incarcat poze- this.files!==null
       const product = {
         quantity: this.quantity,
@@ -548,13 +550,11 @@ export default {
       this.displayRes = null;
       this.quantity = null;
       this.price = null;
-      
     },
     onFileAdd(myFiles) {
-      this.myFiles = myFiles
+      this.myFiles = myFiles;
     },
     saveProduct() {
-
       const product = {
         brand: this.brand,
         quantity: this.quantity,
@@ -575,20 +575,35 @@ export default {
         // photos: this.photos,
       };
 
+      //adauga si id-ul care stiu ca l ar primi produsul
+      //get last id + 1
+
       let formData = new FormData();
-      formData.append("bodyProduct",JSON.stringify(product));
-       for( var i = 0; i < this.myFiles.length; i++ ){
-          let file = this.myFiles[i];
-          var newName=this.brand + "_" + file.name//adauga si id-ul care stiu ca l ar primi produsul
-          formData.append("product",file,newName);
-        }        
-    
+
       axios
-        .post("http://localhost:8082/addProduct",formData, {
+        .get("http://localhost:8082/getLastId", {
           withCredentials: true,
         })
         .then((result) => {
-          console.log(result.data);
+          this.lastProductId = result.data.id;
+          console.log(this.lastProductId);
+          formData.append("bodyProduct", JSON.stringify(product));
+          for (var i = 0; i < this.myFiles.length; i++) {
+            let file = this.myFiles[i];
+            var newName = this.lastProductId + "_" + file.name; //adauga si id-ul care stiu ca l ar primi produsul
+            formData.append("product", file, newName);
+          }
+
+          axios
+            .post("http://localhost:8082/addProduct", formData, {
+              withCredentials: true,
+            })
+            .then((result) => {
+              console.log(result.data);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         })
         .catch((err) => {
           console.log(err);

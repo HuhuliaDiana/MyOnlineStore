@@ -12,6 +12,19 @@ const Op = Sequelize.Op;
 const controller = require("./Cart");
 
 const controllers = {
+  getLastId: async (req, res) => {
+    ProductDB.findAll()
+      .then((products) => {
+        if (products.length == 0) {
+          res.status(200).send({ id: 1 });
+        } else {
+          res.status(200).send({ id: products[products.length - 1].id + 1 });
+        }
+      })
+      .catch((err) => {
+        res.status(500).send(err);
+      });
+  },
 
   deleteProducts: async (req, res) => {
     //array of json objects, get id from every json obj
@@ -33,14 +46,13 @@ const controllers = {
       });
   },
   addProduct: async (req, res) => {
-    
-    const reqFiles = await req.files
-    const files= reqFiles.map(function(file) {
+    const reqFiles = await req.files;
+    const files = reqFiles.map(function (file) {
       return file.filename;
     });
 
-    const body = await req.body.bodyProduct
-    const bodyProduct=JSON.parse(body)
+    const body = await req.body.bodyProduct;
+    const bodyProduct = JSON.parse(body);
 
     const product = {
       brand: bodyProduct.brand,
@@ -57,11 +69,11 @@ const controllers = {
       displayRes: bodyProduct.displayRes,
       displaySize: bodyProduct.displaySize,
       netSpeed: bodyProduct.netSpeed,
-      USB: bodyProduct.usb,
+      USB: bodyProduct.USB,
       discount: bodyProduct.discount,
-      photos:files.toString()
-    }
-    console.log(product)
+      photos: files.toString(),
+    };
+    console.log(product);
 
     let errors = [];
 
