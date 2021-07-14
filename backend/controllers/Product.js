@@ -45,50 +45,6 @@ const controllers = {
         res.status(500).send(err);
       });
   },
-  addProduct: async (req, res) => {
-    const reqFiles = await req.files;
-    const files = reqFiles.map(function (file) {
-      return file.filename;
-    });
-
-    const body = await req.body.bodyProduct;
-    const bodyProduct = JSON.parse(body);
-
-    const product = {
-      brand: bodyProduct.brand,
-      quantity: bodyProduct.quantity,
-      price: bodyProduct.price,
-      model: bodyProduct.model,
-      dimensions: bodyProduct.dimensions,
-      weight: bodyProduct.weight,
-      memRAM: bodyProduct.memRAM,
-      memInternal: bodyProduct.memInternal,
-      selfieCam: bodyProduct.selfieCam,
-      mainCam: bodyProduct.mainCam,
-      battery: bodyProduct.battery,
-      displayRes: bodyProduct.displayRes,
-      displaySize: bodyProduct.displaySize,
-      netSpeed: bodyProduct.netSpeed,
-      USB: bodyProduct.USB,
-      discount: bodyProduct.discount,
-      photos: files.toString(),
-    };
-    console.log(product);
-
-    let errors = [];
-
-    if (errors.length === 0) {
-      try {
-        ProductDB.create(product).then((result) =>
-          res.status(201).send(result)
-        );
-      } catch (err) {
-        res.status(500).send(err);
-      }
-    } else {
-      res.status(400).send(errors);
-    }
-  },
 
   getAllProducts: async (req, res) => {
     try {
@@ -395,8 +351,59 @@ const controllers = {
       res.status(400).send({ message: "Email invalid!" });
     }
   },
+  addProduct: async (req, res) => {
+    const reqFiles = await req.files;
+    const files = reqFiles.map(function (file) {
+      return file.filename;
+    });
+
+    const body = await req.body.bodyProduct;
+    const bodyProduct = JSON.parse(body);
+
+    const product = {
+      brand: bodyProduct.brand,
+      quantity: bodyProduct.quantity,
+      price: bodyProduct.price,
+      model: bodyProduct.model,
+      dimensions: bodyProduct.dimensions,
+      weight: bodyProduct.weight,
+      memRAM: bodyProduct.memRAM,
+      memInternal: bodyProduct.memInternal,
+      selfieCam: bodyProduct.selfieCam,
+      mainCam: bodyProduct.mainCam,
+      battery: bodyProduct.battery,
+      displayRes: bodyProduct.displayRes,
+      displaySize: bodyProduct.displaySize,
+      netSpeed: bodyProduct.netSpeed,
+      USB: bodyProduct.USB,
+      discount: bodyProduct.discount,
+      photos: files.toString(),
+    };
+    let errors = [];
+
+    if (errors.length === 0) {
+      try {
+        ProductDB.create(product).then((result) =>
+          res.status(201).send(result)
+        );
+      } catch (err) {
+        res.status(500).send(err);
+      }
+    } else {
+      res.status(400).send(errors);
+    }
+  },
   editProduct: async (req) => {
-    const newProduct = req.body;
+    // const newProduct = req.body;
+    const reqFiles = await req.files;
+    // console.log(reqFiles);
+    const files = reqFiles.map(function (file) {
+      return file.filename;
+    });
+
+    const body = await req.body.bodyProduct;
+    const newProduct = JSON.parse(body);
+
     let attributes = [];
 
     const prod = await ProductDB.findByPk(req.params.id);
@@ -421,6 +428,19 @@ const controllers = {
         }
       );
     });
+    if (prod.photos !== newProduct.photos) {
+      const newFiles = files.toString().concat(",", newProduct.photos);
+      await ProductDB.update(
+        {
+          photots: newFiles,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+    }
   },
 };
 module.exports = controllers;

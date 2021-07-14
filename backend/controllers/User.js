@@ -295,8 +295,10 @@ const controller = {
   },
 
   getEditProduct: async (req, res) => {
-    await controllerProduct.editProduct(req, res);
-    await controllerProduct.editProduct(req, res);
+    const reqFiles = await req.files;
+    console.log(reqFiles);
+    await controllerProduct.editProduct(req);
+    await controllerProduct.editProduct(req);
 
     ProductDB.findByPk(req.params.id)
       .then((result) => {

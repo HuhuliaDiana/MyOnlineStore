@@ -25,7 +25,7 @@
         <div style="margin-top: 2%">
           <img style="width: 150px" src="photos/ecommerce.png" />
         </div>
-        <div>
+        <div style="max-width: 95%">
           <div class="flex" style="justify-content: flex-end">
             <q-select
               v-model="visibleColumns"
@@ -126,6 +126,14 @@
                 </div>
                 <div>
                   <q-input v-model="weight" label="Greutate" />
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between">
+                <div>
+                  <q-input v-model="displaySize" label="Dimensiune ecran" />
+                </div>
+                <div>
+                  <q-input v-model="battery" label="Baterie" />
                 </div>
               </div>
               <div style="display: flex; justify-content: space-between">
@@ -271,9 +279,7 @@ export default {
     val(n, o) {
       this.rows = n;
     },
-    photos() {
-      console.log(this.photos);
-    },
+    photos() {},
   },
 
   data() {
@@ -304,7 +310,7 @@ export default {
         { name: "model", label: "Model", field: "model", align: "center" },
         {
           name: "dimensions",
-          label: "Dimensions",
+          label: "Dimensiuni",
           field: "dimensions",
           align: "center",
         },
@@ -382,7 +388,6 @@ export default {
           field: "quantity",
         },
       ],
-      files: [],
       product: null,
       productEdit: null,
       myFiles: null,
@@ -458,57 +463,20 @@ export default {
     },
     deletePhoto(photo) {
       this.productEditPhotos.splice(this.productEditPhotos.indexOf(photo), 1); //delete s3
-      this.photos = this.productEditPhotos.join(", "); //s1, s2
+      this.photos = this.productEditPhotos.join(","); //s1, s2
       this.maxFiles = 3 - this.productEditPhotos.length;
 
       //edit photos from product
     },
-    editProduct(key) {
-      //verifica ce campuri se schimba, vefifica pozele, verifica daca s-au incarcat poze- this.files!==null
-      const product = {
-        quantity: this.quantity,
-        price: this.price,
-        brand: this.brand,
-        model: this.model,
-        dimensions: this.dimensions,
-        weight: this.weight,
-        memRAM: this.memRAM,
-        memInternal: this.memInternal,
-        selfieCam: this.selfieCam,
-        mainCam: this.mainCam,
-        battery: this.battery,
-        displayRes: this.displayRes,
-        displaySize: this.displaySize,
-        netSpeed: this.netSpeed,
-        USB: this.usb,
-        discount: this.discount,
-        photos: this.photos,
-      };
 
-      axios
-        .patch(`http://localhost:8082/getEditProduct/${key}`, product)
-        .then((res) => {
-          this.refresh = true;
-          this.$q.notify({
-            color: "green-4",
-            textColor: "white",
-            icon: "cloud_done",
-            message: "Ai modificat un produs!",
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     onRowClick(evt, row) {
       this.clickBtnAdd = false;
 
       this.productEdit = row;
 
-      this.productEditPhotos = row.photos.split(", ");
+      this.productEditPhotos = row.photos.split(",");
 
       this.maxFiles = 3 - this.productEditPhotos.length;
-      console.log(this.maxFiles);
 
       this.confirm = true;
       this.brand = row.brand;
@@ -554,6 +522,56 @@ export default {
     onFileAdd(myFiles) {
       this.myFiles = myFiles;
     },
+    editProduct(key) {
+      const product = {
+        quantity: this.quantity,
+        price: this.price,
+        brand: this.brand,
+        model: this.model,
+        dimensions: this.dimensions,
+        weight: this.weight,
+        memRAM: this.memRAM,
+        memInternal: this.memInternal,
+        selfieCam: this.selfieCam,
+        mainCam: this.mainCam,
+        battery: this.battery,
+        displayRes: this.displayRes,
+        displaySize: this.displaySize,
+        netSpeed: this.netSpeed,
+        USB: this.usb,
+        discount: this.discount,
+        photos: this.photos,
+      };
+
+      //verifica pozele, verifica daca s-au incarcat poze- this.myFiles!==null
+      let formData = new FormData();
+      formData.append("bodyProduct", JSON.stringify(product));
+      if (this.myFiles!==null) {
+        for (var i = 0; i < this.myFiles.length; i++) {
+          let file = this.myFiles[i];
+          var newName = key.toString() + "_" + file.name; //adauga si id-ul care stiu ca il are produsul
+          formData.append("product", file, newName);
+        }
+        console.log(formData);
+      }
+
+      axios
+        .post(`http://localhost:8082/getEditProduct/${key}`, formData, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          this.refresh = true;
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Ai modificat un produs!",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     saveProduct() {
       const product = {
         brand: this.brand,
@@ -586,7 +604,6 @@ export default {
         })
         .then((result) => {
           this.lastProductId = result.data.id;
-          console.log(this.lastProductId);
           formData.append("bodyProduct", JSON.stringify(product));
           for (var i = 0; i < this.myFiles.length; i++) {
             let file = this.myFiles[i];

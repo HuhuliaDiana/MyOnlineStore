@@ -585,7 +585,7 @@ export default {
               value: this.product.dimensions,
             }
           );
-          this.photos = this.product.photos.split(", ");
+          this.photos = this.product.photos.split(",");
         })
         .catch((err) => {
           console.log(err);

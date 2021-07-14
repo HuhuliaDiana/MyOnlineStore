@@ -5,7 +5,7 @@ const other = require("../controllers").other;
 const controllers = require("../controllers").user;
 
 router.get('/getUserByEmail/:email',controllers.getUserByEmail)
-router.patch("/getEditProduct/:id", controllers.getEditProduct);
+router.post("/getEditProduct/:id", controllers.getEditProduct);
 router.delete("/cancelOrder/:id", other.checkNotAuth, controllers.cancelOrder);
 router.patch("/editProfile", other.checkNotAuth, controllers.editProfile);
 router.get("/getCurrentUser", other.checkNotAuth, controllers.getCurrentUser);

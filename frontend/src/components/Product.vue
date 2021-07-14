@@ -47,7 +47,7 @@
         <div>
           <img
             class="photos"
-            v-bind:src="`../photos/${photosProd.split(', ')[0]}`"
+            v-bind:src="`../photos/${photosProd.split(',')[0]}`"
           />
         </div>
         <div style="margin-left: 20px">
