@@ -33,8 +33,8 @@
             </q-carousel>
           </div>
         </div>
-        <div class="infoProduct" style="width: 20%">
-          <div style="font-weight: bold; font-size: 200%">
+        <div class="infoProduct" style="width: 20%" v-if="product!==null">
+          <div style="font-weight: bold; font-size: 200%" >
             {{ product.brand }} {{ product.model }}
           </div>
           <div style="font-size: 150%">
@@ -240,7 +240,7 @@
               <span>Retur gratuit în <b>30 de zile</b></span>
             </div>
           </div>
-          <div class="q-pa-md q-gutter-sm">
+          <div class="q-pa-md q-gutter-sm" v-if="product!==null">
             <q-btn
               style="
                 padding: 3px;
@@ -401,6 +401,7 @@ export default {
     email(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.email = newVal;
+        console.log(this.email)
       }
     },
     isNew(n, o) {

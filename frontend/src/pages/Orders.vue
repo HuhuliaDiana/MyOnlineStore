@@ -1,7 +1,8 @@
 <template>
   <div>
-    <div><Toolbar disable="true"/></div>
+    <div><Toolbar disable="true" /></div>
     <div
+      v-if="orders.length > 0"
       style="
         display: flex;
         justify-content: center;
@@ -117,14 +118,27 @@
         />
       </div>
     </div>
-
+    <div v-else style="margin-top: 8%; text-align: center">
+      <div
+        style="
+          font-family: 'Montserrat', sans-serif;
+          font-size: 300%;
+          color: #383838;
+        "
+      >
+        Nu ați realizat comenzi!
+      </div>
+      <img style="width: 15%; margin-top: 10%" src="photos/emptyCart.svg" />
+    </div>
     <q-dialog v-model="confirm" persistent>
       <q-card style="font-family: 'Montserrat', sans-serif; width: 400px">
         <q-card-section
           class="row items-center"
           style="background-color: #26a69b; color: white; font-size: 120%"
         >
-          <span class="q-ml-sm" style="margin-top:3%">Sigur doresti anularea comenzii?</span>
+          <span class="q-ml-sm" style="margin-top: 3%"
+            >Sigur doresti anularea comenzii?</span
+          >
         </q-card-section>
 
         <q-card-actions align="right">
@@ -180,9 +194,7 @@ export default {
     };
   },
   watch: {
-    order(n, o) {
-      this.order = n;
-    },
+    order(n, o) {},
     render(n, o) {
       console.log("a randat......." + this.render);
     },
@@ -213,6 +225,7 @@ export default {
         })
         .then((res) => {
           this.orders = res.data;
+          this.$router.go();
           this.$q.notify({
             color: "green-4",
             textColor: "white",

@@ -239,13 +239,14 @@ export default {
           withCredentials: true,
         })
         .then((res) => {
+          this.$router.push("/login");
+
           this.$q.notify({
             color: "green-4",
             textColor: "white",
             icon: "cloud_done",
             message: "Contul a fost creat cu succes!",
           });
-          this.$router.push("/login");
         })
         .catch((err) => {
           const errors = err.response.data;

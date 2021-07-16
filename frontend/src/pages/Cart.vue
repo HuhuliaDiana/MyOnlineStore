@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <Toolbar :disable="true"/>
+      <Toolbar :disable="true" />
     </div>
     <div class="body">
       <div class="flex-child products">
@@ -140,7 +140,10 @@
               realizata!
             </div>
             <div>
-              Total plata: <b style="color: #26a69b">{{ Math.round(costF * 100) / 100 }} lei</b>
+              Total plata:
+              <b style="color: #26a69b"
+                >{{ Math.round(costF * 100) / 100 }} lei</b
+              >
             </div>
           </div>
         </q-card-section>
@@ -364,7 +367,8 @@ export default {
         !this.phone ||
         !this.address ||
         !this.lastname ||
-        !this.firstname;
+        !this.firstname ||
+        this.products.length === 0;
     },
     sendDataToCartPrice() {
       this.products.forEach((product) => {

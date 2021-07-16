@@ -117,7 +117,14 @@ export default {
           },
           { withCredentials: true }
         )
-        .then((result) => {})
+        .then((result) => {
+          this.$q.notify({
+            color: "green-4",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Date actualizate!",
+          });
+        })
         .catch((err) => {
           console.log(err);
         });
