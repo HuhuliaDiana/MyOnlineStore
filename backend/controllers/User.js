@@ -295,10 +295,8 @@ const controller = {
   },
 
   getEditProduct: async (req, res) => {
-    const reqFiles = await req.files;
-    console.log(reqFiles);
-    await controllerProduct.editProduct(req);
-    await controllerProduct.editProduct(req);
+    await controllerProduct.editProduct(req, res);
+    await controllerProduct.editProduct(req, res);
 
     ProductDB.findByPk(req.params.id)
       .then((result) => {
@@ -307,6 +305,7 @@ const controller = {
       .catch((err) => {
         res.status(500).send(err);
       });
+    
   },
 };
 module.exports = controller;

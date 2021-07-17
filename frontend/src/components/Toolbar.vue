@@ -102,6 +102,7 @@ export default {
       disabled: null,
       fram: "",
       fmemInt: "",
+      model: null,
       path: null,
       fstock: "",
       fnet: "",
@@ -127,7 +128,6 @@ export default {
         })
         .then((response) => {
           this.products = response.data;
-          this.filter();
         })
         .catch((err) => {
           console.log(err);

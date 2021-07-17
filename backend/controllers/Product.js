@@ -377,10 +377,12 @@ const controllers = {
       netSpeed: bodyProduct.netSpeed,
       USB: bodyProduct.USB,
       discount: bodyProduct.discount,
-      photos: files.toString(),
+      // photos: files.toString(),
     };
-    let errors = [];
+    product['photos']=files.toString()
 
+
+    let errors = [];
     if (errors.length === 0) {
       try {
         ProductDB.create(product).then((result) =>
@@ -393,13 +395,8 @@ const controllers = {
       res.status(400).send(errors);
     }
   },
-  editProduct: async (req) => {
+  editProduct: async (req, res) => {
     // const newProduct = req.body;
-    const reqFiles = await req.files;
-    // console.log(reqFiles);
-    const files = reqFiles.map(function (file) {
-      return file.filename;
-    });
 
     const body = await req.body.bodyProduct;
     const newProduct = JSON.parse(body);
@@ -416,6 +413,7 @@ const controllers = {
         attributes.push(att);
       }
     }
+    console.log(attributes);
     attributes.forEach(async (att) => {
       await ProductDB.update(
         {
@@ -428,11 +426,18 @@ const controllers = {
         }
       );
     });
-    if (prod.photos !== newProduct.photos) {
+
+    const reqFiles = await req.files;
+    if (reqFiles.length > 0) {
+      const files = reqFiles.map(function (file) {
+        return file.filename;
+      });
       const newFiles = files.toString().concat(",", newProduct.photos);
+      console.log(newFiles);
+
       await ProductDB.update(
         {
-          photots: newFiles,
+          photos: newFiles,
         },
         {
           where: {

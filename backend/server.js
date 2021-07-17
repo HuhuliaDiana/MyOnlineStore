@@ -33,9 +33,9 @@ app.use(
     secret: "secret",
     resave: false,
     saveUninitialized: false,
-      name: "cookieLogin",
-      cookie: {
-          httpOnly: false,
+    name: "cookieLogin",
+    cookie: {
+        httpOnly: false,
          
     }
   })

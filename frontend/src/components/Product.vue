@@ -50,8 +50,8 @@
             v-bind:src="`../photos/${photosProd.split(',')[0]}`"
           />
         </div>
-        <div style="margin-left: 20px">
-          <div style="font-size: 17px; margin-top: 20px; font-weight: bold">
+        <div style="margin-left: 20px" v-if="product">
+          <div style="font-size: 17px; margin-top: 20px; font-weight: bold" >
             {{ product.brand }}
           </div>
           <div>
@@ -61,7 +61,7 @@
         </div>
       </div>
 
-      <div>
+      <div v-if="product">
         <div
           style="margin-top: 30px; margin-left: 20px; display: flex"
           v-if="product.discount !== 0"
@@ -127,7 +127,7 @@ export default {
 
   data() {
     return {
-      fav: null,
+      fav: 0,
       product: null,
       quantity: null,
       isNew: "",

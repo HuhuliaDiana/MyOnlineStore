@@ -14,7 +14,6 @@
         <div class="products" style="display: flex; margin-top: 5%">
           <FavProduct
             style="margin-right: 20px"
-            v-on:childToParent="getProducts"
             v-for="item in products"
             :key="item.id"
             :idProd="item.Product.id"

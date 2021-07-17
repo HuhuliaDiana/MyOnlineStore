@@ -11,10 +11,11 @@ module.exports = function (/* ctx */) {
   return {
     framework: {
       plugins: [
-        'Loading'
+        'Loading',
       ],
       config: {
         loading: { /* look at QUASARCONFOPTIONS from the API card (bottom of page) */ }
+        
       }
     },
     // https://quasar.dev/quasar-cli/supporting-ts
@@ -53,7 +54,7 @@ module.exports = function (/* ctx */) {
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
 
       // transpile: false,
 
@@ -108,7 +109,7 @@ cfg.module.rules.push({
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify']
+      plugins: ['Notify','Cookies']
     },
 
     // animations: 'all', // --- includes all animations

@@ -7,7 +7,11 @@
       margin-top: 5%;
     "
   >
-    <div :style="myDiv" class="product" v-on:click.self="seeProduct()">
+    <div
+      :style="myDiv"
+      class="product"
+      v-on:click.self="seeProduct()"
+    >
       <div class="divPhoto">
         <img
           class="photos"

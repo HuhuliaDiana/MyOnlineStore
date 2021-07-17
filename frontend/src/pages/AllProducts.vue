@@ -257,16 +257,6 @@
 <script>
 import axios from "../boot/axios";
 import ToolbarAdmin from "../components/ToolbarAdmin.vue";
-const multer = require("multer");
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "../frontend/public/photos");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-const upload = multer({ storage: storage }); //limits:{filesize: ...}
 
 export default {
   components: {
@@ -546,7 +536,7 @@ export default {
       //verifica pozele, verifica daca s-au incarcat poze- this.myFiles!==null
       let formData = new FormData();
       formData.append("bodyProduct", JSON.stringify(product));
-      if (this.myFiles!==null) {
+      if (this.myFiles !== null) {
         for (var i = 0; i < this.myFiles.length; i++) {
           let file = this.myFiles[i];
           var newName = key.toString() + "_" + file.name; //adauga si id-ul care stiu ca il are produsul
@@ -556,9 +546,7 @@ export default {
       }
 
       axios
-        .post(`http://localhost:8082/getEditProduct/${key}`, formData, {
-          withCredentials: true,
-        })
+        .post(`http://localhost:8082/getEditProduct/${key}`, formData)
         .then((res) => {
           this.refresh = true;
           this.$q.notify({

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <Toolbar />
+      <Toolbar disable="true"/>
     </div>
     <div class="divProducts">
       <div

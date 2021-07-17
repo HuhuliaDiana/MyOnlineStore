@@ -6,7 +6,7 @@
     <div class="myDiv">
       <div class="body" style="font-family: 'Montserrat', sans-serif">
         <div style="height: 560px; width: 450px">
-          <div :key="product">
+          <div v-if="product" :key="product.id">
             <q-carousel
               style="height: 560px"
               animated
@@ -17,7 +17,7 @@
             >
               <q-carousel-slide
                 v-for="photo in photos"
-                :key="photo"
+                :key="photos.indexOf(photo)"
                 :name="photos.indexOf(photo)"
               >
                 <div
@@ -33,8 +33,8 @@
             </q-carousel>
           </div>
         </div>
-        <div class="infoProduct" style="width: 20%" v-if="product!==null">
-          <div style="font-weight: bold; font-size: 200%" >
+        <div class="infoProduct" style="width: 20%" v-if="product !== null">
+          <div style="font-weight: bold; font-size: 200%">
             {{ product.brand }} {{ product.model }}
           </div>
           <div style="font-size: 150%">
@@ -240,7 +240,7 @@
               <span>Retur gratuit în <b>30 de zile</b></span>
             </div>
           </div>
-          <div class="q-pa-md q-gutter-sm" v-if="product!==null">
+          <div class="q-pa-md q-gutter-sm" v-if="product !== null">
             <q-btn
               style="
                 padding: 3px;
@@ -387,7 +387,7 @@ export default {
       photos: [],
       slide: 1,
       email: null,
-      fav: null,
+      fav: 0,
       options: [],
       textareaModel: "",
       qinput: document.getElementById("qinput_email"),
@@ -401,7 +401,7 @@ export default {
     email(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.email = newVal;
-        console.log(this.email)
+        console.log(this.email);
       }
     },
     isNew(n, o) {

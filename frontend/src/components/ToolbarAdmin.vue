@@ -62,6 +62,7 @@ export default {
       disabled: null,
       search: "",
       rows: [],
+      model: null,
     };
   },
   watch: {

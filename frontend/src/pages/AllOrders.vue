@@ -23,7 +23,7 @@
           :columns="columns"
           row-key="id"
           class="my-sticky-header-table"
-          :key="componentKey"
+          
         >
           <template v-slot:header="props">
             <q-tr :props="props">
@@ -132,13 +132,7 @@ export default {
           required: true,
           field: "phone",
         },
-        {
-          name: "price",
-          label: "Preț",
-          align: "center",
-          required: true,
-          field: (row) => row.price + " lei",
-        },
+
         {
           name: "name",
           label: "Livrare la",
@@ -152,6 +146,13 @@ export default {
           align: "center",
           required: true,
           field: "paymentMethod",
+        },
+        {
+          name: "totalPrice",
+          label: "Preț total",
+          align: "center",
+          required: true,
+          field: (row) => row.price + " lei",
         },
         {
           name: "email",

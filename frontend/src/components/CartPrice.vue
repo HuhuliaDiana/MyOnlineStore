@@ -41,9 +41,7 @@
       "
     >
       <div>Total:</div>
-      <div v-if="specialDiscount===false">{{ Math.round(costF * 100) / 100 }} lei</div>
-      <div v-else>{{ Math.round(costFinal * 100) / 100 }} lei</div>
-
+      <div>{{ Math.round(costF * 100) / 100 }} lei</div>
     </div>
     <div v-if="discount !== 0" style="margin-top: 15%; text-align: center">
       <q-btn
@@ -67,27 +65,20 @@
 import axios from "../boot/axios";
 
 export default {
-  props: ["costProduse", "costLivrare", "costF"],
+  props: ["ceva", "costProduse", "costLivrare", "costF"],
 
   data() {
     return {
       products: [],
+      cost: 0,
       discount: 0,
       costFinal: 0,
-      specialDiscount: false,
     };
   },
 
   watch: {
+    cost() {},
     discount() {},
-    costFinal() {},
-    specialDiscount() {},
-    costF(n, o) {
-      if (this.discount === 0) {
-        this.costFinal = n - n / 10;
-        this.$emit("transmitFinalCost", this.costFinal);
-      }
-    },
   },
 
   methods: {
@@ -107,7 +98,6 @@ export default {
             icon: "cloud_done",
             message: "Ai aplicat reducerea de 10%!",
           });
-          this.specialDiscount = true;
           this.costFinal = this.costF - this.costF / 10;
           this.$emit("transmitFinalCost", this.costFinal);
           this.discount = 0;
@@ -124,6 +114,7 @@ export default {
       })
       .then((result) => {
         this.discount = result.data.discount;
+        console.log(this.discount);
       })
       .catch((err) => {
         console.log(err);

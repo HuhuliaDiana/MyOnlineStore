@@ -57,7 +57,7 @@
         </div>
 
         <!-- div info -->
-        <div style="margin-left: 20px">
+        <div style="margin-left: 20px" v-if="product">
           <div style="font-size: 17px; margin-top: 20px; font-weight: bold">
             {{ product.brand }}
           </div>
@@ -73,7 +73,7 @@
       <div>
         <div
           style="margin-left: 20px; display: flex"
-          v-if="product.discount !== 0"
+          v-if="product && product.discount !== 0"
         >
           <div>
             <div
@@ -148,7 +148,7 @@ export default {
 
   data() {
     return {
-      fav: null,
+      fav: 0,
       product: null,
       quantity: null,
       isNew: "",
@@ -197,7 +197,6 @@ export default {
         .then((response) => {
           if (response.data !== null) {
             this.isNew = "New!";
-            console.log(this.isNew);
           }
         })
         .catch((err) => {
@@ -234,13 +233,13 @@ export default {
       }
     },
     getStockStatus() {
-      if (this.product.quantity > 0 && this.product.quantity <= 15) {
+      if (this.product!==null && this.product.quantity > 0 && this.product.quantity <= 15) {
         this.color = "orange";
         return "Stoc limitat";
-      } else if (this.product.quantity > 15) {
+      } else if (this.product!==null && this.product.quantity > 15) {
         this.color = "green";
         return "În stoc";
-      } else if (this.product.quantity == 0) {
+      } else if (this.product!==null && this.product.quantity == 0) {
         this.color = "red";
         return "Stoc epuizat";
       }

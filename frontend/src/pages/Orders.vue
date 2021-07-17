@@ -195,9 +195,7 @@ export default {
   },
   watch: {
     order(n, o) {},
-    render(n, o) {
-      console.log("a randat......." + this.render);
-    },
+    render(n, o) {},
     idOrderCancel() {},
     orders() {},
   },
@@ -206,7 +204,6 @@ export default {
       .get("http://localhost:8082/getUserOrders", { withCredentials: true })
       .then((res) => {
         this.orders = res.data;
-        console.log(this.orders);
       })
       .catch((err) => {
         console.log(err);
@@ -216,7 +213,6 @@ export default {
     ceva(key) {
       this.confirm = true;
       this.idOrderCancel = key;
-      console.log(this.idOrderCancel);
     },
     cancelOrder() {
       axios
@@ -243,8 +239,6 @@ export default {
         .then((res) => {
           this.order = res.data;
           this.render = !this.render;
-          console.log("am apasat");
-          console.log(this.order);
         })
         .catch((err) => {
           console.log(err);

@@ -49,7 +49,7 @@
               shopping_bag
             </span>
             <div style="margin-top: 4%; font-weight: bold">
-              <a href="/#/orders" style="">Comenzile tale</a>
+              <a href="/orders" style="">Comenzile tale</a>
             </div>
           </div>
           <div style="text-align: center">
@@ -60,7 +60,7 @@
               groups
             </span>
             <div style="margin-top: 4%; font-weight: bold">
-              <a href="/#/suggestionsFrom">Sugestii primite</a>
+              <a href="/suggestionsFrom">Sugestii primite</a>
             </div>
           </div>
         </div>

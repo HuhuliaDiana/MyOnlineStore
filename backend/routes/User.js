@@ -4,8 +4,23 @@ const passport = require("passport");
 const other = require("../controllers").other;
 const controllers = require("../controllers").user;
 
-router.get('/getUserByEmail/:email',controllers.getUserByEmail)
-router.post("/getEditProduct/:id", controllers.getEditProduct);
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../frontend/public/photos");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage: storage }); //limits:{filesize: ...}
+router.get("/getUserByEmail/:email", controllers.getUserByEmail);
+router.post(
+  "/getEditProduct/:id",
+  upload.array("product", 3),
+  controllers.getEditProduct
+);
+
 router.delete("/cancelOrder/:id", other.checkNotAuth, controllers.cancelOrder);
 router.patch("/editProfile", other.checkNotAuth, controllers.editProfile);
 router.get("/getCurrentUser", other.checkNotAuth, controllers.getCurrentUser);

@@ -2,7 +2,6 @@
   <div>
     <!-- div intreg -->
     <div
-      :style="myDiv"
       style="font-family: 'Montserrat', sans-serif"
       class="product"
       v-on:click.self="seeProduct()"
@@ -19,7 +18,7 @@
 
       <!-- div info -->
 
-      <div class="infoProduct" style="width: 25%">
+      <div class="infoProduct" style="width: 25%" v-if="product">
         <div style="font-weight: bold; font-size: 115%">
           {{ product.brand }} {{ product.model }}
         </div>
@@ -75,7 +74,7 @@
         <div>
           <div
             style="margin-top: 15%; display: flex"
-            v-if="product.discount !== 0"
+            v-if="product && product.discount !== 0"
           >
             <div>
               <div
@@ -160,7 +159,7 @@ export default {
 
   data() {
     return {
-      fav: null,
+      fav: 0,
       product: null,
       username: null,
       priceReduced: null,

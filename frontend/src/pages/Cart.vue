@@ -100,7 +100,69 @@
               @input="onClickPaymentMethod(plata)"
             />
           </div>
-          <div style="margin-top: 3%; text-align: center; margin-bottom: 8%">
+          <div
+            v-if="paymentMethod === 'Card online'"
+            style="margin-top: 3%; display: flex; justify-content: center"
+          >
+            <div
+              class="q-gutter-y-md column"
+              style="
+                padding: 5% 5%;
+                width: 65%;
+                box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+              "
+            >
+              <div class="flex row" style="justify-content: space-between">
+                <img
+                  src="photos/debit-card.png"
+                  style="width: 8%; height: fit-content; margin-top: 2%"
+                />
+                <q-input
+                  outlined
+                  v-model="nrCard"
+                  style="width: 85%"
+                  label="Numărul cardului"
+                  hint="Numărul cardului"
+                />
+              </div>
+
+              <div
+                class="row flex"
+                style="justify-content: space-between; margin-top: 30px"
+              >
+                <q-input
+                  outlined
+                  v-model="expireDate"
+                  label="MM/YY"
+                  hint="Data expirării"
+                />
+                <q-input
+                  outlined
+                  v-model="cvv"
+                  label="CVV/CVV2"
+                  hint="Cod securitate"
+                />
+              </div>
+              <div
+                class="flex row"
+                style="justify-content: space-between; margin-top: 30px"
+              >
+                <img
+                  src="photos/user.png"
+                  style="width: 8%; height: fit-content; margin-top: 2%"
+                />
+                <q-input
+                  outlined
+                  v-model="cardholder"
+                  style="width: 85%"
+                  label="Numele deținătorului"
+                  hint="Deținătorul cardului"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 7%; text-align: center; margin-bottom: 8%">
             <q-btn
               color="secondary"
               :disabled="validation"
@@ -184,6 +246,11 @@ export default {
   data() {
     return {
       products: [],
+      nrCard: null,
+      expireDate: null,
+      cvv: null,
+      cardholder: null,
+      cardValidation: null,
       confirm: false,
       nrOrder: null,
       optionsLivrare: [
@@ -238,6 +305,18 @@ export default {
     town() {
       this.getValidation();
     },
+    cvv() {
+      this.getValidation();
+    },
+    nrCard() {
+      this.getValidation();
+    },
+    expireDate() {
+      this.getValidation();
+    },
+    cardholder() {
+      this.getValidation();
+    },
     address() {
       this.getValidation();
     },
@@ -265,7 +344,6 @@ export default {
       this.noiDate.forEach((element) => {
         this.costProduse += element.price * element.number;
       });
-      console.log("heia" + this.costProduse);
       this.costF = this.costProduse + this.costLivrare;
     },
     getFinalCost(value) {
@@ -276,50 +354,39 @@ export default {
     },
     getTown(value) {
       this.town = value;
-      //console.log(this.town);
     },
     getFirstname(value) {
       this.firstname = value;
-      // console.log(this.firstname);
     },
     getLastname(value) {
       this.lastname = value;
-      // console.log(this.lastname);
     },
     getAddress(value) {
       this.address = value;
-      // console.log(this.address);
     },
     getCounty(value) {
       this.county = value;
-      // console.log(this.county);
     },
     getPhone(value) {
       this.phone = value;
-      //  console.log(this.phone);
     },
     listModified(value) {
       //update the prod with id 1 to receive quantity=value.quantity
 
-      console.log(this.noiDate);
-      console.log(value);
-
+      // const id=value.id
+      // const index=this.products.
+      // this.products.splice(this.products.indexOf(value),1)
       const x = this.noiDate.find((data) => {
         return data["id"] === value.id;
       });
 
       x["number"] = value.number;
-      console.log(x);
-
-      console.log("kk");
 
       this.costProduse = 0;
       this.noiDate.forEach((element) => {
         this.costProduse += element.price * element.number;
       });
 
-      console.log("heia" + this.costProduse);
-      console.log("weell");
       this.costF = this.costProduse + this.costLivrare;
     },
 
@@ -340,7 +407,6 @@ export default {
           { withCredentials: true }
         )
         .then((response) => {
-          console.log(response.data);
           this.nrOrder = response.data.id;
           this.confirm = true;
         });
@@ -359,6 +425,9 @@ export default {
         });
     },
     getValidation() {
+      this.cardValidation =
+        !this.cvv || !this.cardholder || !this.nrCard || !this.expireDate;
+
       this.validation =
         this.costF === 0 ||
         !this.paymentMethod ||
@@ -368,7 +437,8 @@ export default {
         !this.address ||
         !this.lastname ||
         !this.firstname ||
-        this.products.length === 0;
+        this.products.length === 0 ||
+        (this.paymentMethod === "Card online" && this.cardValidation);
     },
     sendDataToCartPrice() {
       this.products.forEach((product) => {

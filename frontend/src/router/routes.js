@@ -14,7 +14,8 @@ const routes = [
   },
   {
     path: '/submit',
-    component: () => import('pages/Submit.vue')
+    component: () => import('pages/Submit.vue'),
+    name: "submit"
   },
   {
     path: '/orders',
@@ -49,7 +50,9 @@ const routes = [
  
   {
     path: '/login',
-    component: () => import('pages/LogIn.vue')
+    
+    component: () => import('pages/LogIn.vue'),
+    name: "login"
   },
   {
     path: '/profile',

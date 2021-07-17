@@ -19,9 +19,6 @@ const Order = OrderModel(db, Sequelize);
 const UserContactModel = require("./UserContact");
 const UserContact = UserContactModel(db, Sequelize);
 
-// const NewCategoryProductModel = require("./NewCategoryProduct");
-// const NewCategoryProduct = NewCategoryProductModel(db, Sequelize);
-
 const ViewedProductModel = require("./ViewedProduct");
 const ViewedProduct = ViewedProductModel(db, Sequelize);
 
@@ -69,8 +66,6 @@ User.hasMany(UserContact);
 UserContact.belongsTo(User);
 
 //o adresa poate corespunde mai multor comenzi
-// UserContact.hasMany(Order);
-// Order.belongsTo(UserContact);
 
 ViewedProduct.belongsTo(Product);
 Product.hasOne(ViewedProduct);

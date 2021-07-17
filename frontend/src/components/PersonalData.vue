@@ -136,7 +136,6 @@ export default {
         withCredentials: true,
       })
       .then((result) => {
-        console.log(result.data);
         this.firstname = result.data.firstname;
         this.lastname = result.data.lastname;
         this.username = result.data.username;
