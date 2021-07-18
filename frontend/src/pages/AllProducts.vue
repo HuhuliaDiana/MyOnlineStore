@@ -463,9 +463,26 @@ export default {
       this.clickBtnAdd = false;
 
       this.productEdit = row;
+      if (row.photos) {
+        if (row.photos.charAt(row.photos.length - 1) === ",") {
+          this.productEditPhotos[0] = row.photos.slice(0, -1);
+        } else {
+          this.productEditPhotos = row.photos.split(",");
+        }
+      } else {
+        this.productEditPhotos = [];
+      }
+      console.log(row.photos)
 
-      this.productEditPhotos = row.photos.split(",");
-
+      // if (row.photos) {
+      //   const array = row.photos.split(",");
+      //   if (array[1] === "") {
+      //     this.productEditPhotos[0] = row.photos;
+      //     console.log(this.productEditPhotos);
+      //   } else {
+      //     this.productEditPhotos = array;
+      //   }
+      // }
       this.maxFiles = 3 - this.productEditPhotos.length;
 
       this.confirm = true;
@@ -532,6 +549,7 @@ export default {
         discount: this.discount,
         photos: this.photos,
       };
+      console.log(this.photos);
 
       //verifica pozele, verifica daca s-au incarcat poze- this.myFiles!==null
       let formData = new FormData();

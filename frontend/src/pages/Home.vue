@@ -383,7 +383,7 @@ export default {
 
       if (this.fstock !== "") {
         const valstock = this.fstock;
-        if (valstock === "In stoc") {
+        if (valstock === "În stoc") {
           this.products = this.products.filter(function (element) {
             return element.quantity > 15;
           });
