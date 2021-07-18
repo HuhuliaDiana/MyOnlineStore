@@ -23,7 +23,6 @@
           :columns="columns"
           row-key="id"
           class="my-sticky-header-table"
-          
         >
           <template v-slot:header="props">
             <q-tr :props="props">
@@ -68,12 +67,11 @@
                       <th>Cantitate</th>
                     </tr>
                     <tr v-for="produs in props.row.produse" :key="produs.id">
-                      <td>{{ produs.id }}</td>
-                      <td>
+                      <td v-if="produs.Product">{{ produs.Product.id }}</td>
+                      <td v-if="produs.Product">
                         {{ produs.Product.brand }} {{ produs.Product.model }}
                       </td>
-
-                      <td>{{ produs.quantity }}</td>
+                      <td v-if="produs">{{ produs.quantity }}</td>
                     </tr>
                   </table>
                 </div>

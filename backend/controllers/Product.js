@@ -352,48 +352,48 @@ const controllers = {
     }
   },
   addProduct: async (req, res) => {
-    let product = await req.body;
+    // let product = await req.body;
 
-    if (req.files) {
-      const reqFiles = await req.files;
-      const files = reqFiles.map(function (file) {
-        return file.filename;
-      });
-
-      product["photos"] = files.toString();
-    }
-    //tot ce e mai jos trebuie pastrat cand adaug din aplicatie si nu din postman!
-
-    // const reqFiles = await req.files;
-    // const body = await req.body.bodyProduct;
-    // const bodyProduct = JSON.parse(body);
-
-    // const product = {
-    //   brand: bodyProduct.brand,
-    //   quantity: bodyProduct.quantity,
-    //   price: bodyProduct.price,
-    //   model: bodyProduct.model,
-    //   dimensions: bodyProduct.dimensions,
-    //   weight: bodyProduct.weight,
-    //   memRAM: bodyProduct.memRAM,
-    //   memInternal: bodyProduct.memInternal,
-    //   selfieCam: bodyProduct.selfieCam,
-    //   mainCam: bodyProduct.mainCam,
-    //   battery: bodyProduct.battery,
-    //   displayRes: bodyProduct.displayRes,
-    //   displaySize: bodyProduct.displaySize,
-    //   netSpeed: bodyProduct.netSpeed,
-    //   USB: bodyProduct.USB,
-    //   discount: bodyProduct.discount,
-    // };
-
-    // if (reqFiles.length > 0) {
+    // if (req.files) {
+    //   const reqFiles = await req.files;
     //   const files = reqFiles.map(function (file) {
     //     return file.filename;
     //   });
 
     //   product["photos"] = files.toString();
     // }
+    //tot ce e mai jos trebuie pastrat cand adaug din aplicatie si nu din postman!
+
+    const reqFiles = await req.files;
+    const body = await req.body.bodyProduct;
+    const bodyProduct = JSON.parse(body);
+
+    const product = {
+      brand: bodyProduct.brand,
+      quantity: bodyProduct.quantity,
+      price: bodyProduct.price,
+      model: bodyProduct.model,
+      dimensions: bodyProduct.dimensions,
+      weight: bodyProduct.weight,
+      memRAM: bodyProduct.memRAM,
+      memInternal: bodyProduct.memInternal,
+      selfieCam: bodyProduct.selfieCam,
+      mainCam: bodyProduct.mainCam,
+      battery: bodyProduct.battery,
+      displayRes: bodyProduct.displayRes,
+      displaySize: bodyProduct.displaySize,
+      netSpeed: bodyProduct.netSpeed,
+      USB: bodyProduct.USB,
+      discount: bodyProduct.discount,
+    };
+
+    if (reqFiles) {
+      const files = reqFiles.map(function (file) {
+        return file.filename;
+      });
+
+      product["photos"] = files.toString();
+    }
 
     let errors = [];
     if (errors.length === 0) {
