@@ -11,7 +11,6 @@ router.post("/orderCart", other.checkNotAuth, controllers.orderCart);
 router.get("/getUserOrders", other.checkNotAuth, controllers.getUserOrders);
 router.get(
   "/getProductsFromOrder/:id",
-  other.checkNotAuth,
   controllers.getProductsFromOrder
 );
 

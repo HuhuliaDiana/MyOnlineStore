@@ -169,9 +169,10 @@ export default {
         this.rows = result.data;
         this.rows.forEach((element) => {
           axios
-            .get(`http://localhost:8082/getProductsFromCart/${element.id}`)
+            .get(`http://localhost:8082/getProductsFromOrder/${element.id}`)
             .then((res) => {
               element["produse"] = res.data;
+              console.log(res.data)
             })
             .catch((err) => {
               console.log(err);

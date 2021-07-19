@@ -472,7 +472,7 @@ export default {
       } else {
         this.productEditPhotos = [];
       }
-      console.log(row.photos)
+      console.log(row.photos);
 
       // if (row.photos) {
       //   const array = row.photos.split(",");
@@ -622,7 +622,12 @@ export default {
               withCredentials: true,
             })
             .then((result) => {
-              console.log(result.data);
+              this.$q.notify({
+                color: "green-4",
+                textColor: "white",
+                icon: "cloud_done",
+                message: "Ai adăugat un produs!",
+              });
             })
             .catch((err) => {
               console.log(err);
